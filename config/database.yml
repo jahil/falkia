@@ -1,0 +1,25 @@
+development:
+      host: localhost
+      adapter: mysql
+      database: falkia
+      port: 3306
+      username: falkia
+      password: DBM@rk3T
+
+test: &test
+      host: localhost
+      adapter: mysql
+      database: falkia
+      port: 3306
+      username: falkia
+      password: DBM@rk3T
+
+production:
+      host: localhost
+      adapter: mysql
+      database: falkia
+      port: 3306
+      username: falkia
+      password: DBM@rk3T
+cucumber:
+  <<: *test
