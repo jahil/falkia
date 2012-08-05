@@ -185,7 +185,7 @@
           <% unless @student.country.nil? %>
             <div class="text-input-bg"> <%= select :guardian, :country_id, Country.all.map {|c| [c.name, c.id]}, :selected => @student.country_id %> </div>
           <% else %>
-            <div class="text-input-bg"> <%= select :guardian, :country_id, Country.all.map {|c| [c.name, c.id]}, :selected => 76 %> </div>
+            <div class="text-input-bg"> <%= select :guardian, :country_id, Country.all.map {|c| [c.name, c.id]}, :selected => 133 %> </div>
             <% end %>
           </div>
 
