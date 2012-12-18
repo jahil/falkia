@@ -206,7 +206,7 @@ class CreateCountries < ActiveRecord::Migration
          "Yemen",
          "Zambia",
          "Zimbabwe"]
-       
+
     clist.each do |c|
       @c1 = Country.new
       @c1.name = c

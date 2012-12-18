@@ -7,7 +7,7 @@
 }
 .link-heading a {
     font-weight:bold;
-    color:#3293bc;
+    color:#900;
 }
 .link-descr {
     margin-top:5px;
@@ -85,7 +85,7 @@ width:250px;
 
 .text-input-bg textarea:focus{
     background: #fff;
-    border: 1px solid #42a5cc;
+    border: 1px solid #9e0f15;
 }
 
 .box{

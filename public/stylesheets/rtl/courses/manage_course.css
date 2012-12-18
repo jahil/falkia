@@ -80,13 +80,13 @@
 }
 
 #inner-tab-menu ul li {
-    background-color: #42A5CC;
+    background-color: #9D0E00;
     color: #FFFFFF;
     float: right;
     font-size: 0.9em;
     height: 1.5em;
     list-style-type: none;
-    margin: 0 0 0 10px;
+    margin: 0 10px 0 0;
     padding: 0;
     text-align: center;
     width: 100px;

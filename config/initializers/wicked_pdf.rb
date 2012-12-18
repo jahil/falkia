@@ -7,5 +7,5 @@ WickedPdf.config = {
                     :right => 30},
     :header => {:html => { :template=> 'layouts/pdf_header.html'}},
     :footer => {:html => { :template=> 'layouts/pdf_footer.html'}}
-   #:exe_path => '/usr/bin/wkhtmltopdf-amd64'
+    #:exe_path => '/usr/bin/wkhtmltopdf'
 }

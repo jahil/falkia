@@ -1,5 +1,5 @@
 .heading{
-    font-weight:bold;color:#3293bc;
+    font-weight:bold;color:#900;
     padding-bottom:20px;
 }
 
@@ -56,7 +56,7 @@
     margin:10px 40px 0 0;
 }
 .new-leaves-count{
-    background-color : #42a5cc;
+    background-color : #9d0e00;
     color : #fff;
     float : right;
     font-size : 0.9em;
@@ -248,7 +248,7 @@ padding:0;
 	text-align:right;
 	width:100px;
 	font-size:.8em;
-	background:#42A5CC;
+	background:#9D0E00;
 	-webkit-border-bottom-right-radius:5px;
 	-webkit-border-bottom-left-radius:5px;
 	-khtml-border-radius-bottomleft:5px;
@@ -301,7 +301,7 @@ html>body #nav ul.scriptaculously{/*ie shit*/
     height:1.5em;
     display:block;
 	/*padding:10px 10px 0 10px;*/
-	background:#42A5CC;
+	background:#9D0E00;
 /*	-webkit-border-top-left-radius:5px;
 	-webkit-border-top-right-radius:5px;
 	-khtml-border-radius-topleft:5px;
@@ -324,7 +324,7 @@ html>body #nav ul.scriptaculously{/*ie shit*/
  	/*display:inline;
 	margin:0;
 	padding:0;*/
-    background-color : #42a5cc;
+    background-color : #9d0e00;
     color : #fff;
     float : right;
     font-size : 0.9em;
@@ -337,7 +337,7 @@ html>body #nav ul.scriptaculously{/*ie shit*/
 }
 
 #nav ul li ul li{
-    background-color:#42A5CC;
+    background-color:#9D0E00;
     font-size:1.3em;
     height:1.5em;
     padding:5px 0px 5px 0;

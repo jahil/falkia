@@ -12,7 +12,7 @@ body {
 #top_logo {
     margin:0 auto;
     padding-top:15px;
-    height:107px; width:155px;
+    height:115px; width:155px;
     /*background:#fff url(../../images/login/fedena_logo.jpg) no-repeat;*/
 }
 #top_logo h1 {
@@ -23,7 +23,7 @@ body {
     width:614px;height:1.5em;
 }
 #help_top #help_link {float:right;}
-#help_top #help_link a {color:#42a5cc;padding-right:10px;}
+#help_top #help_link a {color:#b00;padding-right:10px;}
 
 #login_area_bg {background:#fff url(../../images/login/form_bg.jpg) repeat-x;height:362px;}
 #login_area {height:362px;width:614px;background:#fff url(../../images/login/login_box.jpg) no-repeat;margin:0px auto;}
@@ -71,8 +71,8 @@ body {
     font-size:14px;
 }
 #wrapper  #help_forgot_pw {margin:50px auto;text-align:center;width:614px;}
-#wrapper  #help_forgot_pw a {text-decoration:none;font-weight:bold;color:#42a5cc;}
-#wrapper  #help_forgot_pw a:hover {text-decoration:underline;font-weight:bold;color:#42a5cc;}
+#wrapper  #help_forgot_pw a {text-decoration:none;font-weight:bold;color:#b00;}
+#wrapper  #help_forgot_pw a:hover {text-decoration:underline;font-weight:bold;color:#b00;}
 
 #username_texbox_bg input{border:none;margin:0px; padding:0px;text-align:center;}
 
@@ -110,11 +110,12 @@ input[type="text"], input[type="password"], textarea, select {outline: none;}
 #powered_by {
     height:20px;
     padding:35px 0 0 0;
-    width:980px;
+    width:auto;
     margin:0 auto;
     color:#fff;
     font-size:12px;
     font-weight:bold;
+    float: right;
 }
 #powered_by a {
     color:#fff;

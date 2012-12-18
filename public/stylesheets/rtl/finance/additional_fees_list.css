@@ -7,7 +7,7 @@
     text-decoration:  line-through;
     font-size: 11px;
     float:left;
-    width:35px;
+    width:57px;
 }
 .submit_button {
     margin-top:15px;
@@ -62,7 +62,7 @@
 }
 
 .val {
-    color: #42a5cc;
+    color: #bb0000;
     font-weight: bold;
     font-size: 13px;
 }
@@ -80,7 +80,7 @@
 }
 
 .linker a:hover{
-    color:#42a5cc;
+    color:#bb0000;
     text-decoration: none;
 }
 

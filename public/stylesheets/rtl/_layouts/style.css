@@ -38,7 +38,7 @@ body {
 }
 #main-menu a {
     background : #fff;
-    color : #42a5cc;
+    color : #b00;
     display : block;
     font-size : 0.8em;
     float : right;
@@ -72,7 +72,7 @@ p.flash-msg {
 #fedena_logo {
     margin-top:30px;
     height:107px;
-    background:#fff url(../../../images/application/app_falkia_logo.jpg) center center no-repeat;
+    background:#fff url(../../../images/application/app_fedena_logo.jpg) center center no-repeat;
 }
 #content {
     width:980px;
@@ -121,7 +121,7 @@ p.flash-msg {
 #content-header h3 {
     margin:0px;
     padding:0 100px 0 0;
-    color:#42a5cc;
+    color:#b00;
     font-size: 17px;
 }
 #app-back-button {
@@ -155,7 +155,7 @@ p.flash-msg {
 }
 #news_feed small {
     padding-top:0px;
-    color:#42a5cc;
+    color:#b00;
 }
 #news_feed_top_img {
     margin:0 auto;
@@ -348,12 +348,12 @@ body > #content_wrapper {
 /* Validation error messages */
 
 .fieldWithErrors input{
-    border : 1px solid #42a5cc;
+    border : 1px solid #b00;
     
 }
 .errorExplanation {
     background-color : #ffb1b1;
-    border : 1px solid #42a5cc;
+    border : 1px solid #b00;
     height : auto; width : 510px;
     margin : 20px 50px 40px 0;
     padding : 10px 20px 20px 0;
@@ -381,7 +381,7 @@ body > #content_wrapper {
     padding : 0;
 }
 #inner-tab-menu ul li {
-    background-color : #42a5cc;
+    background-color : #9d0e00;
     color : #fff;
     float : right;
     font-size : 0.9em;
@@ -402,5 +402,5 @@ body > #content_wrapper {
 }
 .label-field-pair input:focus{
     background: #fff;
-    border: 1px solid #42a5cc;
+    border: 1px solid #9e0f15;
 }

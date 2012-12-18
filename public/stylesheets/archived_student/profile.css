@@ -28,13 +28,13 @@
 #student_main_info h4 {
     margin:0;
     padding:0;
-    color:#42a5cc;
+    color:#b00;
     margin-top:10px;
 }
 #student_main_info h6 {
     margin:0;
     padding:0;
-    color:#42a5cc;
+    color:#b00;
     margin-top:5px;
 }
 #student_main_info h5 {
@@ -74,7 +74,7 @@
     color:#000;
 }
 .profile_info_text_top a:hover{
-    color:#42A5CC;
+    color:#BB0000;
 }
 .profile_info_label_top2 {
     padding-top:15px;

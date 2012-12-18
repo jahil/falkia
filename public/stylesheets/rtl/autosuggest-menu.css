@@ -40,7 +40,7 @@
 .ui-menu .ui-menu-item a.ui-state-hover,
 .ui-menu .ui-menu-item a.ui-state-active {
     background-color: #f8f1d1;
-    color: #42a5cc;
+    color: #bb0000;
 }
 #autosuggest_menu_input{
     background: url("../../images/search.png") no-repeat scroll 2px 50% #FFFFFF;
@@ -51,5 +51,5 @@
     padding-left: 25px;
 }
 li.ui-menu-item a.action{
-border-right: 2px solid #42a5cc;
+border-right: 2px solid #bb0000;
 }

@@ -32,6 +32,7 @@
   <% unless flash[:notice].nil? %>
     <p class="flash-msg"> <%= flash[:notice] %> </p>
   <% end %>
+  <%= error_messages_for :school_detail %>
 
   <% form_for(:configuration,:html=> {:multipart=>true}) do |c| %>
     <div class="box">
@@ -64,7 +65,7 @@
         <label for="configuration_currency_type"><%= t('finance_year_start_date') %></label>
         <div class="text-input-bg">
           <%= calendar_date_select_tag 'configuration[financial_year_start_date]', @config[:financial_year_start_date],
-            :year_range => 15.years.ago..5.years.from_now %>
+            :year_range => 15.years.ago..5.years.from_now, :readonly=>true, :popup=>"force" %>
         </div>
       </div>
 
@@ -72,7 +73,7 @@
         <label for="configuration_currency_type"><%= t('finance_year_end_date') %></label>
         <div class="text-input-bg">
           <%= calendar_date_select_tag 'configuration[financial_year_end_date]', @config[:financial_year_end_date],
-            :year_range => 15.years.ago..5.years.from_now %>
+            :year_range => 15.years.ago..5.years.from_now, :readonly=>true, :popup=>"force" %>
         </div>
       </div>
 
@@ -83,7 +84,20 @@
             :selected => @config[:locale] %>
         </div>
       </div>
+      <div class="label-field-pair">
+        <label for="configuration_student_attendance_type">Time Zone</label>
+        <div class="text-input-bg">
+          <%= select :configuration, :time_zone, @time_zones.map{|t| ["#{t.name}(#{t.code}) - GMT#{t.difference_type}#{Time.at(t.time_difference).gmtime.strftime('%R')}",t.id]},:selected =>@config[:time_zone].to_i  %>
+        </div>
+      </div>
 
+      <div class="label-field-pair">
+        <label for="configuration_default_country"><%= t('country') %></label>
+        <div class="text-input-bg">
+          <% selected_value = @config[:default_country].present? ? @config[:default_country].to_i : 76 %>
+          <%= select :configuration, :default_country, @countries.map {|c| [c.name, c.id]}, :selected=> selected_value.to_i %>
+        </div>
+      </div>
       <div class="label-field-pair">
         <label for="configuration_currency_type"><%= t('currency_type') %></label>
         <div class="text-input-bg">
@@ -93,13 +107,29 @@
       <div class="label-field-pair">
         <label for="configuration_currency_type"><%= t('upload_logo') %></label>
         <div class="text-input-bg">
-          <%= file_field 'upload', 'datafile', :size=>12 %>
+          <%= file_field 'school_detail','school_logo', :size=>12 %>
         </div>
       </div>
       <div class="label-field-pair">
         <label for="configuration_currency_type"><%= t('network_state') %></label>
         <div class="text-input-bg">
           <%= select :configuration, :network_state, [["#{t('online')}","Online"],["#{t('offline')}","Offline"]],:selected =>@config[:network_state] %>
+        </div>
+      </div>
+      <div class="grades">
+        <div class="label-field-pair">
+          <label for="configuration_grading_systems"><%= t('include_grading_systems') %></label>
+        </div>
+        <div class="fee_category_scroll">
+          <div class="sel-list">
+            <%= t('select') %>: <%= link_to_function t('all'), "$$('input.batches_box').each(function(checkbox) { checkbox.checked = true; });" %>,
+            <%= link_to_function t('none'), "$$('input.batches_box').each(function(checkbox) { checkbox.checked = false; });" %>
+          </div>
+          <% @grading_types.each do |key,val| %>
+            <div class="each_batch">
+              <%= check_box :configuration, val.underscore , :checked => (@enabled_grading_types.include? key),:class=>'batches_box' %> <label for="configuration_<%= val.underscore %>"><%= val %></label>
+            </div>
+          <% end %>
         </div>
       </div>
 
@@ -121,6 +151,16 @@
         <% else %>
           <%= check_box :configuration, :employee_number_auto_increment, :checked => false %><%= t('employee_admission_auto') %>
         <% end %>
+      <% end %>
+      <br/>
+      <% if @config[:enable_news_comment_moderation] == '1' %>
+        <%= check_box :configuration, :enable_news_comment_moderation, :checked => true %><%= t('enable_news_comment_moderation') %>
+      <% else %>
+        <%= check_box :configuration, :enable_news_comment_moderation, :checked => false %><%= t('enable_news_comment_moderation') %>
+      <% end %>
+      <% FedenaPlugin::REGISTERED_HOOKS[:general_settings_checkbox].each do |mod| %>
+        <br/>
+        <%= render :partial=>mod.camelize.constantize.send("general_settings_checkbox") %>
       <% end %>
       <div id="submit-button">
         <%= submit_tag "► #{t('update')}" %>

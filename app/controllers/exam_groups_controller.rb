@@ -18,17 +18,18 @@
 
 class ExamGroupsController < ApplicationController
   before_filter :login_required
+  filter_access_to :all
   before_filter :initial_queries
   before_filter :protect_other_student_data
   before_filter :restrict_employees_from_exam
   before_filter :protect_other_batch_exams, :only => [:show, :index]
-  in_place_edit_for :exam_group, :name
-  filter_access_to :all
-  in_place_edit_for :exam, :maximum_marks
-  in_place_edit_for :exam, :minimum_marks
-  in_place_edit_for :exam, :weightage
+  in_place_edit_with_validation_for :exam_group, :name
+  in_place_edit_with_validation_for :exam, :maximum_marks
+  in_place_edit_with_validation_for :exam, :minimum_marks
+  in_place_edit_with_validation_for :exam, :weightage
 
   def index
+    @sms_setting = SmsSetting.new
     @exam_groups = @batch.exam_groups
     if @current_user.employee?
       @user_privileges = @current_user.privileges
@@ -42,6 +43,7 @@ class ExamGroupsController < ApplicationController
 
   def new
     @user_privileges = @current_user.privileges
+    @cce_exam_categories = CceExamCategory.all if @batch.cce_enabled?
     if !@current_user.admin? and !@user_privileges.map{|p| p.name}.include?('ExaminationControl') and !@user_privileges.map{|p| p.name}.include?('EnterResults')
       flash[:notice] = "#{t('flash_msg4')}"
       redirect_to :controller => 'user', :action => 'dashboard'
@@ -56,12 +58,14 @@ class ExamGroupsController < ApplicationController
       flash[:notice] =  "#{t('flash1')}"
       redirect_to batch_exam_groups_path(@batch)
     else
+      @cce_exam_categories = CceExamCategory.all if @batch.cce_enabled?
       render 'new'
     end
   end
 
   def edit
     @exam_group = ExamGroup.find params[:id]
+    @cce_exam_categories = CceExamCategory.all if @batch.cce_enabled?
   end
 
   def update
@@ -70,6 +74,7 @@ class ExamGroupsController < ApplicationController
       flash[:notice] = "#{t('flash2')}"
       redirect_to [@batch, @exam_group]
     else
+      @cce_exam_categories = CceExamCategory.all if @batch.cce_enabled?
       render 'edit'
     end
   end

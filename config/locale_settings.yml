@@ -4,6 +4,10 @@ available:
   en: "English"
   es: "Español"
   hi: "हिंदी"
+  de: "Deutsch"
+  pt: "português"
+  mr: "मराठी"
+  ja: "日本の"
   
 fallbacks:
   en-GB:

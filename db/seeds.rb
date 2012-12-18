@@ -1,123 +1,104 @@
+[
+  {"config_key" => "InstitutionName"                 ,"config_value" => "" },
+  {"config_key" => "InstitutionAddress"              ,"config_value" => ""},
+  {"config_key" => "InstitutionPhoneNo"              ,"config_value" => ""},
+  {"config_key" => "StudentAttendanceType"           ,"config_value" => "Daily"},
+  {"config_key" => "CurrencyType"                    ,"config_value" => "$"},
+  {"config_key" => "Locale"                          ,"config_value" => "en"},
+  {"config_key" => "AdmissionNumberAutoIncrement"    ,"config_value" => "1"},
+  {"config_key" => "EmployeeNumberAutoIncrement"     ,"config_value" => "1"},
+  {"config_key" => "TotalSmsCount"                   ,"config_value" => "0"},
+  {"config_key" => "NetworkState"                    ,"config_value" => "Online"},
+  {"config_key" => "FinancialYearStartDate"          ,"config_value" => Date.today},
+  {"config_key" => "FinancialYearEndDate"            ,"config_value" => Date.today+1.year},
+  {"config_key" => "AutomaticLeaveReset"             ,"config_value" => "0"},
+  {"config_key" => "LeaveResetPeriod"                ,"config_value" => "4"},
+  {"config_key" => "LastAutoLeaveReset"              ,"config_value" => nil},
+  {"config_key" => "GPA"                             ,"config_value" => "0"},
+  {"config_key" => "CWA"                             ,"config_value" => "0"},
+  {"config_key" => "CCE"                             ,"config_value" => "0"},
+  {"config_key" => "DefaultCountry"                  ,"config_value" => "76"}
+].each do |param|
+  Configuration.find_or_create_by_config_key(param)
+end
 
-StudentCategory.destroy_all
-StudentCategory.create([
-  {:name=>"OBC",:is_deleted=>false},
-  {:name=>"General",:is_deleted=>false}
-  ])
+[
+  {"config_key" => "AvailableModules"                ,"config_value" => "HR"},
+  {"config_key" => "AvailableModules"                ,"config_value" => "Finance"}
+].each do |param|
+  Configuration.find_or_create_by_config_key_and_config_value(param)
+end
 
-#HR modules defaults
+if GradingLevel.count == 0
+  [
+    {"name" => "A"   ,"min_score" => 90 },
+    {"name" => "B"   ,"min_score" => 80},
+    {"name" => "C"   ,"min_score" => 70},
+    {"name" => "D"   ,"min_score" => 60},
+    {"name" => "E"   ,"min_score" => 50},
+    {"name" => "F"   ,"min_score" => 0}
+  ].each do |param|
+    GradingLevel.create(param)
+  end
+end
 
-#EmployeeCategory.delete_all
-EmployeeCategory.create([
-#  {:name => 'Fedena Admin',:prefix => 'Admin',:status => true},
-  {:name => 'Management',:prefix => 'MGMT',:status => true},
-  {:name => 'Teaching',:prefix => 'TCR',:status => true},
-  {:name => 'Non-Teaching',:prefix => 'NTCR',:status => true}
-  ])
 
-#EmployeePosition.delete_all
-EmployeePosition.create([
-#  {:name => 'Fedena Admin',:employee_category_id => 1,:status => true},
-  {:name => 'Principal',:employee_category_id => 2,:status => true},
-  {:name => 'HR',:employee_category_id => 2,:status => true},
-  {:name => 'Sr.Teacher',:employee_category_id => 3,:status => true},
-  {:name => 'Jr.Teacher',:employee_category_id => 3,:status => true},
-  {:name => 'Clerk',:employee_category_id => 4,:status => true}
-  ])
+if User.first( :conditions=>{:admin=>true}).blank?
 
-#EmployeeDepartment.delete_all
-EmployeeDepartment.create([
-#  {:code => 'Admin',:name => 'Fedena Admin',:status => true},
-  {:code => 'MGMT',:name => 'Management',:status => true},
-  {:code => 'MAT',:name => 'Mathematics',:status => true},
-  {:code => 'OFC',:name => 'Office',:status => true},
-  ])
+  employee_category = EmployeeCategory.find_or_create_by_prefix(:name => 'System Admin',:prefix => 'Admin',:status => true)
 
-#EmployeeGrade.delete_all
-EmployeeGrade.create([
-#  {:name => 'Fedena Admin',:priority => 0 ,:status => true,:max_hours_day=>nil,:max_hours_week=>nil},
-  {:name => 'A',:priority => 1 ,:status => true,:max_hours_day=>1,:max_hours_week=>5},
-  {:name => 'B',:priority => 2 ,:status => true,:max_hours_day=>3,:max_hours_week=>15},
-  {:name => 'C',:priority => 3 ,:status => true,:max_hours_day=>4,:max_hours_week=>20},
-  {:name => 'D',:priority => 4 ,:status => true,:max_hours_day=>5,:max_hours_week=>25},
-  ])
+  employee_position = EmployeePosition.find_or_create_by_name(:name => 'System Admin',:employee_category_id => employee_category.id,:status => true)
 
-PayrollCategory.delete_all
-PayrollCategory.create([
-  {:name=>"Basic",:percentage=>nil,:payroll_category_id=>nil,:is_deduction=>false,:status=>true},
-  {:name=>"Medical Allowance",:percentage=>3,:payroll_category_id=>1,:is_deduction=>false,:status=>true},
-  {:name=>"Travel Allowance",:percentage=>5,:payroll_category_id=>1,:is_deduction=>false,:status=>true},
-  {:name=>"Mobile deduction",:percentage=>nil,:payroll_category_id=>nil,:is_deduction=>true,:status=>true},
-  {:name=>"PF",:percentage=>5,:payroll_category_id=>1,:is_deduction=>true,:status=>true},
-  {:name=>"State tax",:percentage=>3,:payroll_category_id=>5,:is_deduction=>true,:status=>true}
-  ])
+  employee_department = EmployeeDepartment.find_or_create_by_code(:code => 'Admin',:name => 'System Admin',:status => true)
 
-BankField.delete_all
-BankField.create([
-  {:name=>"Bank Name",:status=>true},
-  {:name=>"Bank Branch",:status=>true},
-  {:name=>"Account No",:status=>true},
-  ])
+  employee_grade = EmployeeGrade.find_or_create_by_name(:name => 'System Admin',:priority => 0 ,:status => true,:max_hours_day=>nil,:max_hours_week=>nil)
 
-AdditionalField.delete_all
-AdditionalField.create([
-  {:name=>"Liscence Number",:status=>true},
-  {:name=>"PAN",:status=>true},
-  {:name=>"LIC",:status=>true},
-  ])
+  employee = Employee.find_or_create_by_employee_number(:employee_number => 'admin',:joining_date => Date.today,:first_name => 'Admin',:last_name => 'User',
+    :employee_department_id => employee_department.id,:employee_grade_id => employee_grade.id,:employee_position_id => employee_position.id,:employee_category_id => employee_category.id,:status => true,:nationality_id =>'133', :date_of_birth => Date.today-365, :email => 'noreply@falkia.com')
 
-#Employee.delete_all
-Employee.create([
-#  {:employee_number => 'admin',:joining_date => Date.today,:first_name => 'Admin',:last_name => 'Employee',
-#   :employee_department_id => 1,:employee_grade_id => 1,:employee_position_id => 1,
-#   :employee_category_id => 1,:date_of_birth => Date.today-365},
-  {:employee_number => 'EMP1',:joining_date => Date.today,:first_name => 'Unni',:last_name => 'Koroth',
-   :employee_department_id => 2,:employee_grade_id => 2,:employee_position_id => 2,
-   :employee_category_id => 2,:date_of_birth => Date.today-365},
-  {:employee_number => 'EMP2',:joining_date => Date.today,:first_name => 'Vishwajith',:last_name => 'A',
-   :employee_department_id => 2,:employee_grade_id => 1,:employee_position_id => 3,
-   :employee_category_id => 2,:date_of_birth => Date.today-365},
-  {:employee_number => 'EMP3',:joining_date => Date.today,:first_name => 'Aravind',:last_name => 'GS',
-   :employee_department_id => 3,:employee_grade_id => 3,:employee_position_id => 4,
-   :employee_category_id => 3,:date_of_birth => Date.today-365},
-  {:employee_number => 'EMP4',:joining_date => Date.today,:first_name => 'Nithin',:last_name => 'Bekal',
-   :employee_department_id => 3,:employee_grade_id => 4,:employee_position_id => 5,
-   :employee_category_id => 3,:date_of_birth => Date.today-365},
-  {:employee_number => 'EMP5',:joining_date => Date.today,:first_name => 'Ralu',:last_name => 'RM',
-   :employee_department_id => 4,:employee_grade_id => 5,:employee_position_id => 6,
-   :employee_category_id => 4,:date_of_birth => Date.today-365}
-  ])
+  employee.user.update_attributes(:admin=>true,:employee=>false)
+  
+end
 
-#user creations
-#User.delete_all
-User.create([
-#   {:username   => 'admin',:password   => 'admin123',:first_name => 'Fedena',
-#    :last_name  => 'Administrator',:email=> 'admin@falkia.com',:role=> 'Admin'},
-   {:username   => 'EMP1',:password   => 'EMP1123',:first_name => 'Unni',
-    :last_name  => 'Koroth',:email=> 'unni@falkia.com',:role=> 'Employee'},
-   {:username   => 'EMP2',:password   => 'EMP2123',:first_name => 'Vishwajith',
-    :last_name  => 'A',:email=> 'vishu@falkia.com',:role=> 'Employee'},
-   {:username   => 'EMP3',:password   => 'EMP3123',:first_name => 'Aravind',
-    :last_name  => 'GS',:email=> 'aravind@falkia.com',:role=> 'Employee'},
-   {:username   => 'EMP4',:password   => 'EMP4123',:first_name => 'Nithin',
-    :last_name  => 'Bekal',:email=> 'nithin@falkia.com',:role=> 'Employee'},
-   {:username   => 'EMP5',:password   => 'EMP5123',:first_name => 'Ralu',
-    :last_name  => 'RM',:email=> 'ralu@falkia.com',:role=> 'Employee'},
-   {:username   => '1',:password   => '1123',:first_name => 'John',
-    :last_name  => 'Doe',:email=> 'john@falkia.com',:role=> 'Student'},
-   {:username   => '2',:password   => '2123',:first_name => 'Samantha',
-    :last_name  => 'Fowler',:email=> 'samantha@falkia.com',:role=> 'Student'}
-  ])
+[
+  {"name" => 'Salary'         ,"description" => ' ',"is_income" => false },
+  {"name" => 'Donation'       ,"description" => ' ',"is_income" => true},
+  {"name" => 'Fee'            ,"description" => ' ',"is_income" => true}
+].each do |param|
+  FinanceTransactionCategory.find_or_create_by_name(param)
+end
 
-SmsSetting.delete_all
-SmsSetting.create([
-  {:settings_key=>"ApplicationEnabled",:is_enabled=>false},
-  {:settings_key=>"ParentSmsEnabled",:is_enabled=>false},
-  {:settings_key=>"StudentSmsEnabled",:is_enabled=>false},
-  {:settings_key=>"StudentAdmissionEnabled",:is_enabled=>false},
-  {:settings_key=>"ExamScheduleResultEnabled",:is_enabled=>false},
-  {:settings_key=>"ResultPublishEnabled",:is_enabled=>false},
-  {:settings_key=>"AttendanceEnabled",:is_enabled=>false},
-  {:settings_key=>"NewsEventsEnabled",:is_enabled=>false},
-  {:settings_key=>"EmployeeSmsEnabled",:is_enabled=>false}
-  ])
+if Weekday.count == 0
+  [
+    {"batch_id" => nil          ,"weekday" => "1"     ,"day_of_week" => "1"   ,"is_deleted"=> false },
+    {"batch_id" => nil          ,"weekday" => "2"     ,"day_of_week" => "2"   ,"is_deleted"=> false },
+    {"batch_id" => nil          ,"weekday" => "3"     ,"day_of_week" => "3"   ,"is_deleted"=> false },
+    {"batch_id" => nil          ,"weekday" => "4"     ,"day_of_week" => "4"   ,"is_deleted"=> false },
+    {"batch_id" => nil          ,"weekday" => "5"     ,"day_of_week" => "5"   ,"is_deleted"=> false }
+  ].each do |param|
+    Weekday.create(param)
+  end
+end
+
+[
+  {"settings_key" => "ApplicationEnabled"                 ,"is_enabled" => false },
+  {"settings_key" => "ParentSmsEnabled"                   ,"is_enabled" => false},
+  {"settings_key" => "EmployeeSmsEnabled"                 ,"is_enabled" => false},
+  {"settings_key" => "StudentSmsEnabled"                  ,"is_enabled" => false},
+  {"settings_key" => "ResultPublishEnabled"               ,"is_enabled" => false},
+  {"settings_key" => "StudentAdmissionEnabled"            ,"is_enabled" => false},
+  {"settings_key" => "ExamScheduleResultEnabled"          ,"is_enabled" => false},
+  {"settings_key" => "AttendanceEnabled"                  ,"is_enabled" => false},
+  {"settings_key" => "NewsEventsEnabled"                  ,"is_enabled" => false}
+].each do |param|
+  SmsSetting.find_or_create_by_settings_key(param)
+end
+
+
+Privilege.all.each do |p|
+  p.update_attributes(:description=> p.name.underscore+"_privilege")
+end
+
+Event.all.each do |e|
+  e.destroy if e.origin_type=="AdditionalExam"
+end

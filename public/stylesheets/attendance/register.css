@@ -18,7 +18,7 @@
 }
 .label_field_pair input:focus{
     background: #fff;
-    border: 1px solid #42a5cc;
+    border: 1px solid #9e0f15;
 }
 .label_field_pair select {color:#000;width:230px;height:28px;}
 .user_submit_button {
@@ -73,5 +73,5 @@ label {display:inline;}
 .input-area-bg {width:350px;height:60px;background:#fff url(../../images/_input_bg/text-search.png) no-repeat;}
 .searchbar input {width:320px;height:40px;margin:10px 0 0 10px;font-size:24pt;border:none;color:#444;background:transparent;}
 .searchbar-top-text {height:30px;width:100px;font-size:16pt;float:left;}
-.result-count{height:30px;color:#42a5cc;width:100px;float:right;margin-right:60px;}
+.result-count{height:30px;color:#b00;width:100px;float:right;margin-right:60px;}
 .highlight {background:#000;color:#fff;display:inline;}

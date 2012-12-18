@@ -1,10 +1,27 @@
+#Fedena
+#Copyright 2011 Foradian Technologies Private Limited
+#
+#This product includes software developed at
+#Project Fedena - http://www.projectfedena.org/
+#
+#Licensed under the Apache License, Version 2.0 (the "License");
+#you may not use this file except in compliance with the License.
+#You may obtain a copy of the License at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+#Unless required by applicable law or agreed to in writing, software
+#distributed under the License is distributed on an "AS IS" BASIS,
+#WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#See the License for the specific language governing permissions and
+#limitations under the License.
+
 class FedenaPlugin
 
   AVAILABLE_MODULES = []
   ADDITIONAL_LINKS = Hash.new{|k,v| k[v] = []}
   REGISTERED_HOOKS = Hash.new{|k,v| k[v] = []}
   FINANCE_CATEGORY = []
-  DEPENDENCY = Hash.new
   CSS_OVERRIDES = Hash.new{|k,v| k[v] = []}
 
   def self.register=(plugin_details)
@@ -15,6 +32,7 @@ class FedenaPlugin
       ADDITIONAL_LINKS[:online_exam_index_link] << plugin_details[:online_exam_index_link] unless plugin_details[:online_exam_index_link].blank?
       ADDITIONAL_LINKS[:instant_fees_index_link] << plugin_details[:instant_fees_index_link] unless plugin_details[:instant_fees_index_link].blank?
       ADDITIONAL_LINKS[:autosuggest_menuitems] << plugin_details[:autosuggest_menuitems] unless plugin_details[:autosuggest_menuitems].blank?
+      ADDITIONAL_LINKS[:generic_hook]<<plugin_details[:generic_hook] unless plugin_details[:generic_hook].blank?
       FINANCE_CATEGORY << plugin_details[:finance] unless plugin_details[:finance].blank?
       unless plugin_details[:css_overrides].blank?
         plugin_details[:css_overrides].each do |css|
@@ -32,6 +50,9 @@ class FedenaPlugin
         if plugin_details[:name].camelize.constantize.respond_to? "general_settings_form"
           REGISTERED_HOOKS[:general_settings_form] << plugin_details[:name]
         end
+        if plugin_details[:name].camelize.constantize.respond_to? "general_settings_checkbox"
+          REGISTERED_HOOKS[:general_settings_checkbox] << plugin_details[:name]
+        end
         if plugin_details[:name].camelize.constantize.respond_to? "dashboard_layout_left_sidebar"
           REGISTERED_HOOKS[:dashboard_layout_left_sidebar] << plugin_details[:name]
         end
@@ -40,13 +61,14 @@ class FedenaPlugin
   end
 
   def self.check_dependency(record,action)
+    dependency = []
     AVAILABLE_MODULES.each do |mod|
       modu = mod[:name].classify.constantize
       if modu.respond_to?("dependency_check")
-        data = modu.send("dependency_check",record,action)
-        DEPENDENCY["#{mod[:name]}"] = modu.send("dependency_check",record,action) unless data.blank?
+        dependency << mod[:name] if modu.send("dependency_check",record,action)
       end      
     end
-    DEPENDENCY
+    dependency
   end
+  
 end

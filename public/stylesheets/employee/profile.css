@@ -19,13 +19,13 @@
 #employee_main_info h4 {
     margin:0;
     padding:0;
-    color:#42a5cc;
+    color:#b00;
     margin-top:10px;
 }
 #employee_main_info h6 {
     margin:0;
     padding:0;
-    color:#42a5cc;
+    color:#b00;
     margin-top:5px;
 }
 #employee_main_info h5 {
@@ -190,6 +190,11 @@
     color : #000;
 }
 
+.item-list li div.item-edit b .currency-type1{
+    float:left;
+    margin-left:20px;
+    text-align: left;
+}
 .edit-delete-link{
     -moz-border-radius:10px;
     -webkit-border-radius:10px;
@@ -267,7 +272,7 @@
     padding : 0;
 }
 #profile-general-info ul li {
-    background-color : #42a5cc;
+    background-color : #9d0e00;
     color : #fff;
     float : left;
     font-size : 12px;
@@ -302,7 +307,7 @@
     text-align:left;
     width:100px;
     font-size:.8em;
-    background:#42A5CC;
+    background:#9D0E00;
     -webkit-border-bottom-left-radius:5px;
     -webkit-border-bottom-right-radius:5px;
     -khtml-border-radius-bottomleft:5px;
@@ -355,7 +360,7 @@ html>body #nav ul.scriptaculously{/*ie shit*/
     height:1.5em;
     display:block;
     /*padding:10px 10px 0 10px;*/
-    background:#42A5CC;
+    background:#9D0E00;
     /*	-webkit-border-top-left-radius:5px;
 	-webkit-border-top-right-radius:5px;
 	-khtml-border-radius-topleft:5px;
@@ -379,7 +384,7 @@ html>body #nav ul.scriptaculously{/*ie shit*/
     /*display:inline;
 	margin:0;
 	padding:0;*/
-    background-color : #42a5cc;
+    background-color : #9d0e00;
     color : #fff;
     float : left;
     font-size : 0.9em;
@@ -392,7 +397,7 @@ html>body #nav ul.scriptaculously{/*ie shit*/
 }
 
 #nav ul li ul li{
-    background-color:#42A5CC;
+    background-color:#9D0E00;
     font-size:1.1em;
     width:60px;
     height:1.5em;

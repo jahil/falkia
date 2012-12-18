@@ -55,7 +55,7 @@ table#class-timings-list{
 
 table#class-timings-list tr.tr-head{
     background: #fff;
-    color:#1b495c;
+    color:#990a10;
     font-weight:bold;
     text-align:left;
 }
@@ -121,7 +121,7 @@ table#class-timings-list td a{
 }
 
 table#class-timings-list td a:hover{
-    color:#1b495c;
+    color:#990a10;
     text-decoration:underline;
 }
 
@@ -160,7 +160,7 @@ table#class-timings-list td.col-6{
 }
 
 .linker a:hover{
-    color:#42a5cc;
+    color:#bb0000;
     text-decoration: none;
 }
 
@@ -169,4 +169,8 @@ table#class-timings-list td.col-6{
 }
 .time-select-field select {
     visibility: visible !important;
+}
+#MB_frame .label-field-pair select
+{
+    width: 87px !important;
 }

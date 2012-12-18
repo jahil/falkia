@@ -81,4 +81,42 @@ module ApplicationHelper
     }
   end
 
+  def current_school_detail
+    SchoolDetail.first||SchoolDetail.new
+  end
+
+  def current_school_name
+    Rails.cache.fetch("current_school_name#{session[:user_id]}"){
+      Configuration.get_config_value('InstitutionName')
+    }
+  end
+
+  def generic_hook(cntrl,act)
+    FedenaPlugin::ADDITIONAL_LINKS[:generic_hook].each do |mod| 
+      if cntrl.to_s == mod[:source][:controller].to_s && act.to_s == mod[:source][:action].to_s
+        if permitted_to? mod[:destination][:action].to_sym,mod[:destination][:controller].to_sym
+          return link_to(mod[:title], :controller=>mod[:destination][:controller].to_sym,:action=>mod[:destination][:action].to_sym)
+        end
+      end
+    end
+    return ""
+  end
+
+  def generic_dashboard_hook(cntrl,act)
+    dashboard_links = ""
+    FedenaPlugin::ADDITIONAL_LINKS[:generic_hook].each do |mod|
+      if cntrl.to_s == mod[:source][:controller].to_s && act.to_s == mod[:source][:action].to_s
+        if permitted_to? mod[:destination][:action].to_sym,mod[:destination][:controller].to_sym
+
+          dashboard_links += <<-END_HTML
+             <div class="link-box">
+                <div class="link-heading">#{link_to t(mod[:title]), :controller=>mod[:destination][:controller].to_sym, :action=>mod[:destination][:action].to_sym}</div>
+                <div class="link-descr">#{t(mod[:description])}</div>
+             </div>
+          END_HTML
+        end
+      end
+    end
+    return dashboard_links
+  end
 end

@@ -7289,12 +7289,12 @@ Form.Element.DelayedObserver = Class.create({
 // This file is automatically included by javascript_include_tag :defaults
 
 document.observe("dom:loaded", function() {
-$$('object').each(function(obj){
-console.log(obj);
-a  = document.createElement('param');
-a.name = 'wmode';
-a.value = 'transparent';
-obj.appendChild(a);
-console.log(a);
-});
+    $$('object').each(function(obj){
+        a  = document.createElement('param');
+        a.name = 'wmode';
+        a.value = 'transparent';
+        obj.appendChild(a);
+    });
+
+    load_menu_from_plugins();
 });

@@ -193,21 +193,21 @@
 
 .label-field-pair1 input:focus{
     background: #fff;
-    border: 1px solid #42a5cc;
+    border: 1px solid #9e0f15;
 }
 
 
 .name{
     color: #999999;
     float: right;
-    width: 220px;
+    width: 500px;
     font-weight: bold;
     font-size: 13px;
 }
 
 .val {
-    width: 400px;
-    color: #42a5cc;
+    width: 900px;
+    color: #bb0000;
     font-weight: bold;
     font-size: 13px;
 }
@@ -251,7 +251,7 @@ label-field-pair2 {
 }
 .label-field-pair2 input:focus{
     background: #fff;
-    border: 1px solid #42a5cc;
+    border: 1px solid #9e0f15;
 }
 .pay_fees{
     text-align: left;

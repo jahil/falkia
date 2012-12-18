@@ -9,7 +9,7 @@
 }
 
 #bank-details-label{
-    color:#42A5CC;
+    color:#BB0000;
     font-weight:bold;
     margin-bottom:20px;
     text-decoration:underline;
@@ -136,7 +136,7 @@ li{
 }
 
 .val {
-    color: #42a5cc;
+    color: #bb0000;
     font-weight: bold;
     font-size: 13px;
     float: left;

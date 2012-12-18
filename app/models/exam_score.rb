@@ -24,7 +24,7 @@ class ExamScore < ActiveRecord::Base
   before_save :calculate_grade
 
   def calculate_percentage
-    percentage = self.marks.to_i * 100 / self.exam.maximum_marks
+    percentage = self.marks.to_f * 100 / self.exam.maximum_marks.to_f
   end
 
   def grouped_exam_subject_total(subject,student,type,batch = "")
@@ -47,7 +47,8 @@ class ExamScore < ActiveRecord::Base
         exam = Exam.find_by_subject_id_and_exam_group_id(subject.id,exam_group.id)
         unless exam.nil?
           exam_score = ExamScore.find_by_student_id(student.id, :conditions=>{:exam_id=>exam.id})
-          total_marks = total_marks+(exam_score.marks || 0 ) unless exam_score.nil?
+          marks = exam_score.nil? ? 0 : exam_score.marks.nil? ? 0 : exam_score.marks
+          total_marks = total_marks + marks unless exam_score.nil?
         end
       end
     end
@@ -96,7 +97,7 @@ class ExamScore < ActiveRecord::Base
     unless exam_type == 'Grades'
       unless self.marks.nil?
         percent_score = self.marks.to_i * 100 / self.exam.maximum_marks
-        grade = GradingLevel.percentage_to_grade(percent_score, self.student.batch_id)
+        grade = GradingLevel.percentage_to_grade(percent_score, self.exam.exam_group.batch_id)
         self.grading_level_id = grade.id if exam_type == 'MarksAndGrades'
       else
         self.grading_level_id = nil

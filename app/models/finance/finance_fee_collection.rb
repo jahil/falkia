@@ -109,7 +109,7 @@ class FinanceFeeCollection < ActiveRecord::Base
       discount_attributes["finance_fee_collection_id"]= self.id
       StudentFeeCollectionDiscount.create(discount_attributes)
     end
-    particlulars = FinanceFeeParticulars.find_all_by_finance_fee_category_id(self.fee_category_id,:conditions=>"is_deleted=0")
+    particlulars = FinanceFeeParticular.find_all_by_finance_fee_category_id(self.fee_category_id,:conditions=>"is_deleted=0")
     particlulars.each do |p|
       particlulars_attributes = p.attributes
       particlulars_attributes.delete "finance_fee_category_id"
@@ -124,7 +124,7 @@ class FinanceFeeCollection < ActiveRecord::Base
   end
 
   def transaction_total(start_date,end_date)
-    trans = self.finance_transactions(:conditions=>"transaction_date >= '#{start_date}' AND transaction_date <= '#{end_date}'")
+    trans = self.finance_transactions.all(:conditions=>"transaction_date >= '#{start_date}' AND transaction_date <= '#{end_date}'")
     total = trans.map{|t|t.amount}.sum
   end
   

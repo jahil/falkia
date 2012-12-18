@@ -24,15 +24,14 @@ class Exam < ActiveRecord::Base
   belongs_to :subject, :conditions => { :is_deleted => false }
   before_destroy :removable?
   before_save :update_exam_group_date
-
+  
   has_one :event ,:as=>:origin
   
-  validates_presence_of :maximum_marks
-  validates_presence_of :minimum_marks
-  validates_numericality_of :minimum_marks, :maximum_marks, :greater_than_or_equal_to => 0,:allow_nil=>true
-
   has_many :exam_scores
   has_many :archived_exam_scores
+  has_many :previous_exam_scores
+  has_many :assessment_scores
+#  has_and_belongs_to_many :cce_reports
 
   accepts_nested_attributes_for :exam_scores
 
@@ -40,7 +39,7 @@ class Exam < ActiveRecord::Base
     self.exam_scores.reject{|es| es.marks.nil? and es.grading_level_id.nil?}.empty?
   
   end
-
+  
   def validate
     errors.add_to_base("#{t('minmarks_cant_be_more_than_maxmarks')}") \
       if minimum_marks and maximum_marks and minimum_marks > maximum_marks
@@ -77,6 +76,9 @@ class Exam < ActiveRecord::Base
     return 0
   end
 
+  def fa_groups
+    subject.fa_groups.select{|fg| fg.cce_exam_category_id == exam_group.cce_exam_category_id}
+  end
 
   private
   def update_exam_group_date

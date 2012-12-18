@@ -29,8 +29,3 @@ config.reload_plugins = true
 #  rescue MissingSourceFile
 #  end
 #end
-config.action_mailer.smtp_settings = {
-:enable_starttls_auto => true,
-:address=>"localhost",
-:port=>25
-}

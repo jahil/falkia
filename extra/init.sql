@@ -1,6 +1,6 @@
 -- MySQL dump 10.11
 --
--- Host: localhost    Database: falkia
+-- Host: localhost    Database: new
 -- ------------------------------------------------------
 -- Server version	5.0.51a-24+lenny4
 
@@ -441,6 +441,36 @@ LOCK TABLES `archived_students` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `assessment_scores`
+--
+
+DROP TABLE IF EXISTS `assessment_scores`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `assessment_scores` (
+  `id` int(11) NOT NULL auto_increment,
+  `student_id` int(11) default NULL,
+  `grade_points` int(11) default NULL,
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  `exam_id` int(11) default NULL,
+  `batch_id` int(11) default NULL,
+  `descriptive_indicator_id` int(11) default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `score_index` (`student_id`,`batch_id`,`descriptive_indicator_id`,`exam_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `assessment_scores`
+--
+
+LOCK TABLES `assessment_scores` WRITE;
+/*!40000 ALTER TABLE `assessment_scores` DISABLE KEYS */;
+/*!40000 ALTER TABLE `assessment_scores` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `assets`
 --
 
@@ -457,7 +487,7 @@ CREATE TABLE `assets` (
   `created_at` datetime default NULL,
   `updated_at` datetime default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -466,6 +496,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `assets` WRITE;
 /*!40000 ALTER TABLE `assets` DISABLE KEYS */;
+INSERT INTO `assets` VALUES (1,'Land and Building','Land and Building Detail',1000,0,0,'2012-09-24 19:26:51','2012-09-24 19:26:51');
 /*!40000 ALTER TABLE `assets` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -483,7 +514,11 @@ CREATE TABLE `attendances` (
   `forenoon` tinyint(1) default '0',
   `afternoon` tinyint(1) default '0',
   `reason` varchar(255) default NULL,
-  PRIMARY KEY  (`id`)
+  `month_date` date default NULL,
+  `batch_id` int(11) default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `index_attendances_on_month_date_and_batch_id` (`month_date`,`batch_id`),
+  KEY `index_attendances_on_student_id_and_batch_id` (`student_id`,`batch_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
@@ -548,6 +583,32 @@ LOCK TABLES `batch_events` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `batch_groups`
+--
+
+DROP TABLE IF EXISTS `batch_groups`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `batch_groups` (
+  `id` int(11) NOT NULL auto_increment,
+  `course_id` int(11) default NULL,
+  `name` varchar(255) default NULL,
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `batch_groups`
+--
+
+LOCK TABLES `batch_groups` WRITE;
+/*!40000 ALTER TABLE `batch_groups` DISABLE KEYS */;
+/*!40000 ALTER TABLE `batch_groups` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `batch_students`
 --
 
@@ -587,8 +648,8 @@ CREATE TABLE `batches` (
   `is_deleted` tinyint(1) default '0',
   `employee_id` varchar(255) default NULL,
   PRIMARY KEY  (`id`),
-  KEY `index_batches_on_is_deleted_and_is_active` (`is_deleted`,`is_active`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+  KEY `index_batches_on_is_deleted_and_is_active_and_course_id_and_name` (`is_deleted`,`is_active`,`course_id`,`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -597,8 +658,198 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `batches` WRITE;
 /*!40000 ALTER TABLE `batches` DISABLE KEYS */;
-INSERT INTO `batches` VALUES (1,'2013 A',1,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL),(2,'2013 A',2,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL),(3,'2013 A',3,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL),(4,'2013 A',4,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL),(5,'2013 A',5,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL),(6,'2013 A',6,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL),(7,'2013 A',7,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL),(8,'2013 A',8,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL),(9,'2013 A',9,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL),(10,'2013 A',10,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL),(11,'2013 A',11,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL);
+INSERT INTO `batches` VALUES (1,'1213',1,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL),(2,'1213',2,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL),(3,'1213',3,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL),(4,'1213A',4,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL),(5,'1213B',4,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL),(6,'1213A',5,'2012-09-26 00:00:00','2013-09-26 00:00:00',1,0,NULL),(7,'1213A',6,'2012-09-26 00:00:00','2013-09-26 00:00:00',1,0,NULL),(8,'1213A',7,'2012-09-26 00:00:00','2013-09-26 00:00:00',1,0,NULL),(9,'1213A',8,'2012-09-26 00:00:00','2013-09-26 00:00:00',1,0,NULL),(10,'1213A',9,'2012-09-26 00:00:00','2013-09-26 00:00:00',1,0,NULL),(11,'1213A',10,'2012-09-26 00:00:00','2013-09-26 00:00:00',1,0,NULL),(12,'1213A',11,'2012-09-26 00:00:00','2013-09-26 00:00:00',1,0,NULL),(13,'1213B',11,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL),(14,'1213B',10,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL),(15,'1213B',9,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL),(16,'1213B',8,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL),(17,'1213B',7,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL),(18,'1213B',6,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL),(19,'1213B',5,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL),(20,'1213A',12,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL),(21,'1213A',13,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL),(22,'1213B',12,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL),(23,'1213B',13,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL),(24,'1213A',14,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL),(25,'1213A',15,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL),(26,'1213B',14,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL),(27,'1213B',15,'2012-04-01 00:00:00','2013-03-31 00:00:00',1,0,NULL);
 /*!40000 ALTER TABLE `batches` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `cce_exam_categories`
+--
+
+DROP TABLE IF EXISTS `cce_exam_categories`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `cce_exam_categories` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) default NULL,
+  `desc` varchar(255) default NULL,
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `cce_exam_categories`
+--
+
+LOCK TABLES `cce_exam_categories` WRITE;
+/*!40000 ALTER TABLE `cce_exam_categories` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cce_exam_categories` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `cce_grade_sets`
+--
+
+DROP TABLE IF EXISTS `cce_grade_sets`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `cce_grade_sets` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) default NULL,
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `cce_grade_sets`
+--
+
+LOCK TABLES `cce_grade_sets` WRITE;
+/*!40000 ALTER TABLE `cce_grade_sets` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cce_grade_sets` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `cce_grades`
+--
+
+DROP TABLE IF EXISTS `cce_grades`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `cce_grades` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) default NULL,
+  `grade_point` float default NULL,
+  `cce_grade_set_id` int(11) default NULL,
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `index_cce_grades_on_cce_grade_set_id` (`cce_grade_set_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `cce_grades`
+--
+
+LOCK TABLES `cce_grades` WRITE;
+/*!40000 ALTER TABLE `cce_grades` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cce_grades` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `cce_reports`
+--
+
+DROP TABLE IF EXISTS `cce_reports`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `cce_reports` (
+  `id` int(11) NOT NULL auto_increment,
+  `observable_id` int(11) default NULL,
+  `observable_type` varchar(255) default NULL,
+  `student_id` int(11) default NULL,
+  `batch_id` int(11) default NULL,
+  `grade_string` varchar(255) default NULL,
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  `exam_id` int(11) default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `cce_report_join_index` (`observable_id`,`student_id`,`batch_id`,`exam_id`,`observable_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `cce_reports`
+--
+
+LOCK TABLES `cce_reports` WRITE;
+/*!40000 ALTER TABLE `cce_reports` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cce_reports` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `cce_weightages`
+--
+
+DROP TABLE IF EXISTS `cce_weightages`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `cce_weightages` (
+  `id` int(11) NOT NULL auto_increment,
+  `weightage` int(11) default NULL,
+  `criteria_type` varchar(255) default NULL,
+  `cce_exam_category_id` int(11) default NULL,
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `cce_weightages`
+--
+
+LOCK TABLES `cce_weightages` WRITE;
+/*!40000 ALTER TABLE `cce_weightages` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cce_weightages` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `cce_weightages_courses`
+--
+
+DROP TABLE IF EXISTS `cce_weightages_courses`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `cce_weightages_courses` (
+  `cce_weightage_id` int(11) default NULL,
+  `course_id` int(11) default NULL,
+  KEY `index_cce_weightages_courses_on_cce_weightage_id` (`cce_weightage_id`),
+  KEY `index_cce_weightages_courses_on_course_id` (`course_id`),
+  KEY `index_for_join_table_cce_weightage_courses` (`course_id`,`cce_weightage_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `cce_weightages_courses`
+--
+
+LOCK TABLES `cce_weightages_courses` WRITE;
+/*!40000 ALTER TABLE `cce_weightages_courses` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cce_weightages_courses` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `class_designations`
+--
+
+DROP TABLE IF EXISTS `class_designations`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `class_designations` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) NOT NULL,
+  `cgpa` decimal(15,2) default NULL,
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  `marks` decimal(15,2) default NULL,
+  `course_id` int(11) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `class_designations`
+--
+
+LOCK TABLES `class_designations` WRITE;
+/*!40000 ALTER TABLE `class_designations` DISABLE KEYS */;
+/*!40000 ALTER TABLE `class_designations` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -615,6 +866,7 @@ CREATE TABLE `class_timings` (
   `start_time` time default NULL,
   `end_time` time default NULL,
   `is_break` tinyint(1) default NULL,
+  `is_deleted` tinyint(1) default '0',
   PRIMARY KEY  (`id`),
   KEY `index_class_timings_on_batch_id_and_start_time_and_end_time` (`batch_id`,`start_time`,`end_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -643,7 +895,7 @@ CREATE TABLE `configurations` (
   PRIMARY KEY  (`id`),
   KEY `index_configurations_on_config_key` (`config_key`(10)),
   KEY `index_configurations_on_config_value` (`config_value`(10))
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -652,7 +904,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `configurations` WRITE;
 /*!40000 ALTER TABLE `configurations` DISABLE KEYS */;
-INSERT INTO `configurations` VALUES (1,'InstitutionName','Al Noor Public School'),(2,'InstitutionAddress','Nisar Colony'),(3,'InstitutionPhoneNo','0412662283'),(4,'StudentAttendanceType','Daily'),(5,'CurrencyType','Rs.'),(6,'Locale','en'),(7,'AdmissionNumberAutoIncrement','1'),(8,'EmployeeNumberAutoIncrement','1'),(9,'TotalSmsCount','0'),(10,'AvailableModules','HR'),(11,'AvailableModules','Finance'),(12,'NetworkState','Online'),(13,'FinancialYearStartDate','2012-07-01'),(14,'FinancialYearEndDate','2013-06-30'),(15,'AutomaticLeaveReset','0'),(16,'LeaveResetPeriod','4'),(17,'LastAutoLeaveReset',NULL);
+INSERT INTO `configurations` VALUES (1,'InstitutionName','New Little Folks High School'),(2,'InstitutionAddress','D-Type Colony. Faisalabad'),(3,'InstitutionPhoneNo','0412661725'),(4,'StudentAttendanceType','Daily'),(5,'CurrencyType','Rs.'),(6,'Locale','en'),(7,'AdmissionNumberAutoIncrement','1'),(8,'EmployeeNumberAutoIncrement','1'),(9,'TotalSmsCount','0'),(10,'NetworkState','Online'),(11,'FinancialYearStartDate','2012-07-01'),(12,'FinancialYearEndDate','2013-06-30'),(13,'AutomaticLeaveReset','0'),(14,'LeaveResetPeriod','4'),(15,'LastAutoLeaveReset',NULL),(16,'GPA','0'),(17,'CWA','0'),(18,'CCE','0'),(19,'DefaultCountry','133'),(20,'AvailableModules','HR'),(21,'AvailableModules','Finance'),(22,'EnableNewsCommentModeration','1'),(23,'TimeZone','25'),(24,'job/Batch/1','2012-11-01 13:36:47'),(25,'job/Batch/1','2012-11-01 13:36:48');
 /*!40000 ALTER TABLE `configurations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -695,8 +947,10 @@ CREATE TABLE `courses` (
   `is_deleted` tinyint(1) default '0',
   `created_at` datetime default NULL,
   `updated_at` datetime default NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+  `grading_type` varchar(255) default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `index_courses_on_grading_type` (`grading_type`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -705,8 +959,95 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `courses` WRITE;
 /*!40000 ALTER TABLE `courses` DISABLE KEYS */;
-INSERT INTO `courses` VALUES (1,'Class I','01','',0,'2012-05-29 12:43:07','2012-05-29 12:47:34'),(2,'Class II','02','',0,'2012-05-29 12:44:23','2012-05-29 12:47:48'),(3,'Class III','03','',0,'2012-05-29 12:45:03','2012-05-29 12:48:00'),(4,'Class IV','04','',0,'2012-05-29 12:45:37','2012-05-29 12:48:13'),(5,'Class V','05','',0,'2012-05-29 12:46:29','2012-05-29 12:48:26'),(6,'Class VI','06','',0,'2012-05-29 12:47:09','2012-05-29 12:47:09'),(7,'Class VII','07','',0,'2012-05-29 12:48:59','2012-05-29 12:48:59'),(8,'Class VIII','08','',0,'2012-05-29 12:49:44','2012-05-29 12:49:44'),(9,'Nursery','N','',0,'2012-05-29 12:51:57','2012-05-29 12:51:57'),(10,'Pre Nursery','PN','',0,'2012-05-29 12:52:45','2012-05-29 12:52:45'),(11,'Prep','P','',0,'2012-05-29 12:53:43','2012-05-29 12:53:43');
+INSERT INTO `courses` VALUES (1,'   Pre Nursery','PN','',0,'2012-09-24 18:10:18','2012-09-27 19:35:34','0'),(2,'  Nursery','N','',0,'2012-09-24 18:12:08','2012-09-27 19:40:40','0'),(3,'    Play','P','',0,'2012-09-24 18:13:54','2012-09-27 19:33:51','0'),(4,'Class  I','1st.','',0,'2012-09-24 18:17:14','2012-09-27 19:11:29','0'),(5,'Class  II','2nd.','',0,'2012-09-26 19:44:59','2012-09-27 19:12:11','0'),(6,'Class  III','3rd.','',0,'2012-09-26 19:46:02','2012-09-27 19:13:31','0'),(7,'Class  IV','4th.','',0,'2012-09-26 19:46:50','2012-09-27 19:14:13','0'),(8,'Class  V','5th.','',0,'2012-09-26 19:48:01','2012-09-27 19:12:50','0'),(9,'Class  VI','6th.','',0,'2012-09-26 19:49:57','2012-09-27 19:14:55','0'),(10,'Class  VII','7th.','',0,'2012-09-26 19:51:52','2012-09-27 19:15:41','0'),(11,'Class  VIII','8th.','',0,'2012-09-26 19:52:41','2012-09-27 19:16:29','0'),(12,'Class Secondary','9th.','1st. Year',0,'2012-09-27 17:39:51','2012-09-27 19:10:43','0'),(13,'Class Secondary','10th.','2nd. Year',0,'2012-09-27 17:41:25','2012-09-27 19:19:00','0'),(14,'Higher Secondary','11th.','1st. Year',0,'2012-09-27 17:49:02','2012-09-27 18:50:30','0'),(15,'Higher Secondary','12th.','2nd. Year',0,'2012-09-27 18:54:35','2012-09-27 18:54:35','0');
 /*!40000 ALTER TABLE `courses` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `courses_observation_groups`
+--
+
+DROP TABLE IF EXISTS `courses_observation_groups`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `courses_observation_groups` (
+  `course_id` int(11) default NULL,
+  `observation_group_id` int(11) default NULL,
+  KEY `index_courses_observation_groups_on_observation_group_id` (`observation_group_id`),
+  KEY `index_courses_observation_groups_on_course_id` (`course_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `courses_observation_groups`
+--
+
+LOCK TABLES `courses_observation_groups` WRITE;
+/*!40000 ALTER TABLE `courses_observation_groups` DISABLE KEYS */;
+/*!40000 ALTER TABLE `courses_observation_groups` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `delayed_jobs`
+--
+
+DROP TABLE IF EXISTS `delayed_jobs`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `delayed_jobs` (
+  `id` int(11) NOT NULL auto_increment,
+  `priority` int(11) default '0',
+  `attempts` int(11) default '0',
+  `handler` text,
+  `last_error` text,
+  `run_at` datetime default NULL,
+  `locked_at` datetime default NULL,
+  `failed_at` datetime default NULL,
+  `locked_by` varchar(255) default NULL,
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `index_delayed_jobs_on_locked_by` (`locked_by`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `delayed_jobs`
+--
+
+LOCK TABLES `delayed_jobs` WRITE;
+/*!40000 ALTER TABLE `delayed_jobs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `delayed_jobs` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `descriptive_indicators`
+--
+
+DROP TABLE IF EXISTS `descriptive_indicators`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `descriptive_indicators` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) default NULL,
+  `desc` varchar(255) default NULL,
+  `describable_id` int(11) default NULL,
+  `describable_type` varchar(255) default NULL,
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  `sort_order` int(11) default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `describable_index` (`describable_id`,`describable_type`,`sort_order`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `descriptive_indicators`
+--
+
+LOCK TABLES `descriptive_indicators` WRITE;
+/*!40000 ALTER TABLE `descriptive_indicators` DISABLE KEYS */;
+/*!40000 ALTER TABLE `descriptive_indicators` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -851,7 +1192,7 @@ CREATE TABLE `employee_categories` (
   `prefix` varchar(255) default NULL,
   `status` tinyint(1) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -860,7 +1201,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `employee_categories` WRITE;
 /*!40000 ALTER TABLE `employee_categories` DISABLE KEYS */;
-INSERT INTO `employee_categories` VALUES (1,'Falkia Admin','Admin',1),(3,'Teaching Staff','TS',1),(4,'Non-Teaching Staff','NTS',1),(5,'Finance','Fin',1),(6,'Contract Workers','CW',1);
+INSERT INTO `employee_categories` VALUES (1,'System Admin','Admin',1),(2,'Contract Workers','CW',1),(3,'Finance','Fin',1),(4,'Teaching Staff','TS',1),(5,'Non-Teaching Staff','NTS',1);
 /*!40000 ALTER TABLE `employee_categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -903,7 +1244,7 @@ CREATE TABLE `employee_departments` (
   `name` varchar(255) default NULL,
   `status` tinyint(1) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -912,7 +1253,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `employee_departments` WRITE;
 /*!40000 ALTER TABLE `employee_departments` DISABLE KEYS */;
-INSERT INTO `employee_departments` VALUES (1,'Admin','Falkia Admin',1),(2,'ISL','Islamic Studies',1),(3,'PAK','Pakistan Studies',1),(4,'MAT','Mathematics',1),(5,'ENG','English Language',1),(6,'URD','Urdu Language',1),(7,'SCI','General Science',1),(8,'COM','Computer',1),(9,'GAD','Drawing Gadgets',1),(10,'GKN','General Knowledge',1),(11,'TPT','Transportation',1),(12,'LAB','Computer Lab',1),(13,'LIB','Liberary',1);
+INSERT INTO `employee_departments` VALUES (1,'Admin','System Admin',1);
 /*!40000 ALTER TABLE `employee_departments` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -931,7 +1272,7 @@ CREATE TABLE `employee_grades` (
   `max_hours_day` int(11) default NULL,
   `max_hours_week` int(11) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -940,7 +1281,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `employee_grades` WRITE;
 /*!40000 ALTER TABLE `employee_grades` DISABLE KEYS */;
-INSERT INTO `employee_grades` VALUES (1,'Falkia Admin',0,1,NULL,NULL);
+INSERT INTO `employee_grades` VALUES (1,'System Admin',0,1,NULL,NULL),(2,'Principal',1,1,NULL,NULL),(3,'Head of Department',2,1,NULL,NULL),(4,'Teaching Staff',3,1,2,6);
 /*!40000 ALTER TABLE `employee_grades` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1022,7 +1363,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `employee_positions` WRITE;
 /*!40000 ALTER TABLE `employee_positions` DISABLE KEYS */;
-INSERT INTO `employee_positions` VALUES (1,'Falkia Admin',1,1),(2,'Finance Manager',5,1),(5,'Accountant',5,1),(6,'Cashier',5,1),(7,'Record Keeper',5,1),(8,'Liberarian',4,1),(9,'Driver',4,1),(10,'Sweeper',6,1),(11,'Security Guard',6,1),(12,'Office Boy',4,1),(13,'Lab Incharge',4,1),(14,'Computer Administrator',4,1),(15,'Staff Administrator',3,1);
+INSERT INTO `employee_positions` VALUES (1,'System Admin',1,1),(2,'Accountant',3,1),(3,'Cashier',3,1),(4,'Computer Administrator',5,1),(5,'Driver',2,1),(6,'Finance Manager',3,1),(7,'Lab Incharge',5,1),(8,'Liberarian',5,1),(9,'Office Boy',2,1),(10,'Inventory Controller',5,1),(11,'Security Guard',2,1),(12,'Teaching Staff',4,1),(13,'Sweeper',2,1),(14,'Peon',2,1),(15,'HRM Administrator',1,1);
 /*!40000 ALTER TABLE `employee_positions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1113,7 +1454,7 @@ CREATE TABLE `employees` (
   `user_id` int(11) default NULL,
   PRIMARY KEY  (`id`),
   KEY `index_employees_on_employee_number` (`employee_number`(10))
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -1122,7 +1463,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `employees` WRITE;
 /*!40000 ALTER TABLE `employees` DISABLE KEYS */;
-INSERT INTO `employees` VALUES (1,1,'admin','2012-05-28','Falkia',NULL,'Administrator',NULL,NULL,1,1,NULL,1,NULL,NULL,NULL,NULL,1,NULL,'2011-05-29',NULL,NULL,NULL,NULL,NULL,NULL,133,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'','','','','admin@falkia.com','',NULL,NULL,NULL,'2012-05-28 17:37:17','2012-05-28 20:09:12',NULL,1);
+INSERT INTO `employees` VALUES (1,1,'admin','2012-09-24','Admin',NULL,'User',NULL,NULL,1,1,NULL,1,NULL,NULL,NULL,NULL,1,NULL,'2011-09-25',NULL,NULL,NULL,NULL,NULL,NULL,76,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'noreply@fedena.com',NULL,NULL,NULL,NULL,'2012-09-24 13:49:32','2012-09-24 13:49:32',NULL,1),(2,3,'E002','2012-11-01','Sadaqat','Ali','',1,'Finance Manager',6,1,NULL,1,'CA Inter','',NULL,NULL,1,NULL,'1990-11-01','single',NULL,'','','','Unknown',133,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'theconversant@gmail.com',NULL,NULL,NULL,NULL,'2012-11-01 09:40:17','2012-11-01 14:12:38',NULL,8);
 /*!40000 ALTER TABLE `employees` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1174,7 +1515,7 @@ CREATE TABLE `events` (
   `origin_type` varchar(255) default NULL,
   PRIMARY KEY  (`id`),
   KEY `index_events_on_is_common_and_is_holiday_and_is_exam` (`is_common`,`is_holiday`,`is_exam`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -1183,6 +1524,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `events` WRITE;
 /*!40000 ALTER TABLE `events` DISABLE KEYS */;
+INSERT INTO `events` VALUES (1,'Quaid Day','Very special cermony on Quaid day.','2012-12-25 09:00:00','2012-12-25 09:00:00',1,0,0,0,'2012-09-24 20:16:39','2012-09-24 20:16:39',NULL,NULL),(2,'Meeting','A meeting to start this application.','2012-11-01 00:00:00','2012-11-01 00:00:00',0,0,0,0,'2012-11-01 09:24:19','2012-11-01 09:24:19',NULL,NULL),(3,'Iqbal Day','It is informed that today is a Holy day as Iqbal Day.','2012-11-09 00:00:00','2012-11-09 00:00:00',1,1,0,0,'2012-11-01 14:07:35','2012-11-01 14:07:35',NULL,NULL);
 /*!40000 ALTER TABLE `events` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1201,8 +1543,10 @@ CREATE TABLE `exam_groups` (
   `is_published` tinyint(1) default '0',
   `result_published` tinyint(1) default '0',
   `exam_date` date default NULL,
+  `is_final_exam` tinyint(1) NOT NULL default '0',
+  `cce_exam_category_id` int(11) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -1211,6 +1555,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `exam_groups` WRITE;
 /*!40000 ALTER TABLE `exam_groups` DISABLE KEYS */;
+INSERT INTO `exam_groups` VALUES (1,'1st. Term Exam',9,'MarksAndGrades',0,0,'2012-11-01',0,NULL);
 /*!40000 ALTER TABLE `exam_groups` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1277,6 +1622,91 @@ SET character_set_client = @saved_cs_client;
 LOCK TABLES `exams` WRITE;
 /*!40000 ALTER TABLE `exams` DISABLE KEYS */;
 /*!40000 ALTER TABLE `exams` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `fa_criterias`
+--
+
+DROP TABLE IF EXISTS `fa_criterias`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `fa_criterias` (
+  `id` int(11) NOT NULL auto_increment,
+  `fa_name` varchar(255) default NULL,
+  `desc` varchar(255) default NULL,
+  `fa_group_id` int(11) default NULL,
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  `sort_order` int(11) default NULL,
+  `is_deleted` tinyint(1) default '0',
+  PRIMARY KEY  (`id`),
+  KEY `index_fa_criterias_on_fa_group_id` (`fa_group_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `fa_criterias`
+--
+
+LOCK TABLES `fa_criterias` WRITE;
+/*!40000 ALTER TABLE `fa_criterias` DISABLE KEYS */;
+/*!40000 ALTER TABLE `fa_criterias` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `fa_groups`
+--
+
+DROP TABLE IF EXISTS `fa_groups`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `fa_groups` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) default NULL,
+  `desc` text,
+  `cce_exam_category_id` int(11) default NULL,
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  `cce_grade_set_id` int(11) default NULL,
+  `max_marks` float default '100',
+  `is_deleted` tinyint(1) default '0',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `fa_groups`
+--
+
+LOCK TABLES `fa_groups` WRITE;
+/*!40000 ALTER TABLE `fa_groups` DISABLE KEYS */;
+/*!40000 ALTER TABLE `fa_groups` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `fa_groups_subjects`
+--
+
+DROP TABLE IF EXISTS `fa_groups_subjects`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `fa_groups_subjects` (
+  `subject_id` int(11) default NULL,
+  `fa_group_id` int(11) default NULL,
+  KEY `index_fa_groups_subjects_on_subject_id` (`subject_id`),
+  KEY `index_fa_groups_subjects_on_fa_group_id` (`fa_group_id`),
+  KEY `score_index` (`fa_group_id`,`subject_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `fa_groups_subjects`
+--
+
+LOCK TABLES `fa_groups_subjects` WRITE;
+/*!40000 ALTER TABLE `fa_groups_subjects` DISABLE KEYS */;
+/*!40000 ALTER TABLE `fa_groups_subjects` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1655,9 +2085,11 @@ CREATE TABLE `grading_levels` (
   `is_deleted` tinyint(1) default '0',
   `created_at` datetime default NULL,
   `updated_at` datetime default NULL,
+  `credit_points` decimal(15,2) default NULL,
+  `description` varchar(255) default NULL,
   PRIMARY KEY  (`id`),
   KEY `index_grading_levels_on_batch_id_and_is_deleted` (`batch_id`,`is_deleted`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -1666,8 +2098,66 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `grading_levels` WRITE;
 /*!40000 ALTER TABLE `grading_levels` DISABLE KEYS */;
-INSERT INTO `grading_levels` VALUES (1,'A',NULL,90,NULL,0,'2012-05-28 17:37:16','2012-05-28 17:37:16'),(2,'B',NULL,80,NULL,0,'2012-05-28 17:37:16','2012-05-28 17:37:16'),(3,'C',NULL,70,NULL,0,'2012-05-28 17:37:16','2012-05-28 17:37:16'),(4,'D',NULL,60,NULL,0,'2012-05-28 17:37:16','2012-05-28 17:37:16'),(5,'E',NULL,50,NULL,0,'2012-05-28 17:37:16','2012-05-28 17:37:16'),(6,'F',NULL,0,NULL,0,'2012-05-28 17:37:16','2012-05-28 17:37:16');
+INSERT INTO `grading_levels` VALUES (1,'A+',NULL,90,NULL,0,'2012-09-24 13:47:54','2012-09-28 07:35:38',NULL,'Extra Ordinary'),(2,'A',NULL,80,NULL,0,'2012-09-24 13:47:55','2012-09-28 07:37:05',NULL,'Excellent'),(3,'B',NULL,70,NULL,0,'2012-09-24 13:47:55','2012-09-28 07:37:37',NULL,'Very Good'),(4,'C',NULL,60,NULL,0,'2012-09-24 13:47:55','2012-09-28 07:38:08',NULL,'Good'),(5,'D',NULL,50,NULL,0,'2012-09-24 13:47:55','2012-09-28 07:38:50',NULL,'Satisfactory'),(6,'E',NULL,40,NULL,0,'2012-09-24 13:47:55','2012-09-28 07:39:38',NULL,'Pass'),(7,'F',NULL,0,NULL,0,'2012-09-28 07:46:03','2012-09-28 07:46:03',NULL,'Fail');
 /*!40000 ALTER TABLE `grading_levels` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `grouped_batches`
+--
+
+DROP TABLE IF EXISTS `grouped_batches`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `grouped_batches` (
+  `id` int(11) NOT NULL auto_increment,
+  `batch_group_id` int(11) default NULL,
+  `batch_id` int(11) default NULL,
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `index_grouped_batches_on_batch_group_id` (`batch_group_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `grouped_batches`
+--
+
+LOCK TABLES `grouped_batches` WRITE;
+/*!40000 ALTER TABLE `grouped_batches` DISABLE KEYS */;
+/*!40000 ALTER TABLE `grouped_batches` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `grouped_exam_reports`
+--
+
+DROP TABLE IF EXISTS `grouped_exam_reports`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `grouped_exam_reports` (
+  `id` int(11) NOT NULL auto_increment,
+  `batch_id` int(11) default NULL,
+  `student_id` int(11) default NULL,
+  `exam_group_id` int(11) default NULL,
+  `marks` decimal(15,2) default NULL,
+  `score_type` varchar(255) default NULL,
+  `subject_id` int(11) default NULL,
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `by_batch_student_and_score_type` (`batch_id`,`student_id`,`score_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `grouped_exam_reports`
+--
+
+LOCK TABLES `grouped_exam_reports` WRITE;
+/*!40000 ALTER TABLE `grouped_exam_reports` DISABLE KEYS */;
+/*!40000 ALTER TABLE `grouped_exam_reports` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1681,8 +2171,10 @@ CREATE TABLE `grouped_exams` (
   `id` int(11) NOT NULL auto_increment,
   `exam_group_id` int(11) default NULL,
   `batch_id` int(11) default NULL,
+  `weightage` decimal(15,2) default NULL,
   PRIMARY KEY  (`id`),
-  KEY `index_grouped_exams_on_batch_id` (`batch_id`)
+  KEY `index_grouped_exams_on_batch_id` (`batch_id`),
+  KEY `index_grouped_exams_on_batch_id_and_exam_group_id` (`batch_id`,`exam_group_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
@@ -1723,8 +2215,9 @@ CREATE TABLE `guardians` (
   `education` varchar(255) default NULL,
   `created_at` datetime default NULL,
   `updated_at` datetime default NULL,
+  `user_id` int(11) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -1733,6 +2226,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `guardians` WRITE;
 /*!40000 ALTER TABLE `guardians` DISABLE KEYS */;
+INSERT INTO `guardians` VALUES (1,1,'Muhammad','Irshad','Islam','named.conf@live.com','03457778625','','','P-171/B,','Peoples Colony','Faisalabad','Punjab',133,NULL,'Business','','FSc','2012-09-27 16:51:47','2012-09-27 16:52:33',3),(2,2,'Waseem','Ali','Father','fake@anymail.com','','','03006000000','House No.115','Nisar Colony','Faisalabad','Punjab',133,NULL,'Job Holder','25000 MP','BA','2012-09-27 20:12:44','2012-09-27 20:14:02',5),(3,3,'Niaz','Hussain','Father','','','','','House No.780','Samanabad','Faisalabad','Punjab',133,NULL,'Business','','','2012-09-27 20:51:54','2012-09-27 20:51:54',NULL);
 /*!40000 ALTER TABLE `guardians` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1762,31 +2256,6 @@ SET character_set_client = @saved_cs_client;
 LOCK TABLES `individual_payslip_categories` WRITE;
 /*!40000 ALTER TABLE `individual_payslip_categories` DISABLE KEYS */;
 /*!40000 ALTER TABLE `individual_payslip_categories` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `languages`
---
-
-DROP TABLE IF EXISTS `languages`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `languages` (
-  `id` int(11) NOT NULL auto_increment,
-  `name` varchar(255) default NULL,
-  `code` varchar(255) default NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping data for table `languages`
---
-
-LOCK TABLES `languages` WRITE;
-/*!40000 ALTER TABLE `languages` DISABLE KEYS */;
-INSERT INTO `languages` VALUES (1,'English','en'),(2,'Spanish','es');
-/*!40000 ALTER TABLE `languages` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1836,6 +2305,7 @@ CREATE TABLE `monthly_payslips` (
   `is_rejected` tinyint(1) NOT NULL default '0',
   `rejector_id` int(11) default NULL,
   `reason` varchar(255) default NULL,
+  `remark` varchar(255) default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
@@ -1864,7 +2334,7 @@ CREATE TABLE `news` (
   `created_at` datetime default NULL,
   `updated_at` datetime default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -1873,7 +2343,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `news` WRITE;
 /*!40000 ALTER TABLE `news` DISABLE KEYS */;
-INSERT INTO `news` VALUES (1,'Starting 29/05/2012','<p>&nbsp;This is v7, which is final almost.</p>',1,'2012-05-29 06:43:01','2012-05-29 06:43:01'),(2,'Settings Module Completed','<p>&nbsp;Pls Check</p>',1,'2012-05-30 10:01:17','2012-05-30 10:01:17');
+INSERT INTO `news` VALUES (1,'Welcome to the New Release','<p>&nbsp;please check the new release <strong><em>2.3 version</em></strong>. It is more beautiful compared to the former.</p>',1,'2012-09-24 19:12:39','2012-09-24 19:16:13'),(2,'A New Era To School Management System','<p>&nbsp;Please visit the site and leave comments about it.</p>',1,'2012-11-01 09:08:50','2012-11-01 09:08:50'),(3,'Students Examination','<p>&nbsp;It is informed to all the students that their exam schedule will be announced on Monday.</p>',1,'2012-11-01 13:32:15','2012-11-01 13:32:15');
 /*!40000 ALTER TABLE `news` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1891,8 +2361,9 @@ CREATE TABLE `news_comments` (
   `author_id` int(11) default NULL,
   `created_at` datetime default NULL,
   `updated_at` datetime default NULL,
+  `is_approved` tinyint(1) default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -1901,7 +2372,69 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `news_comments` WRITE;
 /*!40000 ALTER TABLE `news_comments` DISABLE KEYS */;
+INSERT INTO `news_comments` VALUES (1,'Yes it is! great app so far.',1,1,'2012-09-24 20:30:18','2012-09-24 20:30:18',1),(2,'I like it.',2,2,'2012-11-01 09:31:33','2012-11-01 09:31:33',0);
 /*!40000 ALTER TABLE `news_comments` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `observation_groups`
+--
+
+DROP TABLE IF EXISTS `observation_groups`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `observation_groups` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) default NULL,
+  `header_name` varchar(255) default NULL,
+  `desc` varchar(255) default NULL,
+  `cce_grade_set_id` varchar(255) default NULL,
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  `observation_kind` varchar(255) default NULL,
+  `max_marks` float default NULL,
+  `is_deleted` tinyint(1) default '0',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `observation_groups`
+--
+
+LOCK TABLES `observation_groups` WRITE;
+/*!40000 ALTER TABLE `observation_groups` DISABLE KEYS */;
+/*!40000 ALTER TABLE `observation_groups` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `observations`
+--
+
+DROP TABLE IF EXISTS `observations`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `observations` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) default NULL,
+  `desc` varchar(255) default NULL,
+  `is_active` tinyint(1) default NULL,
+  `observation_group_id` int(11) default NULL,
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  `sort_order` int(11) default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `index_observations_on_observation_group_id` (`observation_group_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `observations`
+--
+
+LOCK TABLES `observations` WRITE;
+/*!40000 ALTER TABLE `observations` DISABLE KEYS */;
+/*!40000 ALTER TABLE `observations` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1960,6 +2493,37 @@ LOCK TABLES `period_entries` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `previous_exam_scores`
+--
+
+DROP TABLE IF EXISTS `previous_exam_scores`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `previous_exam_scores` (
+  `id` int(11) NOT NULL auto_increment,
+  `student_id` int(11) default NULL,
+  `exam_id` int(11) default NULL,
+  `marks` decimal(7,2) default NULL,
+  `grading_level_id` int(11) default NULL,
+  `remarks` varchar(255) default NULL,
+  `is_failed` tinyint(1) default NULL,
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `index_previous_exam_scores_on_student_id_and_exam_id` (`student_id`,`exam_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `previous_exam_scores`
+--
+
+LOCK TABLES `previous_exam_scores` WRITE;
+/*!40000 ALTER TABLE `previous_exam_scores` DISABLE KEYS */;
+/*!40000 ALTER TABLE `previous_exam_scores` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `privileges`
 --
 
@@ -1973,7 +2537,7 @@ CREATE TABLE `privileges` (
   `updated_at` datetime default NULL,
   `description` text,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -1982,7 +2546,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `privileges` WRITE;
 /*!40000 ALTER TABLE `privileges` DISABLE KEYS */;
-INSERT INTO `privileges` VALUES (1,'ExaminationControl','2012-05-28 17:37:17','2012-05-28 17:37:17','examination_control_privilege'),(2,'EnterResults','2012-05-28 17:37:17','2012-05-28 17:37:17','enter_results_privilege'),(3,'ViewResults','2012-05-28 17:37:17','2012-05-28 17:37:17','view_results_privilege'),(4,'Admission','2012-05-28 17:37:18','2012-05-28 17:37:18','admission_privilege'),(5,'StudentsControl','2012-05-28 17:37:18','2012-05-28 17:37:18','students_control_privilege'),(6,'ManageNews','2012-05-28 17:37:18','2012-05-28 17:37:18','manage_news_privilege'),(7,'ManageTimetable','2012-05-28 17:37:18','2012-05-28 17:37:18','manage_timetable_privilege'),(8,'StudentAttendanceView','2012-05-28 17:37:18','2012-05-28 17:37:18','student_attendance_view_privilege'),(9,'HrBasics','2012-05-28 17:37:18','2012-05-28 17:37:18','hr_basics_privilege'),(10,'AddNewBatch','2012-05-28 17:37:18','2012-05-28 17:37:18','add_new_batch_privilege'),(11,'SubjectMaster','2012-05-28 17:37:18','2012-05-28 17:37:18','subject_master_privilege'),(12,'EventManagement','2012-05-28 17:37:18','2012-05-28 17:37:18','event_management_privilege'),(13,'GeneralSettings','2012-05-28 17:37:18','2012-05-28 17:37:18','general_settings_privilege'),(14,'FinanceControl','2012-05-28 17:37:18','2012-05-28 17:37:18','finance_control_privilege'),(15,'TimetableView','2012-05-28 17:37:18','2012-05-28 17:37:18','timetable_view_privilege'),(16,'StudentAttendanceRegister','2012-05-28 17:37:18','2012-05-28 17:37:18','student_attendance_register_privilege'),(17,'EmployeeAttendance','2012-05-28 17:37:18','2012-05-28 17:37:18','employee_attendance_privilege'),(18,'PayslipPowers','2012-05-28 17:37:18','2012-05-28 17:37:18','payslip_powers_privilege'),(19,'EmployeeSearch','2012-05-28 17:37:18','2012-05-28 17:37:18','employee_search_privilege'),(20,'SMSManagement','2012-05-28 17:37:18','2012-05-28 17:37:18','sms_management_privilege');
+INSERT INTO `privileges` VALUES (1,'ExaminationControl','2012-09-24 13:47:31','2012-09-24 13:47:31','examination_control_privilege'),(2,'EnterResults','2012-09-24 13:47:31','2012-09-24 13:47:31','enter_results_privilege'),(3,'ViewResults','2012-09-24 13:47:31','2012-09-24 13:47:31','view_results_privilege'),(4,'Admission','2012-09-24 13:47:31','2012-09-24 13:47:31','admission_privilege'),(5,'StudentsControl','2012-09-24 13:47:31','2012-09-24 13:47:31','students_control_privilege'),(6,'ManageNews','2012-09-24 13:47:31','2012-09-24 13:47:31','manage_news_privilege'),(7,'ManageTimetable','2012-09-24 13:47:31','2012-09-24 13:47:31','manage_timetable_privilege'),(8,'StudentAttendanceView','2012-09-24 13:47:31','2012-09-24 13:47:31','student_attendance_view_privilege'),(9,'HrBasics','2012-09-24 13:47:31','2012-09-24 13:47:31','hr_basics_privilege'),(10,'AddNewBatch','2012-09-24 13:47:31','2012-09-24 13:47:31','add_new_batch_privilege'),(11,'SubjectMaster','2012-09-24 13:47:31','2012-09-24 13:47:31','subject_master_privilege'),(12,'EventManagement','2012-09-24 13:47:31','2012-09-24 13:47:31','event_management_privilege'),(13,'GeneralSettings','2012-09-24 13:47:31','2012-09-24 13:47:31','general_settings_privilege'),(14,'FinanceControl','2012-09-24 13:47:31','2012-09-24 13:47:31','finance_control_privilege'),(15,'TimetableView','2012-09-24 13:47:31','2012-09-24 13:47:31','timetable_view_privilege'),(16,'StudentAttendanceRegister','2012-09-24 13:47:31','2012-09-24 13:47:31','student_attendance_register_privilege'),(17,'EmployeeAttendance','2012-09-24 13:47:31','2012-09-24 13:47:31','employee_attendance_privilege'),(18,'PayslipPowers','2012-09-24 13:47:31','2012-09-24 13:47:31','payslip_powers_privilege'),(19,'EmployeeSearch','2012-09-24 13:47:31','2012-09-24 13:47:31','employee_search_privilege'),(20,'SMSManagement','2012-09-24 13:47:31','2012-09-24 13:47:31','sms_management_privilege'),(21,'StudentView','2012-09-24 13:47:40','2012-09-24 13:53:03','student_view_privilege');
 /*!40000 ALTER TABLE `privileges` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2006,7 +2570,41 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `privileges_users` WRITE;
 /*!40000 ALTER TABLE `privileges_users` DISABLE KEYS */;
+INSERT INTO `privileges_users` VALUES (8,21),(8,1);
 /*!40000 ALTER TABLE `privileges_users` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ranking_levels`
+--
+
+DROP TABLE IF EXISTS `ranking_levels`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `ranking_levels` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) NOT NULL,
+  `gpa` decimal(15,2) default NULL,
+  `marks` decimal(15,2) default NULL,
+  `subject_count` int(11) default NULL,
+  `priority` int(11) default NULL,
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  `full_course` tinyint(1) default '0',
+  `course_id` int(11) default NULL,
+  `subject_limit_type` varchar(255) default NULL,
+  `marks_limit_type` varchar(255) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `ranking_levels`
+--
+
+LOCK TABLES `ranking_levels` WRITE;
+/*!40000 ALTER TABLE `ranking_levels` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ranking_levels` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -2029,7 +2627,7 @@ CREATE TABLE `reminders` (
   `updated_at` datetime default NULL,
   PRIMARY KEY  (`id`),
   KEY `index_reminders_on_recipient` (`recipient`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -2038,6 +2636,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `reminders` WRITE;
 /*!40000 ALTER TABLE `reminders` DISABLE KEYS */;
+INSERT INTO `reminders` VALUES (1,1,1,'New Event : Quaid Day',' New event description : Very special cermony on Quaid day.  Start Date : 25/12/2012 09:00 AM  End Date : 25/12/2012 09:00 AM',1,0,0,'2012-09-24 20:17:20','2012-09-25 07:45:46'),(2,2,1,'Reminder 1','My result card is not issued yet, please issue it as soon as possible.',1,0,0,'2012-11-01 09:31:06','2012-11-01 09:32:35'),(3,1,2,'Noted','Your request has been noted, please contact your teacher for further inquiry.',1,0,0,'2012-11-01 09:33:33','2012-11-01 14:03:50'),(4,2,1,'Noted','Sir, I already in contact with my tutor but he says it is not his duty.',1,0,0,'2012-11-01 14:04:57','2012-11-01 14:06:03'),(5,1,1,'New Event : Iqbal Day',' New event description : It is informed that today is a Holy day as Iqbal Day.  Start Date : 09/11/2012 12:00 AM  End Date : 09/11/2012 12:00 AM',0,0,0,'2012-11-01 14:08:11','2012-11-01 14:08:11'),(6,1,2,'New Event : Iqbal Day',' New event description : It is informed that today is a Holy day as Iqbal Day.  Start Date : 09/11/2012 12:00 AM  End Date : 09/11/2012 12:00 AM',0,0,0,'2012-11-01 14:08:11','2012-11-01 14:08:11'),(7,1,3,'New Event : Iqbal Day',' New event description : It is informed that today is a Holy day as Iqbal Day.  Start Date : 09/11/2012 12:00 AM  End Date : 09/11/2012 12:00 AM',0,0,0,'2012-11-01 14:08:11','2012-11-01 14:08:11'),(8,1,4,'New Event : Iqbal Day',' New event description : It is informed that today is a Holy day as Iqbal Day.  Start Date : 09/11/2012 12:00 AM  End Date : 09/11/2012 12:00 AM',0,0,0,'2012-11-01 14:08:11','2012-11-01 14:08:11'),(9,1,5,'New Event : Iqbal Day',' New event description : It is informed that today is a Holy day as Iqbal Day.  Start Date : 09/11/2012 12:00 AM  End Date : 09/11/2012 12:00 AM',0,0,0,'2012-11-01 14:08:11','2012-11-01 14:08:11'),(10,1,6,'New Event : Iqbal Day',' New event description : It is informed that today is a Holy day as Iqbal Day.  Start Date : 09/11/2012 12:00 AM  End Date : 09/11/2012 12:00 AM',0,0,0,'2012-11-01 14:08:11','2012-11-01 14:08:11'),(11,1,7,'New Event : Iqbal Day',' New event description : It is informed that today is a Holy day as Iqbal Day.  Start Date : 09/11/2012 12:00 AM  End Date : 09/11/2012 12:00 AM',0,0,0,'2012-11-01 14:08:11','2012-11-01 14:08:11'),(12,1,8,'New Event : Iqbal Day',' New event description : It is informed that today is a Holy day as Iqbal Day.  Start Date : 09/11/2012 12:00 AM  End Date : 09/11/2012 12:00 AM',0,0,0,'2012-11-01 14:08:11','2012-11-01 14:08:11');
 /*!40000 ALTER TABLE `reminders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2060,8 +2659,89 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `schema_migrations` WRITE;
 /*!40000 ALTER TABLE `schema_migrations` DISABLE KEYS */;
-INSERT INTO `schema_migrations` VALUES ('20090622100004'),('20090622102004'),('20090622104053'),('20090622104054'),('20090622114927'),('20090622115927'),('20090703074822'),('20090706170408'),('20090715234257'),('20090715234258'),('20090717124241'),('20090717126241'),('20090718050113'),('20090718050453'),('20090718050921'),('20090718052749'),('20090731092833'),('20090818045411'),('20090818050018'),('20090904071048'),('20090904071548'),('20090904071642'),('20090904071905'),('20090904071906'),('20090904071907'),('20090904071908'),('20090904071909'),('20090910062751'),('20090914095002'),('20090914114212'),('20090916052300'),('20090917052349'),('20090917065256'),('20090924081520'),('20090926071527'),('20091009093746'),('20091026065251'),('20091202050910'),('20091202053600'),('20091202104818'),('20091207084711'),('20091207085849'),('20091207090412'),('20091217191652'),('20091217201118'),('20091224063502'),('20100403073735'),('20100403092229'),('20100403093355'),('20100412105036'),('20100412105116'),('20100422110336'),('20100426094532'),('20100429093616'),('20100505075459'),('20100515063157'),('20100515063814'),('20100520073311'),('20100524093457'),('20100525055716'),('20100602115152'),('20100604103435'),('20100604103916'),('20100604104308'),('20100604104759'),('20100609073016'),('20100609074544'),('20100730092747'),('20100731053458'),('20100731054033'),('20100731055437'),('20101209063633'),('20110221051223'),('20110419101802'),('20110510121550'),('20110511053223'),('20110516110336'),('20110706114907'),('20110711100500'),('20110721122326'),('20110728115723'),('20110729055539'),('20110730100503'),('20110805072425'),('20110810052138'),('20110912062640'),('20110928054502'),('20111015111840'),('20111020074717'),('20111105052819');
+INSERT INTO `schema_migrations` VALUES ('20090622100004'),('20090622102004'),('20090622104053'),('20090622104054'),('20090622114927'),('20090622115927'),('20090703074822'),('20090706170408'),('20090715234257'),('20090715234258'),('20090717124241'),('20090717126241'),('20090718050113'),('20090718050453'),('20090718050921'),('20090718052749'),('20090731092833'),('20090818045411'),('20090818050018'),('20090904071048'),('20090904071548'),('20090904071642'),('20090904071905'),('20090904071906'),('20090904071907'),('20090904071908'),('20090904071909'),('20090910062751'),('20090914095002'),('20090914114212'),('20090916052300'),('20090917052349'),('20090917065256'),('20090924081520'),('20090926071527'),('20091009093746'),('20091026065251'),('20091202050910'),('20091202053600'),('20091202104818'),('20091207084711'),('20091207085849'),('20091207090412'),('20091217191652'),('20091217201118'),('20091224063502'),('20100403073735'),('20100403092229'),('20100403093355'),('20100412105036'),('20100412105116'),('20100422110336'),('20100426094532'),('20100429093616'),('20100505075459'),('20100515063157'),('20100515063814'),('20100520073311'),('20100524093457'),('20100525055716'),('20100602115152'),('20100604103435'),('20100604103916'),('20100604104308'),('20100604104759'),('20100609073016'),('20100609074544'),('20100730092747'),('20100731053458'),('20100731054033'),('20100731055437'),('20101209063633'),('20110221051223'),('20110510121550'),('20110511053223'),('20110516110336'),('20110706114907'),('20110711100500'),('20110721122326'),('20110728115723'),('20110729055539'),('20110730100503'),('20110805072425'),('20110810052138'),('20110912062640'),('20110928054502'),('20111015111840'),('20111020074717'),('20111105052819'),('20120321065124'),('20120326114112'),('20120404051019'),('20120404051814'),('20120404052524'),('20120410081920'),('20120413090231'),('20120420085643'),('20120421061939'),('20120421062319'),('20120421062549'),('20120421062750'),('20120421062917'),('20120421063035'),('20120423061415'),('20120423100037'),('20120424092335'),('20120425052412'),('20120427102307'),('20120503062405'),('20120503112304'),('20120504123001'),('20120507064439'),('20120508085619'),('20120510070334'),('20120514050238'),('20120514050318'),('20120514050339'),('20120514050353'),('20120514050415'),('20120514050433'),('20120514050455'),('20120514050500'),('20120514050522'),('20120514050548'),('20120514050603'),('20120514063103'),('20120514063142'),('20120516052659'),('20120517112833'),('20120517122038'),('20120518091221'),('20120521120315'),('20120522065318'),('20120522065410'),('20120525100324'),('20120528060855'),('20120530120325'),('20120602095356'),('20120606050404'),('20120606050437'),('20120608090107'),('20120608090126'),('20120613063621'),('20120613070054'),('20120614092829'),('20120615084815'),('20120615085346'),('20120615103301'),('20120618053150'),('20120618102301'),('20120625072331'),('20120625073818'),('20120626082424'),('20120702062719'),('20120704103545'),('20120706090514'),('20120706103712'),('20120710054428'),('20120816045034');
 /*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `school_details`
+--
+
+DROP TABLE IF EXISTS `school_details`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `school_details` (
+  `id` int(11) NOT NULL auto_increment,
+  `school_id` int(11) default NULL,
+  `logo_file_name` varchar(255) default NULL,
+  `logo_content_type` varchar(255) default NULL,
+  `logo_file_size` varchar(255) default NULL,
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `school_details`
+--
+
+LOCK TABLES `school_details` WRITE;
+/*!40000 ALTER TABLE `school_details` DISABLE KEYS */;
+INSERT INTO `school_details` VALUES (1,NULL,NULL,NULL,NULL,'2012-09-24 17:47:34','2012-09-24 17:47:34');
+/*!40000 ALTER TABLE `school_details` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sms_logs`
+--
+
+DROP TABLE IF EXISTS `sms_logs`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `sms_logs` (
+  `id` int(11) NOT NULL auto_increment,
+  `mobile` varchar(255) default NULL,
+  `gateway_response` varchar(255) default NULL,
+  `sms_message_id` varchar(255) default NULL,
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `sms_logs`
+--
+
+LOCK TABLES `sms_logs` WRITE;
+/*!40000 ALTER TABLE `sms_logs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sms_logs` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sms_messages`
+--
+
+DROP TABLE IF EXISTS `sms_messages`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `sms_messages` (
+  `id` int(11) NOT NULL auto_increment,
+  `body` varchar(255) default NULL,
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `sms_messages`
+--
+
+LOCK TABLES `sms_messages` WRITE;
+/*!40000 ALTER TABLE `sms_messages` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sms_messages` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -2085,7 +2765,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `sms_settings` WRITE;
 /*!40000 ALTER TABLE `sms_settings` DISABLE KEYS */;
-INSERT INTO `sms_settings` VALUES (1,'ApplicationEnabled',0),(2,'ParentSmsEnabled',0),(3,'EmployeeSmsEnabled',0),(4,'StudentSmsEnabled',0),(5,'ResultPublishEnabled',0),(6,'StudentAdmissionEnabled',0),(7,'ExamScheduleResultEnabled',0),(8,'AttendanceEnabled',0),(9,'NewsEventsEnabled',0);
+INSERT INTO `sms_settings` VALUES (1,'ApplicationEnabled',1),(2,'ParentSmsEnabled',1),(3,'EmployeeSmsEnabled',1),(4,'StudentSmsEnabled',1),(5,'ResultPublishEnabled',0),(6,'StudentAdmissionEnabled',1),(7,'ExamScheduleResultEnabled',1),(8,'AttendanceEnabled',1),(9,'NewsEventsEnabled',1);
 /*!40000 ALTER TABLE `sms_settings` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2150,7 +2830,7 @@ CREATE TABLE `student_categories` (
   `name` varchar(255) default NULL,
   `is_deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -2159,7 +2839,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `student_categories` WRITE;
 /*!40000 ALTER TABLE `student_categories` DISABLE KEYS */;
-INSERT INTO `student_categories` VALUES (1,'General',0),(2,'Deserving',0),(3,'Sibling',0),(4,'Handicap',0);
+INSERT INTO `student_categories` VALUES (1,'General',0),(2,'Handicap',0),(3,'Deserving',0);
 /*!40000 ALTER TABLE `student_categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2178,7 +2858,7 @@ CREATE TABLE `student_previous_datas` (
   `course` varchar(255) default NULL,
   `total_mark` varchar(255) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -2187,6 +2867,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `student_previous_datas` WRITE;
 /*!40000 ALTER TABLE `student_previous_datas` DISABLE KEYS */;
+INSERT INTO `student_previous_datas` VALUES (1,1,'Anmol Public School','2007','Prep','85');
 /*!40000 ALTER TABLE `student_previous_datas` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2263,8 +2944,9 @@ CREATE TABLE `students` (
   `user_id` int(11) default NULL,
   PRIMARY KEY  (`id`),
   KEY `index_students_on_admission_no` (`admission_no`(10)),
-  KEY `index_students_on_first_name_and_middle_name_and_last_name` (`first_name`(10),`middle_name`(10),`last_name`(10))
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  KEY `index_students_on_first_name_and_middle_name_and_last_name` (`first_name`(10),`middle_name`(10),`last_name`(10)),
+  KEY `index_students_on_batch_id` (`batch_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -2273,6 +2955,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `students` WRITE;
 /*!40000 ALTER TABLE `students` DISABLE KEYS */;
+INSERT INTO `students` VALUES (1,'NLF001',NULL,'2008-09-17','Moeen','','Irshad',4,'2005-09-15','m','B+','Faisalabad',133,'Punjabi','Islam',NULL,'P-171/B,','Peoples Colony','Faisalabad','Punjab','',133,'0418727171','03457778625','theconversant@gmail.com',1,1,NULL,NULL,NULL,NULL,1,0,'2012-09-27 16:48:34','2012-09-27 16:52:33',0,NULL,2),(2,'NLF002',NULL,'2012-09-27','Azeem','','Ali',3,'2009-09-16','m','AB+','Faisalabad',133,'Punjabi','Islam',NULL,'House No.115','Nisar Colony','Faisalabad','Punjab','',133,'','','',2,1,NULL,NULL,NULL,NULL,1,0,'2012-09-27 20:03:56','2012-09-27 20:14:02',0,NULL,4),(3,'NLF003',NULL,'2012-09-27','Naeem','','Ahmed',3,'2009-05-13','m','A-','Faisalabad',133,'Punjabi','Islam',NULL,'House No.780','Samanabad','Faisalabad','Punjab','',133,'','03314567891','noemail@nomail.com',NULL,1,NULL,NULL,NULL,NULL,1,0,'2012-09-27 20:35:03','2012-09-27 20:35:03',0,NULL,6);
 /*!40000 ALTER TABLE `students` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2303,6 +2986,39 @@ LOCK TABLES `students_subjects` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `subject_leaves`
+--
+
+DROP TABLE IF EXISTS `subject_leaves`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `subject_leaves` (
+  `id` int(11) NOT NULL auto_increment,
+  `student_id` int(11) default NULL,
+  `month_date` date default NULL,
+  `subject_id` int(11) default NULL,
+  `employee_id` int(11) default NULL,
+  `class_timing_id` int(11) default NULL,
+  `reason` varchar(255) default NULL,
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  `batch_id` int(11) default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `index_subject_leaves_on_month_date_and_subject_id_and_batch_id` (`month_date`,`subject_id`,`batch_id`),
+  KEY `index_subject_leaves_on_student_id_and_batch_id` (`student_id`,`batch_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `subject_leaves`
+--
+
+LOCK TABLES `subject_leaves` WRITE;
+/*!40000 ALTER TABLE `subject_leaves` DISABLE KEYS */;
+/*!40000 ALTER TABLE `subject_leaves` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `subjects`
 --
 
@@ -2320,9 +3036,12 @@ CREATE TABLE `subjects` (
   `is_deleted` tinyint(1) default '0',
   `created_at` datetime default NULL,
   `updated_at` datetime default NULL,
+  `credit_hours` decimal(15,2) default NULL,
+  `prefer_consecutive` tinyint(1) default '0',
+  `amount` decimal(15,2) default NULL,
   PRIMARY KEY  (`id`),
   KEY `index_subjects_on_batch_id_and_elective_group_id_and_is_deleted` (`batch_id`,`elective_group_id`,`is_deleted`)
-) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -2331,8 +3050,36 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `subjects` WRITE;
 /*!40000 ALTER TABLE `subjects` DISABLE KEYS */;
-INSERT INTO `subjects` VALUES (1,'Islamic Studies','IS',10,0,3,NULL,0,'2012-05-29 13:08:01','2012-05-29 13:08:01'),(2,'Pakistan Studies','PS',10,0,3,NULL,0,'2012-05-29 13:23:41','2012-05-29 13:23:41'),(3,'Islamic Studies','IS',1,0,3,NULL,0,'2012-05-29 17:15:40','2012-05-30 03:58:35'),(4,'Pakistan Studies','PS',1,0,3,NULL,0,'2012-05-29 17:16:29','2012-05-30 03:59:03'),(5,'Urdu Language','UL',1,0,6,NULL,0,'2012-05-29 17:26:13','2012-05-29 17:26:13'),(6,'Mathematics','MS',1,0,6,NULL,0,'2012-05-29 17:28:31','2012-05-30 04:00:02'),(7,'English Language','EL',1,0,6,NULL,0,'2012-05-29 17:36:55','2012-05-29 17:36:55'),(8,'Drawing Gadgets','DG',1,0,3,NULL,0,'2012-05-30 01:36:29','2012-05-30 04:01:04'),(9,'General Knowledge','GK',1,0,3,NULL,0,'2012-05-30 01:37:47','2012-05-30 01:37:47'),(10,'Islamic Studies','IS',2,0,6,NULL,0,'2012-05-30 01:40:37','2012-05-30 01:40:37'),(11,'Pakistan Studies','PS',2,0,6,NULL,0,'2012-05-30 01:41:34','2012-05-30 01:41:34'),(12,'Urdu Language','UL',2,0,6,NULL,0,'2012-05-30 01:42:56','2012-05-30 01:42:56'),(13,'Mathematics','MS',2,0,6,NULL,0,'2012-05-30 01:44:01','2012-05-30 09:45:18'),(14,'English Language','EL',2,0,6,NULL,0,'2012-05-30 01:45:43','2012-05-30 01:45:43'),(15,'Drawing Gadgets','DG',2,0,3,NULL,0,'2012-05-30 01:46:47','2012-05-30 09:45:40'),(16,'General Knowledge','GK',2,0,3,NULL,0,'2012-05-30 01:49:06','2012-05-30 01:49:06'),(17,'Islamic Studies','IS',3,0,3,NULL,0,'2012-05-30 01:51:11','2012-05-30 09:46:15'),(18,'Pakistan Studies','PS',3,0,3,NULL,0,'2012-05-30 01:52:27','2012-05-30 09:46:27'),(19,'Urdu Language','UL',3,0,6,NULL,0,'2012-05-30 01:53:30','2012-05-30 01:53:30'),(20,'Mathematics','MS',3,0,6,NULL,0,'2012-05-30 01:54:43','2012-05-30 09:49:14'),(21,'English Language','EL',3,0,6,NULL,0,'2012-05-30 01:55:34','2012-05-30 01:55:34'),(22,'Drawing Gadgets','DG',3,0,3,NULL,0,'2012-05-30 01:56:19','2012-05-30 09:46:58'),(23,'General Knowledge','GK',3,0,3,NULL,0,'2012-05-30 01:57:41','2012-05-30 01:57:41'),(24,'Islamic Studies','IS',4,0,3,NULL,0,'2012-05-30 01:59:07','2012-05-30 09:49:54'),(25,'Pakistan Studies','PS',4,0,3,NULL,0,'2012-05-30 02:00:07','2012-05-30 09:50:04'),(26,'Urdu Language','UL',4,0,6,NULL,0,'2012-05-30 02:02:16','2012-05-30 02:02:16'),(27,'Mathematics','MS',4,0,6,NULL,0,'2012-05-30 02:03:29','2012-05-30 09:50:19'),(28,'English Language','EL',4,0,6,NULL,0,'2012-05-30 02:04:28','2012-05-30 02:04:28'),(29,'Drawing Gadgets','DG',4,0,3,NULL,0,'2012-05-30 02:05:16','2012-05-30 09:50:46'),(30,'General Knowledge','GK',4,0,3,NULL,0,'2012-05-30 02:06:13','2012-05-30 02:06:13'),(31,'Islamic Studies','IS',5,0,3,NULL,0,'2012-05-30 02:12:00','2012-05-30 09:51:15'),(32,'Pakistan Studies','PS',5,0,3,NULL,0,'2012-05-30 02:12:54','2012-05-30 09:51:27'),(33,'Urdu Language','UL',5,0,6,NULL,0,'2012-05-30 02:13:39','2012-05-30 02:13:39'),(34,'Mathematics','MS',5,0,6,NULL,0,'2012-05-30 02:14:33','2012-05-30 09:51:41'),(35,'English Language','EL',5,0,6,NULL,0,'2012-05-30 02:15:21','2012-05-30 02:15:21'),(36,'Computer','CR',5,0,6,NULL,1,'2012-05-30 02:55:59','2012-05-30 09:53:17'),(37,'General Science','GS',5,0,3,NULL,0,'2012-05-30 03:01:48','2012-05-30 09:52:24'),(38,'Drawing Gadgets','DG',5,0,3,NULL,0,'2012-05-30 03:02:45','2012-05-30 09:52:51'),(39,'Islamic Studies','IS',6,0,3,NULL,0,'2012-05-30 03:04:34','2012-05-30 03:04:34'),(40,'Pakistan Studies','PS',6,0,3,NULL,0,'2012-05-30 03:05:18','2012-05-30 03:05:18'),(41,'Urdu Language','UL',6,0,6,NULL,0,'2012-05-30 03:06:41','2012-05-30 03:06:41'),(42,'Mathematics','MA',6,0,6,NULL,0,'2012-05-30 03:07:22','2012-05-30 03:07:22'),(43,'English Language','EL',6,0,6,NULL,0,'2012-05-30 03:08:05','2012-05-30 03:08:05'),(44,'General Science','GS',6,0,3,NULL,0,'2012-05-30 03:14:22','2012-05-30 09:57:16'),(45,'Computer','CO',6,0,3,NULL,0,'2012-05-30 03:15:22','2012-05-30 09:57:48'),(46,'Islamic Studies','IS',7,0,3,NULL,0,'2012-05-30 03:17:18','2012-05-30 03:17:18'),(47,'Pakistan Studies','PS',7,0,3,NULL,0,'2012-05-30 03:17:56','2012-05-30 03:17:56'),(48,'Urdu Language','UL',7,0,6,NULL,0,'2012-05-30 03:18:55','2012-05-30 03:18:55'),(49,'Mathematics','MS',7,0,6,NULL,0,'2012-05-30 03:19:35','2012-05-30 09:58:23'),(50,'English Language','EL',7,0,6,NULL,0,'2012-05-30 03:22:24','2012-05-30 03:22:24'),(51,'General Science','GS',7,0,3,NULL,0,'2012-05-30 03:23:25','2012-05-30 09:58:36'),(52,'Computer','CO',7,0,3,NULL,0,'2012-05-30 03:26:05','2012-05-30 09:58:46'),(53,'Islamic Studies','IS',8,0,3,NULL,0,'2012-05-30 03:29:01','2012-05-30 03:29:01'),(54,'Pakistan Studies','PS',8,0,3,NULL,0,'2012-05-30 03:30:19','2012-05-30 03:30:19'),(55,'Urdu Language','UL',8,0,6,NULL,0,'2012-05-30 03:31:14','2012-05-30 03:31:14'),(56,'Mathematics','MS',8,0,6,NULL,0,'2012-05-30 03:32:01','2012-05-30 09:59:21'),(57,'English Language','EL',8,0,6,NULL,0,'2012-05-30 03:33:02','2012-05-30 03:33:02'),(58,'General Science','GS',8,0,3,NULL,0,'2012-05-30 03:35:09','2012-05-30 09:59:32'),(59,'Computer','CO',8,0,3,NULL,0,'2012-05-30 03:39:09','2012-05-30 09:59:42'),(60,'Urdu Language','UL',10,0,6,NULL,0,'2012-05-30 03:42:03','2012-05-30 03:42:03'),(61,'Counting','CG',10,0,6,NULL,0,'2012-05-30 03:43:06','2012-05-30 09:40:32'),(62,'English Language','EL',10,0,6,NULL,0,'2012-05-30 03:44:05','2012-05-30 03:45:04'),(63,'Drawing Gadgets','DG',10,0,6,NULL,0,'2012-05-30 03:45:51','2012-05-30 03:45:51'),(64,'Islamic Studies','IS',9,0,3,NULL,0,'2012-05-30 03:47:23','2012-05-30 03:47:23'),(65,'Pakistan Studies','PS',9,0,3,NULL,0,'2012-05-30 03:48:06','2012-05-30 03:48:06'),(66,'Urdu Language','UL',9,0,6,NULL,0,'2012-05-30 03:49:01','2012-05-30 03:49:01'),(67,'Counting','CG',9,0,6,NULL,0,'2012-05-30 03:49:49','2012-05-30 09:39:44'),(68,'English Language','EL',9,0,6,NULL,0,'2012-05-30 03:50:41','2012-05-30 03:50:41'),(69,'Drawing Gadgets','DG',9,0,6,NULL,0,'2012-05-30 03:51:46','2012-05-30 03:51:46'),(70,'Islamic Studies','IS',11,0,3,NULL,0,'2012-05-30 03:53:00','2012-05-30 03:53:00'),(71,'Pakistan Studies','PS',11,0,3,NULL,0,'2012-05-30 03:53:42','2012-05-30 03:53:42'),(72,'Urdu Language','UL',11,0,6,NULL,0,'2012-05-30 03:54:32','2012-05-30 03:54:32'),(73,'Counting','CG',11,0,6,NULL,0,'2012-05-30 03:56:09','2012-05-30 09:40:05'),(74,'English Language','EL',11,0,6,NULL,0,'2012-05-30 03:56:59','2012-05-30 03:56:59'),(75,'Drawing Gadgets','DG',11,0,6,NULL,0,'2012-05-30 03:57:45','2012-05-30 03:57:45');
 /*!40000 ALTER TABLE `subjects` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `time_zones`
+--
+
+DROP TABLE IF EXISTS `time_zones`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `time_zones` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) default NULL,
+  `code` varchar(255) default NULL,
+  `difference_type` varchar(255) default NULL,
+  `time_difference` int(11) default NULL,
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `time_zones`
+--
+
+LOCK TABLES `time_zones` WRITE;
+/*!40000 ALTER TABLE `time_zones` DISABLE KEYS */;
+INSERT INTO `time_zones` VALUES (1,'Greenwich Mean Time','GMT','+',0,'2012-09-24 13:47:40','2012-09-24 13:47:40'),(2,'European Central Time','ECT','+',3600,'2012-09-24 13:47:40','2012-09-24 13:47:40'),(3,'Eastern European Time','EET','+',7200,'2012-09-24 13:47:40','2012-09-24 13:47:40'),(4,'Arabic Standard Time','ART','+',7200,'2012-09-24 13:47:40','2012-09-24 13:47:40'),(5,'Eastern African Time','EAT','+',10800,'2012-09-24 13:47:40','2012-09-24 13:47:40'),(6,'Middle East Time','MET','+',12600,'2012-09-24 13:47:40','2012-09-24 13:47:40'),(7,'Near East Time','NET','+',14400,'2012-09-24 13:47:40','2012-09-24 13:47:40'),(8,'Pakistan Lahore Time','PLT','+',18000,'2012-09-24 13:47:40','2012-09-24 13:47:40'),(9,'Indian Standard Time','IST','+',19800,'2012-09-24 13:47:40','2012-09-24 13:47:40'),(10,'Bangladesh Standard Time','BST','+',21600,'2012-09-24 13:47:40','2012-09-24 13:47:40'),(11,'Vietnam Standard Time','VST','+',25200,'2012-09-24 13:47:40','2012-09-24 13:47:40'),(12,'China Taiwan Time','CTT','+',28800,'2012-09-24 13:47:40','2012-09-24 13:47:40'),(13,'Japan Standard Time','JST','+',32400,'2012-09-24 13:47:40','2012-09-24 13:47:40'),(14,'Australia Central Time','ACT','+',34200,'2012-09-24 13:47:40','2012-09-24 13:47:40'),(15,'Australia Eastern Time','AET','+',36000,'2012-09-24 13:47:40','2012-09-24 13:47:40'),(16,'Solomon Standard Time','SST','+',39600,'2012-09-24 13:47:40','2012-09-24 13:47:40'),(17,'New Zealand Standard Time','NST','+',43200,'2012-09-24 13:47:40','2012-09-24 13:47:40'),(18,'Midway Islands Time','MIT','-',39600,'2012-09-24 13:47:40','2012-09-24 13:47:40'),(19,'Hawaii Standard Time','HST','-',36000,'2012-09-24 13:47:40','2012-09-24 13:47:40'),(20,'Alaska Standard Time','AST','-',32400,'2012-09-24 13:47:40','2012-09-24 13:47:40'),(21,'Pacific Standard Time','PST','-',28800,'2012-09-24 13:47:40','2012-09-24 13:47:40'),(22,'Phoenix Standard Time','PNT','-',25200,'2012-09-24 13:47:40','2012-09-24 13:47:40'),(23,'Mountain Standard Time','MST','-',25200,'2012-09-24 13:47:40','2012-09-24 13:47:40'),(24,'Central Standard Time','CST','-',21600,'2012-09-24 13:47:40','2012-09-24 13:47:40'),(25,'Eastern Standard Time','EST','-',18000,'2012-09-24 13:47:40','2012-09-24 13:47:40'),(26,'Indiana Eastern Standard Time','IET','-',18000,'2012-09-24 13:47:40','2012-09-24 13:47:40'),(27,'Puerto Rico and US Virgin Islands Time','PRT','-',14400,'2012-09-24 13:47:40','2012-09-24 13:47:40'),(28,'Canada Newfoundland Time','CNT','-',12600,'2012-09-24 13:47:40','2012-09-24 13:47:40'),(29,'Argentina Standard Time','AGT','-',10800,'2012-09-24 13:47:40','2012-09-24 13:47:40'),(30,'Brazil Eastern Time','BET','-',10800,'2012-09-24 13:47:40','2012-09-24 13:47:40'),(31,'Central African Time','CAT','-',3600,'2012-09-24 13:47:40','2012-09-24 13:47:40');
+/*!40000 ALTER TABLE `time_zones` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -2349,8 +3096,9 @@ CREATE TABLE `timetable_entries` (
   `class_timing_id` int(11) default NULL,
   `subject_id` int(11) default NULL,
   `employee_id` int(11) default NULL,
+  `timetable_id` int(11) default NULL,
   PRIMARY KEY  (`id`),
-  KEY `by_timetable` (`weekday_id`,`batch_id`,`class_timing_id`)
+  KEY `index_timetable_entries_on_timetable_id` (`timetable_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
@@ -2361,6 +3109,35 @@ SET character_set_client = @saved_cs_client;
 LOCK TABLES `timetable_entries` WRITE;
 /*!40000 ALTER TABLE `timetable_entries` DISABLE KEYS */;
 /*!40000 ALTER TABLE `timetable_entries` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `timetables`
+--
+
+DROP TABLE IF EXISTS `timetables`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `timetables` (
+  `id` int(11) NOT NULL auto_increment,
+  `start_date` date default NULL,
+  `end_date` date default NULL,
+  `is_active` tinyint(1) default '0',
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `by_start_and_end` (`start_date`,`end_date`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `timetables`
+--
+
+LOCK TABLES `timetables` WRITE;
+/*!40000 ALTER TABLE `timetables` DISABLE KEYS */;
+INSERT INTO `timetables` VALUES (1,'2012-04-01','2013-03-31',0,'2012-11-01 13:38:05','2012-11-01 13:38:05');
+/*!40000 ALTER TABLE `timetables` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -2411,9 +3188,10 @@ CREATE TABLE `users` (
   `reset_password_code_until` datetime default NULL,
   `created_at` datetime default NULL,
   `updated_at` datetime default NULL,
+  `parent` tinyint(1) default NULL,
   PRIMARY KEY  (`id`),
   KEY `index_users_on_username` (`username`(10))
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -2422,7 +3200,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'admin','Falkia','Administrator','admin@falkia.com',1,0,0,'32ff67a5b2c4a55ee902447cc7c40708aaec66d4','evarNAx8',NULL,NULL,'2012-05-28 17:37:17','2012-05-28 20:09:12');
+INSERT INTO `users` VALUES (1,'admin','Admin','User','noreply@fedena.com',1,0,0,'73c31d1a0a4ec395586644957f2d85e0a961b20f','6mmu18k2',NULL,NULL,'2012-09-24 13:49:06','2012-09-24 13:51:13',NULL),(2,'NLF001','Moeen','Irshad','theconversant@gmail.com',0,1,0,'e84cc330992bda538f24ea2b770217b742ed72f9','PrT7QPT3',NULL,NULL,'2012-09-27 16:48:33','2012-11-01 09:26:44',NULL),(3,'pNLF001','Muhammad','Irshad','named.conf@live.com',0,0,0,'2620498491deb0da852ee20b09469edd98e68561','0wDX09LC',NULL,NULL,'2012-09-27 16:52:33','2012-09-27 16:52:33',1),(4,'NLF002','Azeem','Ali','',0,1,0,'a8b4c62d8b5cd4970198e24288709f094b20ce19','r1Ydi7lt',NULL,NULL,'2012-09-27 20:03:56','2012-09-27 20:03:56',NULL),(5,'pNLF002','Waseem','Ali','fake@anymail.com',0,0,0,'50fa4c79aa9cb0788974ce4b1e5eb059325b41b7','aKGiOK9w',NULL,NULL,'2012-09-27 20:14:02','2012-09-27 20:14:02',1),(6,'NLF003','Naeem','Ahmed','noemail@nomail.com',0,1,0,'3de5052138f92e13dc6dd5713ef37cc24fa79924','02OzFdHa',NULL,NULL,'2012-09-27 20:35:03','2012-09-27 20:35:03',NULL),(7,'E001','Farrukh','Iqbal','malikfarrukh_9024@yahoo.com',1,0,0,'bc392e8bac6c1c92aea3219efb2c0be501cad7ec','K7bMc4OA',NULL,NULL,'2012-11-01 09:35:51','2012-11-01 09:35:51',NULL),(8,'E002','Sadaqat','','theconversant@gmail.com',0,0,1,'f52888a841835080c48e374e90bfd410455c188a','xjTUOolS',NULL,NULL,'2012-11-01 09:40:17','2012-11-01 14:12:38',NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2437,6 +3215,10 @@ CREATE TABLE `weekdays` (
   `id` int(11) NOT NULL auto_increment,
   `batch_id` int(11) default NULL,
   `weekday` varchar(255) default NULL,
+  `name` varchar(255) default NULL,
+  `sort_order` int(11) default NULL,
+  `day_of_week` int(11) default NULL,
+  `is_deleted` tinyint(1) default '0',
   PRIMARY KEY  (`id`),
   KEY `index_weekdays_on_batch_id` (`batch_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
@@ -2448,7 +3230,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `weekdays` WRITE;
 /*!40000 ALTER TABLE `weekdays` DISABLE KEYS */;
-INSERT INTO `weekdays` VALUES (1,NULL,'1'),(2,NULL,'2'),(3,NULL,'3'),(4,NULL,'4'),(5,NULL,'5'),(6,NULL,'6');
+INSERT INTO `weekdays` VALUES (1,NULL,'1',NULL,NULL,1,0),(2,NULL,'2',NULL,NULL,2,0),(3,NULL,'3',NULL,NULL,3,0),(4,NULL,'4',NULL,NULL,4,0),(5,NULL,'5',NULL,NULL,5,0),(6,NULL,'6',NULL,NULL,6,0);
 /*!40000 ALTER TABLE `weekdays` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -2461,4 +3243,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-07-15  8:33:05
+-- Dump completed on 2012-11-08  8:14:29

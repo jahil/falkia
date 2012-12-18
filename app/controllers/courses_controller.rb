@@ -27,6 +27,15 @@ class CoursesController < ApplicationController
 
   def new
     @course = Course.new
+    @grade_types=Course.grading_types_as_options
+#    gpa = Configuration.find_by_config_key("GPA").config_value
+#    if gpa == "1"
+#      @grade_types << "GPA"
+#    end
+#    cwa = Configuration.find_by_config_key("CWA").config_value
+#    if cwa == "1"
+#      @grade_types << "CWA"
+#    end
   end
 
   def manage_course
@@ -35,6 +44,109 @@ class CoursesController < ApplicationController
 
   def manage_batches
 
+  end
+
+  def grouped_batches
+    @course = Course.find(params[:id])
+    @batch_groups = @course.batch_groups
+    @batches = @course.active_batches.reject{|b| GroupedBatch.exists?(:batch_id=>b.id)}
+    @batch_group = BatchGroup.new
+  end
+
+  def create_batch_group
+    @batch_group = BatchGroup.new(params[:batch_group])
+    @course = Course.find(params[:course_id])
+    @batch_group.course_id = @course.id
+    @error=false
+    if params[:batch_ids].blank?
+      @error=true
+    end
+    if @batch_group.valid? and @error==false
+      @batch_group.save
+      batches = params[:batch_ids]
+      batches.each do|batch|
+        GroupedBatch.create(:batch_group_id=>@batch_group.id,:batch_id=>batch)
+      end
+      @batch_group = BatchGroup.new
+      @batch_groups = @course.batch_groups
+      @batches = @course.active_batches.reject{|b| GroupedBatch.exists?(:batch_id=>b.id)}
+      render(:update) do|page|
+        page.replace_html "category-list", :partial=>"batch_groups"
+        page.replace_html 'flash', :text=>'<p class="flash-msg"> Batch Group created successfully. </p>'
+        page.replace_html 'errors', :partial=>"form_errors"
+        page.replace_html 'class_form', :partial=>"batch_group_form"
+      end
+    else
+      if params[:batch_ids].blank?
+        @batch_group.errors.add_to_base "Atleast one batch must be selected."
+      end
+      render(:update) do|page|
+        page.replace_html 'errors', :partial=>'form_errors'
+        page.replace_html 'flash', :text=>""
+      end
+    end
+  end
+
+  def edit_batch_group
+    @batch_group = BatchGroup.find(params[:id])
+    @course = @batch_group.course
+    @assigned_batches = @course.active_batches.reject{|b| (!GroupedBatch.exists?(:batch_id=>b.id,:batch_group_id=>@batch_group.id))}
+    @batches = @course.active_batches.reject{|b| (GroupedBatch.exists?(:batch_id=>b.id))}
+    @batches = @assigned_batches + @batches
+    render(:update) do|page|
+      page.replace_html "class_form", :partial=>"batch_group_edit_form"
+      page.replace_html 'errors', :partial=>'form_errors'
+      page.replace_html 'flash', :text=>""
+    end
+  end
+
+  def update_batch_group
+    @batch_group = BatchGroup.find(params[:id])
+    @course = @batch_group.course
+    unless params[:batch_ids].blank?
+      if @batch_group.update_attributes(params[:batch_group])
+        @batch_group.grouped_batches.map{|b| b.destroy}
+        batches = params[:batch_ids]
+        batches.each do|batch|
+          GroupedBatch.create(:batch_group_id=>@batch_group.id,:batch_id=>batch)
+        end
+        @batch_group = BatchGroup.new
+        @batch_groups = @course.batch_groups
+        @batches = @course.active_batches.reject{|b| GroupedBatch.exists?(:batch_id=>b.id)}
+        render(:update) do|page|
+          page.replace_html "category-list", :partial=>"batch_groups"
+          page.replace_html 'flash', :text=>'<p class="flash-msg"> Batch Group updated successfully. </p>'
+          page.replace_html 'errors', :partial=>"form_errors"
+          page.replace_html 'class_form', :partial=>"batch_group_form"
+        end
+      else
+        render(:update) do|page|
+          page.replace_html 'errors', :partial=>'form_errors'
+          page.replace_html 'flash', :text=>""
+        end
+      end
+    else
+      @batch_group.errors.add_to_base("Atleat one Batch must be selected.")
+      render(:update) do|page|
+        page.replace_html 'errors', :partial=>'form_errors'
+        page.replace_html 'flash', :text=>""
+      end
+    end
+  end
+
+  def delete_batch_group
+    @batch_group = BatchGroup.find(params[:id])
+    @course = @batch_group.course
+    @batch_group.destroy
+    @batch_group = BatchGroup.new
+    @batch_groups = @course.batch_groups
+    @batches = @course.active_batches.reject{|b| GroupedBatch.exists?(:batch_id=>b.id)}
+    render(:update) do|page|
+      page.replace_html "category-list", :partial=>"batch_groups"
+      page.replace_html 'flash', :text=>'<p class="flash-msg"> Batch Group deleted successfully. </p>'
+      page.replace_html 'errors', :partial=>"form_errors"
+      page.replace_html 'class_form', :partial=>"batch_group_form"
+    end
   end
 
   def update_batch
@@ -52,18 +164,41 @@ class CoursesController < ApplicationController
       flash[:notice] = "#{t('flash1')}"
       redirect_to :action=>'manage_course'
     else
+      @grade_types=Course.grading_types_as_options
+#      gpa = Configuration.find_by_config_key("GPA").config_value
+#      if gpa == "1"
+#        @grade_types << "GPA"
+#      end
+#      cwa = Configuration.find_by_config_key("CWA").config_value
+#      if cwa == "1"
+#        @grade_types << "CWA"
+#      end
       render 'new'
     end
   end
 
   def edit
+    @grade_types=Course.grading_types_as_options
+#    @grade_types=[]
+#    gpa = Configuration.find_by_config_key("GPA").config_value
+#    if gpa == "1"
+#      @grade_types << "GPA"
+#    end
+#    cwa = Configuration.find_by_config_key("CWA").config_value
+#    if cwa == "1"
+#      @grade_types << "CWA"
+#    end
   end
 
   def update
     if @course.update_attributes(params[:course])
+#      if @course.cce_enabled
+#        @course.batches.update_all(:grading_type=>nil)
+#      end
       flash[:notice] = "#{t('flash2')}"
       redirect_to :action=>'manage_course'
     else
+      @grade_types=Course.grading_types_as_options
       render 'edit'
     end
   end
@@ -71,7 +206,7 @@ class CoursesController < ApplicationController
   def destroy
     if @course.batches.active.empty?
       @course.inactivate
-       flash[:notice]="#{t('flash3')}"
+      flash[:notice]="#{t('flash3')}"
       redirect_to :action=>'manage_course'
     else
       flash[:warn_notice]="<p>#{t('courses.flash4')}</p>"
@@ -89,35 +224,5 @@ class CoursesController < ApplicationController
     @course = Course.find params[:id]
   end
 
-
-  #  To be used once the new exam system is completed.
-  #
-  #  def email
-  #    @course = Course.find(params[:id])
-  #    if request.post?
-  #      recipient_list = []
-  #      case params['email']['recipients']
-  #      when 'Students'             then recipient_list << @course.student_email_list
-  #      when 'Guardians'            then recipient_list << @course.guardian_email_list
-  #      when 'Students & Guardians' then recipient_list += @course.student_email_list + @course.guardian_email_list
-  #      end
-  #
-  #      unless recipient_list.empty?
-  #        recipients = recipient_list.join(', ')
-  #        FedenaMailer::deliver_email(recipients, params[:email][:subject], params[:email][:message])
-  #        flash[:notice] = "Mail sent to #{recipients}"
-  #        redirect_to :controller => 'user', :action => 'dashboard'
-  #      end
-  #    end
-  #  end
-  #
-  #  def send_sms
-  #    @course = Course.find params[:id], :include => [:students]
-  #    if request.post?
-  #      sms = SmsManager.new params[:message], ['9656001824']
-  #      sms.send_sms
-  #      flash[:notice] = 'Text messages sent successfully!'
-  #    end
-  #  end
 
 end

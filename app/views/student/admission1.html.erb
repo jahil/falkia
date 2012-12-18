@@ -19,7 +19,7 @@
 
 
 <div id="content-header">
-<%= image_tag("/images/admission/admission_page_logo.jpg") %>
+  <%= image_tag("/images/admission/admission_page_logo.jpg") %>
   <h1><%= t('admission') %></h1>
   <h3><%=  t('student_detail_step1') %></h3>
   <div id="app-back-button">
@@ -63,8 +63,8 @@
         <div class="student_admission_date">
           <label for="student_admission_date"><%= t('admission_date') %> <span class="necessary-field">*</span> </label>
           <div class="text-input-bg-admission">
-            <%= calendar_date_select_tag 'student[admission_date]', I18n.l(Date.today,:format=>:normal),
-              :year_range => 15.years.ago..5.years.from_now %>
+            <%= calendar_date_select_tag 'student[admission_date]', I18n.l(Date.today,:format=>:default),
+              :year_range => 15.years.ago..5.years.from_now, :readonly=>true, :popup=>"force" %>
           </div>
         </div>
 
@@ -88,7 +88,7 @@
       <hr class="label-underline"></hr>
 
       <div class="label-field-pair">
-        <label for="student_grade"><%= t('last_name') %><span class="necessary-field">*</span> </label>
+        <label for="student_grade"><%= t('last_name') %></label>
         <div class="text-input-bg"><%= s.text_field :last_name %></div>
       </div>
 
@@ -107,7 +107,7 @@
           <label for="student_date_of_birth"><%= t('date_of_birth') %> <span class="necessary-field">*</span> </label>
           <div class="text-input-bg">
             <%= calendar_date_select_tag 'student[date_of_birth]',
-              I18n.l(Date.today-5.years,:format=>:normal) , :year_range => 40.years.ago..0.years.ago %>
+              I18n.l(Date.today-5.years,:format=>:default) , :year_range => 40.years.ago..0.years.ago,:popup=>"force" %>
           </div>
         </div>
 
@@ -142,7 +142,7 @@
         <div class="label-field-pair">
           <label for="student_nationality"><%= t("nationality") %></label>
           <div class="text-input-bg">
-            <%= select :student, :nationality_id, Country.all.map {|c| [c.name, c.id]}, :selected=> @student.nationality_id || 133 %>
+            <%= select :student, :nationality_id, Country.all.map {|c| [c.name, c.id]}, :selected=> @student.nationality_id || @selected_value.to_i %>
           </div>
         </div>
 
@@ -204,7 +204,7 @@
 
         <div class="label-field-pair">
           <label for="student_country"><%= t('country') %></label>
-          <div class="text-input-bg"> <%= select :student, :country_id, Country.all.map {|c| [c.name, c.id]}, :selected=> @student.country_id || 133 %> </div>
+          <div class="text-input-bg"> <%= select :student, :country_id, Country.all.map {|c| [c.name, c.id]}, :selected=> @student.country_id || @selected_value.to_i %> </div>
         </div>
 
         <hr class="label-underline"></hr>

@@ -18,19 +18,12 @@
 #under the License. -%>
 
 <div id="pdf-header">
-      <div class="logo">
-        <% if FileTest.exists?("#{RAILS_ROOT}/public/uploads/image/institute_logo.jpg") %>
-            <%= image_tag  "#{RAILS_ROOT}/public/uploads/image/institute_logo.jpg" ,:width => "90",  :height=>"85" %>
-          <% else %>
-
-          <div class="fed_logo">
-            <%= image_tag  "#{RAILS_ROOT}/public/images/application/app_falkia_logo.jpg" ,:width => "90",  :height=>"85" %>
-    </div>
-          <% end %>
-      </div>
-      <div class="header-content">
-        <p><%=Configuration.get_config_value('InstitutionName'); %></p>
-        <p><%=Configuration.get_config_value('InstitutionAddress'); %></p>
-      </div>
+  <div class="logo">
+    <%= wicked_pdf_image_tag "/"+(current_school_detail.logo.path||"#{Rails.root}/public/images/application/app_fedena_logo.jpg") %>
+  </div>
+  <div class="header-content">
+    <p><%=Configuration.get_config_value('InstitutionName'); %></p>
+    <p><%=Configuration.get_config_value('InstitutionAddress'); %></p>
+  </div>
 
 </div>

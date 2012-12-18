@@ -9,7 +9,7 @@
 }
 
 .to-options a{
-    color:#42A5CC;
+    color:#9D0E00;
     font-weight:bold;
 }
 .text-area-bg {
@@ -117,7 +117,7 @@
 }
 .label-field-pair textarea:focus{
     background: #fff;
-    border: 1px solid #42a5cc;
+    border: 1px solid #9e0f15;
 }
 .label-field-pair label{
     width:150px;

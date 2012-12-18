@@ -7,7 +7,7 @@
 }
 .link-heading a {
     font-weight:bold;
-    color:#3293bc;
+    color:#900;
 }
 .link-descr {
     margin-top:5px;
@@ -47,7 +47,7 @@ p{
     font-size:13px;
 }
 #inner-tab-menu ul li ul li {
-    margin-left: -16px;
+    margin-left: -20px;
     font-size: 1.0em;
 }
 
@@ -61,5 +61,5 @@ p{
     margin-bottom: 10px;
 }
 #inner-tab-menu ul li {
-    width: 134px;
+    width: 130px !important;
 }

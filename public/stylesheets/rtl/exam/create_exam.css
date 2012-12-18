@@ -4,7 +4,7 @@
 }
 .link-heading a {
     font-weight:bold;
-    color:#3293bc;
+    color:#900;
 }
 
 .label-field-pair label {
@@ -27,4 +27,16 @@
 #update_batch{
     float:right;
     width:800px;
+}
+#inner-tab-menu ul li {
+    background-color:#9D0E00;
+    color:#FFFFFF;
+    float:right;
+    font-size:0.9em;
+    height:1.5em;
+    list-style-type:none;
+    margin:0 10px 0 0;
+    padding:0;
+    text-align:center;
+    width:161px;
 }

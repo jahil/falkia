@@ -29,8 +29,8 @@
 
 <br />
 <%= error_messages_for "financefee" ,:header_message => nil%>
-<%if @financefee.transaction_id.nil? and @fine.nil?%>
-  <%= render :partial => "fine_submission" %>
+<% unless @financefee.is_paid %>
+  <%= render :partial => "fine_submission" if @fine.nil? %>
 <% end %>
 <div id="register">
   <div class="header">
@@ -61,7 +61,7 @@
       <% @fee_particulars.each do |fee| %>
         <tr class="tr-<%= cycle("odd","even") %>">
           <td class="col-1"><%= i+=1 %></td>
-          <td class="col-2"><%= shorten_string(fee.name,50) %></td>
+          <td class="col-2"><%= fee.name %></td>
           <td class="col-6"><%= fee.amount%></td>
         </tr>
         <% total_fees += fee.amount %>
@@ -77,7 +77,7 @@
         <% @batch_discounts.each do |d| %>
           <tr class="tr-<%= cycle("odd","even") %>">
             <td class="col-1"><%= i+1 %></td>
-            <td class="col-2"><%= shorten_string(d.name,40) %></td>
+            <td class="col-2"><%= d.name %></td>
             <td class="col-6"><%= d.discount%> %</td>
           </tr>
           <% i += 1 %>
@@ -85,7 +85,7 @@
         <% @student_discounts.each do |d| %>
           <tr class="tr-<%= cycle("odd","even") %>">
             <td class="col-1"><%= i+1 %></td>
-            <td class="col-2"><%= shorten_string(d.name,40) %></td>
+            <td class="col-2"><%=d.name %></td>
             <td class="col-6"><%= d.discount%> %</td>
           </tr>
           <% i += 1 %>
@@ -93,7 +93,7 @@
         <% @category_discounts.each do |d| %>
           <tr class="tr-<%= cycle("odd","even") %>">
             <td class="col-1"><%= i+1 %></td>
-            <td class="col-2"><%= shorten_string(d.name,40) %></td>
+            <td class="col-2"><%= d.name %></td>
             <td class="col-6"><%= d.discount%> %</td>
           </tr>
           <% i += 1 %>
@@ -122,23 +122,30 @@
       <% unless @fine.nil? %>
         <tr class="tr-<%= cycle("odd","even") %>">
           <td class="col-1"><%= i+=1 %></td>
-          <td class="col-2"><span>1<%= t('fine') %> </span></td>
+          <td class="col-2"><span><%= t('fine_on') %> <%= Date.today %></span></td>
           <td class="col-6"><%= @fine.to_f %></td>
         </tr>
-        <% total_fees += @fine.to_f %>
+        <% unless @financefee.is_paid? == true %>
+          <% total_fees += @fine.to_f %>
+        <% else %>
+          <% total_fees = @fine %>
+        <% end %>
       <% end %>
 
       <% unless @financefee.transaction_id.nil? %>
 
-        <% @trans = FinanceTransaction.find_by_id(@financefee.transaction_id) %>
-        <% unless @trans.nil? %>
-          <% if @trans.fine_included %>
-            <tr class="tr-<%= cycle("odd","even") %>">
-              <td class="col-1"><%= i+= 1 %></td>
-              <td class="col-2"><span><%= t('fine') %> </span></td>
-              <td class="col-6"><%= @trans.fine_amount %></td>
-            </tr>
-            <% total_fees += @trans.fine_amount.to_f %>
+        <% @transactions = FinanceTransaction.all(:conditions=>"id IN (#{@financefee.transaction_id})") %>
+
+        <% unless @transactions.blank? %>
+          <% @transactions.each do |trans| %>
+            <% if trans.fine_included %>
+              <tr class="tr-<%= cycle("odd","even") %>">
+                <td class="col-1"><%= i+=1 %></td>
+                <td class="col-2"><span><%= t('fine_on') %> <%= trans.transaction_date %></span></td>
+                <td class="col-6"><%= trans.fine_amount %></td>
+              </tr>
+              <% total_fees += trans.fine_amount.to_f %>
+            <% end %>
           <% end %>
         <% end %>
       <% end %>

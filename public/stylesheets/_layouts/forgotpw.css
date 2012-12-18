@@ -7,7 +7,6 @@ body {
 #top_logo {
     margin:0 auto;
     height:143px; width:156px;
-    background:#fff url(../../images/login/fedena_logo.jpg) no-repeat;
 }
 #top_logo h1 {
     text-indent:-9999px;
@@ -17,7 +16,7 @@ body {
     width:614px;height:1.5em;
 }
 #help_top #help_link {float:right;}
-#help_top #help_link a {color:#42a5cc;padding-right:10px;}
+#help_top #help_link a {color:#b00;padding-right:10px;}
 
 #login_area_bg {
     background:#fff url(../../images/login/form_bg.jpg) repeat-x;
@@ -91,7 +90,7 @@ body {
     text-align:center;
 }
 #help_forgot_pw {margin:50px auto;text-align:center;width:614px;}
-#help_forgot_pw a {text-decoration:none;font-weight:bold;color:#42a5cc;}
+#help_forgot_pw a {text-decoration:none;font-weight:bold;color:#b00;}
 
 /* #footer{height:33px;background:#b00 url(../../images/login/footer_bg.jpg) repeat;}
 #footer #footer_links {height:33px;width:614px;margin:0px auto;text-align:center;padding-top:5px;color:#fff;padding-left:114px;}
@@ -131,11 +130,12 @@ input[type="text"], input[type="password"], textarea, select {outline: none;}*/
 #powered_by {
     height:20px;
     padding:35px 0 0 0;
-    width:980px;
+    width:auto;
     margin:0 auto;
     color:#fff;
     font-size:12px;
     font-weight:bold;
+    float: right;
 }
 #powered_by a {
     color:#fff;

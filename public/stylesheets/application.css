@@ -9,18 +9,19 @@ body {
     clear:both;
 }
 #header_bg {
-    height : 60px;
-    background : #42a5cc url(../../images/application/app_layout_header_bg.jpg) repeat;
+    height : 80px;
+    background : #b00 url(../../images/application/pattern_fedena_header.png) repeat;
 }
 #header {
-    width : 980px; height : 60px;
+    width : 980px; 
+    height : 80px;
     margin:0 auto;
 }
 #header_link {
     color : #fff;
     height : 22px;
     float: right;
-    font-size : 0.9em;
+    font-size : 0.8em;
     padding : 10px 0 0 0;
 }
 #header a {
@@ -45,6 +46,7 @@ body {
 }
 #outer-main-menu {
     float: left;
+    margin: 20px 0 0 0;
 }
 #outer-header-link {
     height: 32px;
@@ -55,7 +57,7 @@ body {
 #header_link {
     color: #FFFFFF;
     float: right;
-    font-size: 0.9em;
+    font-size: 0.8em;
     height: 25px;
     padding: 10px 0 0;
 }
@@ -74,7 +76,7 @@ body {
 }
 #main-menu li a {
     background : #fff;
-    color : #42a5cc;
+    color : #b00;
     display : block;
     font-size : 0.8em;
     float : left;
@@ -93,7 +95,7 @@ body {
     width : 160px;
     list-style-type: none;
     position: absolute;
-    top: 60px;
+    top: 80px;
     z-index: 999;
     visibility : hidden;
     border : 1px solid black;
@@ -195,8 +197,8 @@ p.flash-msg {
 }
 #side_bar { float:left; width:200px; }
 #fedena_logo {
-    background: #fff url(../../images/application/app_falkia_logo.jpg) center center no-repeat;
-    height: 107px;
+    width: 157px;
+    text-align: center;
     margin-top: 30px;
 }
 #content { float: left; width: 980px; }
@@ -225,7 +227,7 @@ p.flash-msg {
 #content-header h3 {
     margin:0px;
     padding:0 0 0 100px;
-    color:#42a5cc;
+    color:#b00;
     font-size: 17px;
 }
 #app-back-button {
@@ -259,7 +261,7 @@ p.flash-msg {
 }
 #news_feed small {
     padding-top:0px;
-    color:#42a5cc;
+    color:#b00;
 }
 #news_feed_top_img {
     margin:0 auto;
@@ -447,7 +449,7 @@ body > #content_wrapper {
 /* Validation error messages */
 
 .fieldWithErrors input{
-    border : 1px solid #42a5cc;
+    border : 1px solid #b00;
 
 }
 .errorExplanation {
@@ -485,18 +487,18 @@ body > #content_wrapper {
     margin : 0 10px 0 0;
     padding : 0;
 }
-/* Inner tab menu color */
 #inner-tab-menu ul li {
-    background-color : #42a5cc;
+    background-color : #9d0e00;
     color : #fff;
     float : left;
     font-size : 0.9em;
     height : 1.5em;
     list-style-type : none;
     margin : 0 0 0 10px;
-    padding : 0;
+    padding : 0 10px !important;
     text-align : center;
-    width : 100px;
+    width : auto !important;
+    min-width: 50px !important;
 }
 #inner-tab-menu ul li a {
     color : #fff;
@@ -508,7 +510,7 @@ body > #content_wrapper {
 }
 .label-field-pair input:focus{
     background: #fff;
-    border: 1px solid #42a5cc;
+    border: 1px solid #9e0f15;
 }
 
 
@@ -523,7 +525,7 @@ body > #content_wrapper {
     padding: 15px 0 0 10px;
 }
 #MB_frame .label-field-pair { margin: 5px 0; width: 450px; }
-#MB_frame .submit-button {
+#MB_frame .submit-button, .submit-button {
     -moz-border-radius: 8px;
     -webkit-border-radius: 8px;
     background: #27292B;
@@ -546,9 +548,10 @@ body > #content_wrapper {
     -webkit-border-radius:10px;
     background : #eee;
     border : 1px solid #c6c6c6;
-    margin : 5px 10px 0 5px;
+    margin : 5px 10px 0 10px;
     padding: 5px;
-    width: 80px;
+    width: 215px;
+    height: 28px;
 }
 #MB_frame .head_label{
     position:absolute;
@@ -559,7 +562,7 @@ body > #content_wrapper {
     font-size:16px;
 }
 #MB_frame .head_label span{
-    color:#42a5cc;
+    color:#BB0000;
 }
 #MB_frame #delete-button{
     float:left;
@@ -699,7 +702,7 @@ body > #content_wrapper {
     font-size:16px;
 }
 #MB_frame .head_label span{
-    color:#42a5cc;
+    color:#BB0000;
 }
 #MB_frame .modelbox-time-pair {
     height : 40px;
@@ -745,7 +748,7 @@ table#listing{
 }
 table#listing tr.tr-head{
     background: #fff;
-    color:#1b495c;
+    color:#990a10;
     font-weight:bold;
     text-align:left;
 }
@@ -802,7 +805,7 @@ table#listing td a{
     color:#27292b;
 }
 table#listing td a:hover{
-    color:#1b495c;
+    color:#990a10;
     text-decoration:underline;
 }
 table#listing td.col-3{
@@ -869,7 +872,7 @@ tr.tr-blank{
     border:none;
 }
 .pagination .current{
-    color:#1b495c;
+    color:#990a10;
     font-weight:bold;
     padding:3px;
     font-size:14px;
@@ -881,22 +884,22 @@ tr.tr-blank{
 }
 
 .sel-list a{
-    color:#42a5cc;
+    color:#bb0000;
     text-decoration:none;
 }
 
 .bread_crumb {
-    color:#42a5cc;
+    color:#bb0000;
     font-weight: bold;
     font-size: 13px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 .bread_crumb a {
    color:#000;
     text-decoration: none;
 }
 .bread_crumb a:hover {
-   color:#42a5cc;
+   color:#bb0000;
     text-decoration: underline;
 }
 #error-box {
@@ -940,11 +943,12 @@ tr.tr-blank{
 #powered_by {
     height:20px;
     padding:35px 0 0 0;
-    width:980px;
+    width:auto;
     margin:0 auto;
     color:#fff;
     font-size:12px;
     font-weight:bold;
+    float: right;
 }
 #powered_by a {
     color:#fff;
@@ -958,11 +962,60 @@ tr.tr-blank{
 }
 #outer-autosuggest-menu{
 float: right;
-margin-right: 94px;
-margin-top: 6px;
-width: 245px;
+margin-top: 26px;
+width: 329px;
 }
 #autosuggest_menu_input{
 width: 300px;
 height: 14px;
+}
+#institution-name{
+    margin: 12px 0 0 0;
+    float: left;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+#header_link{
+    overflow: hidden;
+}
+#header_link div{
+    float: left;
+    margin: 0 5px;
+    padding: 0 5px;
+    overflow: hidden;
+}
+#header_link div a{
+    padding: 3px 3px 3px 23px;
+    display: block;
+    float: left;
+    text-decoration: none;
+}
+#profile-link a{
+    background: url(/images/application/profile.png) no-repeat left center;
+}
+#messages-link a{
+    background: url(/images/application/msg.png) no-repeat left center;
+    float: left;
+}
+#messages-link span {
+    padding: 3px 3px 3px 1px;
+    display: block;
+    float: left;
+}
+#logout-link a{
+    background: url(/images/application/logout.png) no-repeat left center;
+}
+#logout-link{
+    margin-right: 0 !important;
+}
+#profile-link:hover, #messages-link:hover, #logout-link:hover{
+    background: url(/images/application/top-link-bg.png) repeat;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+}
+textarea{
+    font-family: Arial !important;
 }

@@ -37,6 +37,10 @@ class Configuration < ActiveRecord::Base
     end
   end
 
+  def self.clear_school_cache(user)
+    Rails.cache.delete("current_school_name#{user.id}")
+  end
+
   class << self
 
     def get_config_value(key)
@@ -70,6 +74,59 @@ class Configuration < ActiveRecord::Base
       conf_hash = {}
       keys.each { |k| conf_hash[k.underscore.to_sym] = get_config_value(k) }
       conf_hash
+    end
+
+    def get_grading_types
+      grading_types = Course::GRADINGTYPES
+      types= all(:conditions=>{:config_key=>grading_types.values, :config_value=>"1"},:group=>:config_key)
+      grading_types.keys.select{|k| types.collect(&:config_key).include? grading_types[k]}      
+    end
+
+    def default_country
+      default_country_value = self.find_by_config_key('DefaultCountry').config_value.to_i
+      return default_country_value
+    end
+    
+    def set_grading_types(updates)
+      #expects an array of integers types
+      grading_types = Course::GRADINGTYPES
+      deletions = grading_types.keys - updates
+      updates.each do |t|
+        find_or_create_by_config_key(grading_types[t]).update_attribute(:config_value, 1)
+      end
+      deletions.each do |t|
+        find_or_create_by_config_key(grading_types[t]).update_attribute(:config_value, 0)
+      end
+    end
+
+    def default_time_zone_present_time
+      server_time = Time.now
+      server_time_to_gmt = server_time.getgm
+      local_tzone_time = server_time
+      time_zone = Configuration.find_by_config_key("TimeZone")
+      unless time_zone.nil?
+        unless time_zone.config_value.nil?
+          zone = TimeZone.find(time_zone.config_value)
+          if zone.difference_type=="+"
+            local_tzone_time = server_time_to_gmt + zone.time_difference
+          else
+            local_tzone_time = server_time_to_gmt - zone.time_difference
+          end
+        end
+      end
+      return local_tzone_time
+    end
+    
+    def cce_enabled?
+      get_config_value("CCE") == "1"
+    end
+
+    def has_gpa?
+      get_config_value("GPA") == "1"
+    end
+
+    def has_cwa?
+      get_config_value("CWA") == "1"
     end
 
   end

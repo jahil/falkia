@@ -32,7 +32,10 @@ class FinanceTransaction < ActiveRecord::Base
   after_create :add_voucher_or_receipt_number
 
   def self.report(start_date,end_date,page)
-    cat_names = ['Fee','Salary','Donation','Library','Hostel','Transport']
+    cat_names = ['Fee','Salary','Donation']
+    FedenaPlugin::FINANCE_CATEGORY.each do |category|
+      cat_names << "#{category[:category_name]}"
+    end
     fixed_cat_ids = FinanceTransactionCategory.find(:all,:conditions=>{:name=>cat_names}).collect(&:id)
     self.find(:all,
       :conditions => ["transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}'and category_id NOT IN (#{fixed_cat_ids.join(",")})"],
@@ -103,7 +106,7 @@ class FinanceTransaction < ActiveRecord::Base
     end
     
     other_transactions.each do |t|
-      if t.category.is_income?
+      if t.category.is_income? and t.master_transaction_id == 0
         income_total +=t.amount
       else
         expenses_total +=t.amount
@@ -116,16 +119,15 @@ class FinanceTransaction < ActiveRecord::Base
   def self.total_fees(start_date,end_date)
     fee_id = FinanceTransactionCategory.find_by_name("Fee").id
     fees = 0
-    transactions_fees = FinanceTransaction.find(:all,
-      :conditions => ["transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}'and category_id ='#{fee_id}'"])
-    transactions_fees.each do |f|
-      fees += f.amount
-    end
-    fees
+    fees = FinanceTransaction.find(:all,
+      :conditions => ["transaction_date >= '#{start_date.to_date}' and transaction_date <= '#{end_date.to_date}'and category_id ='#{fee_id}'"]).map{|ft| ft.amount}.sum
   end
 
   def self.total_other_trans(start_date,end_date)
-    cat_names = ['Fee','Salary','Donation','Library','Hostel','Transport']
+    cat_names = ['Fee','Salary','Donation']
+    FedenaPlugin::FINANCE_CATEGORY.each do |category|
+      cat_names << "#{category[:category_name]}"
+    end
     fixed_cat_ids = FinanceTransactionCategory.find(:all,:conditions=>{:name=>cat_names}).collect(&:id)
     fees = 0
     transactions = FinanceTransaction.find(:all, :conditions => ["created_at >= '#{start_date}' and created_at <= '#{end_date}'and category_id NOT IN (#{fixed_cat_ids.join(",")})"])
@@ -175,7 +177,8 @@ class FinanceTransaction < ActiveRecord::Base
 
   def self.incomes(start_date,end_date)
     incomes = FinanceTransaction.find(:all, :select=>'finance_transactions.*', :joins=>' INNER JOIN finance_transaction_categories ON finance_transaction_categories.id = finance_transactions.category_id',\
-        :conditions => ["finance_transaction_categories.is_income = 1 and finance_transaction_categories.id != 2 and finance_transaction_categories.id != 3 and transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}' "])
+        :conditions => ["finance_transaction_categories.is_income = 1 and transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}' "])
+    incomes = incomes.reject{|income| (income.category.is_fixed or income.master_transaction_id != 0)}
     incomes
   end
 
@@ -218,11 +221,12 @@ class FinanceTransaction < ActiveRecord::Base
 
   def self.total_transaction_amount(transaction_category,start_date,end_date)
     amount = 0
-    transaction_category_id = FinanceTransactionCategory.find_by_name("#{transaction_category}").id
+    finance_transaction_category = FinanceTransactionCategory.find_by_name("#{transaction_category}")
+    category_type = finance_transaction_category.is_income ? "income" : "expense"
     transactions = FinanceTransaction.find(:all,
-      :conditions => ["transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}'and category_id ='#{transaction_category_id}'"])
+      :conditions => ["transaction_date >= '#{start_date}' and transaction_date <= '#{end_date}'and category_id ='#{finance_transaction_category.id}'"])
     transactions.each {|transaction| amount += transaction.amount}
-    amount
+    return {:amount=>amount,:category_type=>category_type}
   end
   
   def add_voucher_or_receipt_number

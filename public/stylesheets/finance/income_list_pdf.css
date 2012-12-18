@@ -1,7 +1,79 @@
+.page1 {
+    width:100%;
+    height: auto;
+    page-break-after: always;
+    page-break-inside: avoid;
+    clear: both;
+}
+.page-break1{
+    height: 20px;
+    border: 1px solid #fff;
+    width: 100%;
+    float: left;
+}
+.grand_total
+{
+    border-bottom: 1px solid #ADACAB;
+}
+.section1{
+    page-break-before:always;
+    text-align: center;
+}
+.row{
+    float: left;
+    width: 100%;
+    text-align: center;
+}
+.page-blank{
+    width: 100%;
+    float: left;
+    border-top: 1px solid #ADACAB;
+}
+.page_break{
+    margin-top: 60px;
+}
+.sl_no{
+    width:20px;
+    min-width:20px;
+    max-width:20px;
+}
+.rcpt_no{
+    width:50px;
+    min-width:50px;
+    max-width:50px;    
+}
+.amnt{
+    width:100px;
+    min-width:100px;
+    max-width:100px;
+}
+.t_date{
+    width:90px;
+    min-width:90px;
+    max-width:90px;
+}
+.name{
+    width:240px;
+    min-width:240px;
+    max-width:240px;
+    overflow: hidden;
+}
+.desc{
+    width:130px;
+    min-width:130px;
+    max-width:130px;
+    overflow: hidden;
+}
+.total_amnt{
+    width:100px;
+    min-width:100px;
+    max-width:100px;
+    border-right: 0px;
+}
 
 
 #page-yield {
-    width:800px;
+    width:100%;
     margin: 0 auto;
     float: left;
     overflow: hidden;
@@ -10,7 +82,7 @@
 
 
 .hor_line{
-    width:800px;
+    width:100%;
     background: #333333;
     height: 1px;
 }
@@ -48,10 +120,12 @@ h2.heading{
 }
 tr.even{
     border: 1px solid #ADACAB;
+    border-bottom: 0;
 }
 
 tr.odd{
     border: 1px solid #ADACAB;
+    border-bottom: 0;
 }
 
 .even td{
@@ -60,6 +134,7 @@ tr.odd{
     border: 1px solid #ADACAB;
     border-right: 0px solid #fff;
     border-top: 0px solid #fff;
+    border-bottom: 0;
 
 }
 
@@ -68,6 +143,7 @@ tr.odd{
     border: 1px solid #ADACAB;
     border-right: 0px solid #fff;
     border-top: 0px solid #fff;
+    border-bottom: 0;
 
 }
 
@@ -82,7 +158,8 @@ tr.odd{
 
 table#pdf-table{
     border-top: 1px solid #ADACAB;
-    border-collapse:collapse
+    border-collapse:collapse;
+    font-size: 18px;
 }
 
 
@@ -98,7 +175,6 @@ table#pdf-table{
 }
 
 .report{
-    min-height: 1000px;
     margin: 0 auto;
 }
 
@@ -107,7 +183,7 @@ table#pdf-table{
     width: 700px;
     margin: 0 auto;
     color: #999999;
-    font-size: 18px;
+
 }
 
 

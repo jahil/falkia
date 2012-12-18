@@ -32,7 +32,7 @@
       <li><%= link_to "#{t('reports_text')}", :controller => 'student',
           :action => 'reports', :id => @student %></li>
     <%end%>
-   
+
     <% if permitted_to? :guardians,:student %>
       <li><%= link_to "#{t('guardians_text')}", :controller => "student",
           :action => "guardians", :id => @student.id %></li>
@@ -55,7 +55,9 @@
           <li><%= link_to "#{t('fees_text')}", :controller => 'student',:action => 'fees', :id => @student.id %></li>
         <% end %>
         <% FedenaPlugin::ADDITIONAL_LINKS[:student_profile_more_menu].each do |mod| %>
-          <li><%= link_to "#{t(mod[:title])}",mod[:destination].merge(:id=>@student.id) %></li>
+          <% if permitted_to? "#{mod[:destination][:action]}".to_sym,"#{mod[:destination][:controller]}".to_sym  %>
+            <li><%= link_to "#{t(mod[:title])}",mod[:destination].merge(:id=>@student.id) %></li>
+          <% end %>
         <% end %>
       </ul>
     </li>
@@ -102,14 +104,15 @@
 
       <tr class="odd left"><td><%= t('category') %></td><td class="right"><%= @student.student_category.name unless @student.student_category.nil? %></td></tr>
       <tr class="even left"><td><%= t('religion') %></td><td class="right"><%= @student.religion %></td></tr>
-      <tr class="odd left"><td><%= t('address') %></td><td class="right"><%= @student.address_line1%>, <%=  @student.address_line2 %></td></tr>
+      <tr class="odd left"><td><%= t('address') %></td><td class="right"><%= @student.address_line1%><%= ', ' unless @student.address_line1.blank? %><%=  @student.address_line2 %></td></tr>
 <%#*<tr class="even left"><td></td><td class="right"><%= @student.address_line2%>
       <tr class="even left"><td><%= t('city') %></td><td class="right"><%= @student.city %></td></tr>
       <tr class="odd left"><td><%= t('state') %></td><td class="right"><%= @student.state %></td></tr>
-      <tr class="even left"><td><%= t('country') %></td><td class="right"><%= @student.country.name unless @student.country_id.nil? %></td></tr>
-      <tr class="odd left"><td><%= t('phone') %></td><td class="right"><%= @student.phone1 %></td></tr>
-      <tr class="even left"><td><%= t('mobile') %></td><td class="right"><%= @student.phone2 %></td></tr>
-      <tr class="odd left"><td><%= t('email') %></td><td class="right"><%= @student.email %></td></tr>
+      <tr class="even left"><td><%= t('zip') %></td><td class="right"><%= @student.pin_code %></td></tr>
+      <tr class="odd left"><td><%= t('country') %></td><td class="right"><%= @student.country.name unless @student.country_id.nil? %></td></tr>
+      <tr class="even left"><td><%= t('phone') %></td><td class="right"><%= @student.phone1 %></td></tr>
+      <tr class="odd left"><td><%= t('mobile') %></td><td class="right"><%= @student.phone2 %></td></tr>
+      <tr class="even left"><td><%= t('email') %></td><td class="right"><%= @student.email %></td></tr>
       <% unless @student.batch.employee_id.nil? %>
         <% @assigned_employees = Employee.find(:all,:conditions=>"FIND_IN_SET(id,\"#{@student.batch.employee_id}\")")  %>
         <tr class="even left"><td><%= t('group_tutor') %>(s) :</td><td class="right">
@@ -122,10 +125,8 @@
       <% FedenaPlugin::REGISTERED_HOOKS[:student_profile].each do |mod| %>
         <%= render :partial=>mod.camelize.constantize.send("student_profile_hook"),:locals=>{:student=>@student} %>
       <% end %>
-      <% if @sms_module.include?('SMS') %>
-        <% if @sms_setting.application_sms_active %>
-          <tr class="odd left"><td><%= t('sms_alerts') %></td><td class="right"><%= @student.is_sms_enabled?? "Enabled":"Disabled" %></td></tr>
-        <% end  %>
+      <% if @sms_setting.application_sms_active %>
+        <tr class="odd left"><td><%= t('sms_alerts') %></td><td class="right"><%= @student.is_sms_enabled?? "Enabled":"Disabled" %></td></tr>
       <% end  %>
       <tr class="even left"><td><%= t('contact_message') %></td><td class="right">
           <%= link_to @immediate_contact.full_name, :controller => "student", :action => "guardians", :id => @student.id \
@@ -148,7 +149,7 @@
           <tr class="odd left">
             <td><%= field.name %></td>
             <td class="right">
-              <% detail = StudentAdditionalDetails.find_by_additional_field_id_and_student_id(field.id,@student.id) %>
+              <% detail = StudentAdditionalDetail.find_by_additional_field_id_and_student_id(field.id,@student.id) %>
               <%= detail.additional_info unless detail.nil? %>
             <% end %>
           </td>
@@ -156,11 +157,13 @@
         <tr class="odd left">
           <td></td>
           <td class="right">
-            <% detail = StudentAdditionalDetails.find_all_by_student_id(@student.id) %>
-            <% unless detail.blank? %>
-              <span> (<%= link_to "#{t('edit_additional_details')}", :controller => 'student', :action => 'edit_admission4', :id => @student.id %>)</span>
-            <% else %>
-              <span> (<%= link_to "#{t('add_additional_details')}", :controller => 'student', :action => 'admission4', :id => @student.id %>)</span>
+            <% detail = StudentAdditionalDetail.find_all_by_student_id(@student.id) %>
+            <% if permitted_to? :edit_admission4,:student %>
+              <% unless detail.blank? %>
+                <span> (<%= link_to "#{t('edit_additional_details')}", :controller => 'student', :action => 'edit_admission4', :id => @student.id %>)</span>
+              <% else %>
+                <span> (<%= link_to "#{t('add_additional_details')}", :controller => 'student', :action => 'admission4', :id => @student.id %>)</span>
+              <% end %>
             <% end %>
           </td>
         </tr>
@@ -169,7 +172,11 @@
         <tr class="even left"><td></td><td class="right"><%= t('previous_details') %></td></tr>
         <tr class="odd left"><td><%= t('previous_institution') %></td><td class="right"><%= link_to @previous_data.institution,:action=>'show_previous_details', :id => @student.id %></td></tr>
       <%else%>
-        <tr class="odd left"><td></td><td class="right"><%= t('no_previous_data') %> (<%= link_to "#{t('add_previous_data')}", :controller => 'student', :action => 'previous_data', :id => @student.id %>)</td></tr>
+        <% if permitted_to? :previous_data,:student %>
+          <tr class="odd left"><td></td><td class="right"><%= t('no_previous_data') %> (<%= link_to "#{t('add_previous_data')}", :controller => 'student', :action => 'previous_data', :id => @student.id %>)</td></tr>
+        <% else %>
+          <tr class="odd left"><td></td><td class="right"><%= t('no_previous_data') %></td></tr>
+        <% end %>
       <% end %>
     </table>
     <% if @current_user.admin? %>

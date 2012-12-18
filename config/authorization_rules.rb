@@ -6,6 +6,12 @@ authorization do
     has_permission_on [:exam],
       :to => [
       :index,
+      :previous_batch_exams,
+      :list_inactive_batches,
+      :list_inactive_exam_groups,
+      :previous_exam_marks,
+      :edit_previous_marks,
+      :update_previous_marks,
       :create_exam,
       :update_batch,
       :create_examtype,
@@ -30,14 +36,57 @@ authorization do
       :consolidated_exam_report,
       :consolidated_exam_report_pdf,
       :subject_wise_report,
+      :subject_rank,
+      :course_rank,
+      :batch_groups,
+      :student_course_rank,
+      :student_course_rank_pdf,
+      :student_school_rank,
+      :student_school_rank_pdf,
+      :attendance_rank,
+      :student_attendance_rank,
+      :student_attendance_rank_pdf,
+      :generate_reports,
+      :generate_previous_reports,
+      :select_inactive_batches,
+      :settings,
+      :report_center,
+      :gpa_cwa_reports,
+      :list_batch_groups,
+      :ranking_level_report,
+      :student_ranking_level_report,
+      :student_ranking_level_report_pdf,
+      :transcript,
+      :student_transcript,
+      :student_transcript_pdf,
+      :combined_report,
+      :load_levels,
+      :student_combined_report,
+      :student_combined_report_pdf,
+      :load_batch_students,
+      :select_mode,
+      :select_batch_group,
+      :select_type,
+      :select_report_type,
+      :batch_rank,
+      :student_batch_rank,
+      :student_batch_rank_pdf,
+      :student_subject_rank,
+      :student_subject_rank_pdf,
       :list_subjects,
+      :list_batch_subjects,
       :generated_report2,
       :generated_report2_pdf,
       :grouped_exam_report,
       :final_report_type,
       :generated_report4,
-      :generated_report4_pdf
+      :generated_report4_pdf,
+      :combined_grouped_exam_report_pdf
     ]
+    has_permission_on [:scheduled_jobs],
+      :to => [
+      :index
+      ]
     has_permission_on [:exam_groups],
       :to => [
       :index,
@@ -63,42 +112,42 @@ authorization do
       :save_scores,
       :query_data
     ]
-    has_permission_on [:additional_exam],
-      :to => [
-      :index,
-      :update_exam_form,
-      :publish,
-      :create_additional_exam,
-      :update_batch
-    ]
+    #    has_permission_on [:additional_exam],
+    #      :to => [
+    #      :index,
+    #      :update_exam_form,
+    #      :publish,
+    #      :create_additional_exam,
+    #      :update_batch
+    #    ]
 
-    has_permission_on [:additional_exam_groups],
-      :to => [
-      :index,
-      :new,
-      :create,
-      :edit,
-      :update,
-      :destroy,
-      :show,
-      :initial_queries,
-      :set_additional_exam_minimum_marks,
-      :set_additional_exam_maximum_marks,
-      :set_additional_exam_weightage,
-      :set_additional_exam_group_name
-    ]
-    has_permission_on [:additional_exams],
-      :to => [
-      :index,
-      :show,
-      :new,
-      :create,
-      :edit,
-      :update,
-      :destroy,
-      :save_additional_scores,
-      :query_data
-    ]
+    #    has_permission_on [:additional_exam_groups],
+    #      :to => [
+    #      :index,
+    #      :new,
+    #      :create,
+    #      :edit,
+    #      :update,
+    #      :destroy,
+    #      :show,
+    #      :initial_queries,
+    #      :set_additional_exam_minimum_marks,
+    #      :set_additional_exam_maximum_marks,
+    #      :set_additional_exam_weightage,
+    #      :set_additional_exam_group_name
+    #    ]
+    #    has_permission_on [:additional_exams],
+    #      :to => [
+    #      :index,
+    #      :show,
+    #      :new,
+    #      :create,
+    #      :edit,
+    #      :update,
+    #      :destroy,
+    #      :save_additional_scores,
+    #      :query_data
+    #    ]
     has_permission_on [:grading_levels],
       :to => [
       :index,
@@ -110,6 +159,153 @@ authorization do
       :destroy
 
     ]
+    has_permission_on [:ranking_levels],
+      :to => [
+      :index,
+      :load_ranking_levels,
+      :create_ranking_level,
+      :edit_ranking_level,
+      :update_ranking_level,
+      :delete_ranking_level,
+      :ranking_level_cancel,
+      :change_priority
+    ]
+    has_permission_on [:class_designations],
+      :to => [
+      :index,
+      :load_class_designations,
+      :create_class_designation,
+      :edit_class_designation,
+      :update_class_designation,
+      :delete_class_designation
+    ]
+    has_permission_on [:descriptive_indicators],
+      :to=>[
+      :index,
+      :show,
+      :new,
+      :create,
+      :edit,
+      :update,
+      :destroy,
+      :reorder,
+      :destroy_indicator
+    ]
+    has_permission_on [:fa_criterias],
+      :to=>[
+      :index,
+      :show
+    ]
+    has_permission_on [:fa_groups],
+      :to=>[
+      :index,
+      :new,
+      :create,
+      :edit,
+      :update,
+      :show,
+      :destroy,
+      :assign_fa_groups,
+      :select_subjects,
+      :select_fa_groups,
+      :update_subject_fa_groups,
+      :new_fa_criteria,
+      :create_fa_criteria,
+      :edit_fa_criteria,
+      :update_fa_criteria,
+      :destroy_fa_criteria,
+      :reorder
+
+    ]
+    has_permission_on [:observation_groups],
+      :to=>[
+      :index,
+      :new,
+      :create,
+      :edit,
+      :edit_observation,
+      :update,
+      :show,
+      :destroy,
+      :new_observation,
+      :create_observation,
+      :edit_osbervation,
+      :update_observation,
+      :destroy_observation,
+      :assign_courses,
+      :select_observation_groups,
+      :update_course_obs_groups,
+      :reorder
+    ]
+    has_permission_on [:observations],
+      :to=>[
+      :show
+    ]
+    has_permission_on [:assessment_scores],
+      :to=>[
+      :exam_fa_groups,
+      :fa_scores,
+      :observation_groups,
+      :observation_scores
+    ]
+    has_permission_on [:cce_exam_categories],
+      :to=>[
+      :index,
+      :new,
+      :create,
+      :show,
+      :edit,
+      :update,
+      :destroy
+    ]
+    has_permission_on [:cce_grade_sets],
+      :to=>[
+      :index,
+      :new,
+      :create,
+      :edit,
+      :update,
+      :destroy,
+      :show,
+      :index,
+      :new_grade,
+      :create_grade,
+      :edit_grade,
+      :update_grade,
+      :destroy_grade
+    ]
+    has_permission_on [:cce_reports],
+      :to=>[
+      :index,
+      :create_reports,
+      :student_wise_report,
+      :student_report_pdf,
+      :student_transcript,
+      :student_report
+    ]
+    has_permission_on [:cce_settings],
+      :to=>[
+      :index,
+      :basic,
+      :scholastic,
+      :co_scholastic
+    ]
+    has_permission_on [:cce_weightages],
+      :to=>[
+      :index,
+      :new,
+      :create,
+      :show,
+      :edit,
+      :update,
+      :destroy,
+      :assign_courses,
+      :assign_weightages,
+      :select_weightages,
+      :update_course_weightages
+    ]
+    has_permission_on [:batches],:to=>[:batches_ajax]
+
   end
 
   role :enter_results  do
@@ -117,6 +313,12 @@ authorization do
     has_permission_on [:exam],
       :to => [
       :index,
+      :previous_batch_exams,
+      :list_inactive_batches,
+      :list_inactive_exam_groups,
+      :previous_exam_marks,
+      :edit_previous_marks,
+      :update_previous_marks,
       :create_exam,
       :update_batch,
       :exam_wise_report,
@@ -127,13 +329,48 @@ authorization do
       :consolidated_exam_report,
       :consolidated_exam_report_pdf,
       :subject_wise_report,
+      :subject_rank,
+      :course_rank,
+      :batch_groups,
+      :student_course_rank,
+      :student_course_rank_pdf,
+      :student_school_rank,
+      :student_school_rank_pdf,
+      :attendance_rank,
+      :student_attendance_rank,
+      :student_attendance_rank_pdf,
+      :report_center,
+      :gpa_cwa_reports,
+      :list_batch_groups,
+      :ranking_level_report,
+      :student_ranking_level_report,
+      :student_ranking_level_report_pdf,
+      :transcript,
+      :student_transcript,
+      :student_transcript_pdf,
+      :combined_report,
+      :load_levels,
+      :student_combined_report,
+      :student_combined_report_pdf,
+      :load_batch_students,
+      :select_mode,
+      :select_batch_group,
+      :select_type,
+      :select_report_type,
+      :batch_rank,
+      :student_batch_rank,
+      :student_batch_rank_pdf,
+      :student_subject_rank,
+      :student_subject_rank_pdf,
       :list_subjects,
+      :list_batch_subjects,
       :generated_report2,
       :generated_report2_pdf,
       :grouped_exam_report,
       :final_report_type,
       :generated_report4,
-      :generated_report4_pdf
+      :generated_report4_pdf,
+      :combined_grouped_exam_report_pdf
     ]
     has_permission_on [:exam_groups],
       :to => [
@@ -150,31 +387,48 @@ authorization do
       :show,
       :save_scores
     ]
-    has_permission_on [:additional_exam],
-      :to =>[
-      :create_additional_exam,
-      :update_batch,
-      :publish
+    #    has_permission_on [:additional_exam],
+    #      :to =>[
+    #      :create_additional_exam,
+    #      :update_batch,
+    #      :publish
+    #    ]
+    #    has_permission_on [:additional_exam_groups],
+    #      :to =>[
+    #      :index,
+    #      :show,
+    #      :set_additional_exam_minimum_marks,
+    #      :set_additional_exam_maximum_marks,
+    #      :set_additional_exam_weightage,
+    #      :set_additional_exam_group_name
+    #    ]
+    #    has_permission_on [:additional_exams],
+    #      :to => [
+    #      :index,
+    #      :show,
+    #      :save_additional_scores
+    #    ]
+    has_permission_on [:assessment_scores],
+      :to=>[
+      :exam_fa_groups,
+      :fa_scores,
+      :observation_groups,
+      :observation_scores
     ]
-    has_permission_on [:additional_exam_groups],
-      :to =>[
+    has_permission_on [:cce_reports],
+      :to=>[
       :index,
-      :show,
-      :set_additional_exam_minimum_marks,
-      :set_additional_exam_maximum_marks,
-      :set_additional_exam_weightage,
-      :set_additional_exam_group_name
+      :student_wise_report,
+      :student_report_pdf,
+      :student_transcript,
+      :student_report
     ]
-    has_permission_on [:additional_exams],
-      :to => [
-      :index,
-      :show,
-      :save_additional_scores
-    ]
+
   end
 
   role :view_results  do
     includes :archived_exam_reports
+    has_permission_on [:student], :to => [:reports]
     has_permission_on [:exam], :to => [:index,
       :exam_wise_report,
       :list_exam_types,
@@ -184,13 +438,56 @@ authorization do
       :consolidated_exam_report,
       :consolidated_exam_report_pdf,
       :subject_wise_report,
+      :subject_rank,
+      :course_rank,
+      :batch_groups,
+      :student_course_rank,
+      :student_course_rank_pdf,
+      :student_school_rank,
+      :student_school_rank_pdf,
+      :attendance_rank,
+      :student_attendance_rank,
+      :student_attendance_rank_pdf,
+      :report_center,
+      :gpa_cwa_reports,
+      :list_batch_groups,
+      :ranking_level_report,
+      :student_ranking_level_report,
+      :student_ranking_level_report_pdf,
+      :transcript,
+      :student_transcript,
+      :student_transcript_pdf,
+      :combined_report,
+      :load_levels,
+      :student_combined_report,
+      :student_combined_report_pdf,
+      :load_batch_students,
+      :select_mode,
+      :select_batch_group,
+      :select_type,
+      :select_report_type,
+      :batch_rank,
+      :student_batch_rank,
+      :student_batch_rank_pdf,
+      :student_subject_rank,
+      :student_subject_rank_pdf,
       :list_subjects,
+      :list_batch_subjects,
       :generated_report2,
       :generated_report2_pdf,
       :grouped_exam_report,
       :final_report_type,
       :generated_report4,
-      :generated_report4_pdf
+      :generated_report4_pdf,
+      :combined_grouped_exam_report_pdf
+    ]
+    has_permission_on [:cce_reports],
+      :to=>[
+      :index,
+      :student_wise_report,
+      :student_report_pdf,
+      :student_transcript,
+      :student_report
     ]
   end
 
@@ -279,6 +576,7 @@ authorization do
       :fees,
       :fee_details,
       :admission3_1,
+      :admission3_2,
       :immediate_contact2
     ]
     has_permission_on [:archived_student],
@@ -314,6 +612,96 @@ authorization do
       :generated_report3_pdf,
       :generated_report4,
       :generated_report4_pdf,
+      :combined_grouped_exam_report_pdf,
+      :graph_for_generated_report,
+      :graph_for_generated_report3,
+      :previous_years_marks_overview,
+      :previous_years_marks_overview_pdf,
+      :academic_report,
+      :graph_for_previous_years_marks_overview
+    ]
+    has_permission_on [:student_attendance],
+      :to =>[
+      :student,
+      :month
+    ]
+  end
+
+  role :student_view do
+    has_permission_on [:student] ,
+      :to => [
+      :academic_reports_pdf,
+      :academic_report,
+      :academic_report_all,
+      :profile,
+      :guardians,
+      :list_students_by_course,
+      :show,
+      :view_all,
+      :index,
+      :email,
+      :exam_report,
+      :previous_years_marks_overview,
+      :previous_years_marks_overview_pdf,
+      :search_ajax,
+      :subject_wise_report,
+      :graph_for_previous_years_marks_overview,
+      :graph_for_student_annual_overview,
+      :graph_for_subject_wise_report_for_one_subject,
+      :graph_for_exam_report,
+      :graph_for_academic_report,
+      :advanced_search,
+      :advanced_search_pdf,
+      :profile_pdf,
+      :show_previous_details,
+      :list_doa_year,
+      :doa_equal_to_update,
+      :doa_less_than_update,
+      :doa_greater_than_update,
+      :list_dob_year,
+      :dob_equal_to_update,
+      :dob_less_than_update,
+      :dob_greater_than_update,
+      :list_batches,
+      :find_student,
+      :fees,
+      :fee_details,
+      :admission3_1,
+      :admission3_2,
+      :immediate_contact2
+    ]
+    has_permission_on [:archived_student],
+      :to => [
+      :profile,
+      :reports,
+      :guardians,
+      :generate_tc_pdf,
+      :consolidated_exam_report,
+      :consolidated_exam_report_pdf,
+      :academic_report,
+      :student_report,
+      :generated_report,
+      :generated_report_pdf,
+      :generated_report3,
+      :previous_years_marks_overview,
+      :previous_years_marks_overview_pdf,
+      :generated_report4,
+      :generated_report4_pdf,
+      :graph_for_generated_report,
+      :graph_for_generated_report3,
+      :graph_for_previous_years_marks_overview
+    ]
+    has_permission_on [:exam],
+      :to =>[
+      :generated_report,
+      :generated_report_pdf,
+      :consolidated_exam_report,
+      :consolidated_exam_report_pdf,
+      :generated_report3,
+      :generated_report3_pdf,
+      :generated_report4,
+      :generated_report4_pdf,
+      :combined_grouped_exam_report_pdf,
       :graph_for_generated_report,
       :graph_for_generated_report3,
       :previous_years_marks_overview,
@@ -337,6 +725,7 @@ authorization do
       :all,
       :delete,
       :delete_comment,
+      :comment_approved,
       :edit,
       :search_news_ajax,
       :view ]
@@ -347,36 +736,79 @@ authorization do
     has_permission_on [:class_timings], :to => [:index, :edit, :destroy, :show, :new, :create, :update]
     has_permission_on [:weekday], :to => [:index, :week, :create]
     has_permission_on [:timetable],
-      :to => [
-      :index,
-      :edit,
-      :delete_subject,
-      :select_class,
-      :tt_entry_update,
-      :tt_entry_noupdate,
-      :update_multiple_timetable_entries,
-      :update_timetable_view,
-      :generate,
-      :extra_class,
-      :extra_class_edit,
-      :list_employee_by_subject,
-      :save_extra_class,
-      :timetable,
-      :weekdays,
+      :to => [:index,
+      :new_timetable,
+      :update_timetable,
       :view,
-      :select_class2,
-      :edit2,
-      :update_employees,
-      :update_multiple_timetable_entries2,
-      :delete_employee2,
-      :tt_entry_update2,
-      :tt_entry_noupdate2,
-      :timetable_pdf
+      :edit_master,
+      :teachers_timetable,
+      :update_teacher_tt,
+      :update_timetable_view,
+      :destroy,
+      :employee_timetable,
+      :update_employee_tt,
+      :student_view,
+      :update_student_tt,
+      :weekdays,
+      :timetable,
+      :timetable_pdf,
+      :work_allotment
     ]
+    has_permission_on [:timetable_entries],
+      :to => [
+      :new,
+      :select_batch,
+      :new_entry,
+      :update_employees,
+      :delete_employee2,
+      :update_multiple_timetable_entries2,
+      :tt_entry_update2,
+      :tt_entry_noupdate2
+    ]
+    #    has_permission_on [:timetable],
+    #      :to => [
+    #      :index,
+    #      :edit,
+    #      :delete_subject,
+    #      :select_class,
+    #      :tt_entry_update,
+    #      :tt_entry_noupdate,
+    #      :update_multiple_timetable_entries,
+    #      :update_timetable_view,
+    #      :generate,
+    #      :extra_class,
+    #      :extra_class_edit,
+    #      :list_employee_by_subject,
+    #      :save_extra_class,
+    #      :timetable,
+    #      :weekdays,
+    #      :view,
+    #      :select_class2,
+    #      :edit2,
+    #      :update_employees,
+    #      :update_multiple_timetable_entries2,
+    #      :delete_employee2,
+    #      :tt_entry_update2,
+    #      :tt_entry_noupdate2,
+    #      :timetable_pdf
+    #    ]
   end
 
   role :timetable_view do
-    has_permission_on [:timetable], :to => [:index,:select_class,:view, :update_timetable_view, :timetable_pdf, :timetable]
+    has_permission_on [:timetable], :to => [:index,
+      :update_timetable,
+      :view,
+      :teachers_timetable,
+      :update_teacher_tt,
+      :update_timetable_view,
+      :employee_timetable,
+      :update_employee_tt,
+      :student_view,
+      :update_student_tt,
+      :timetable,
+      :timetable_pdf
+    ]
+    #    has_permission_on [:timetable], :to => [:index,:select_class,:view, :update_timetable_view, :timetable_pdf, :timetable]
   end
 
   role :student_attendance_view do
@@ -387,15 +819,15 @@ authorization do
 
   role :student_attendance_register do
     has_permission_on [:attendance], :to => [:index,:register,:register_attendance]
-    has_permission_on [:attendances], :to => [:index, :list_subject, :show, :new, :create, :edit,:update, :destroy]
+    has_permission_on [:attendances], :to => [:index, :list_subject, :show, :new, :create, :edit,:update, :destroy,:subject_wise_register,:daily_register]
     has_permission_on [:student_attendance], :to => [:index]
     has_permission_on [:attendance_reports], :to => [:index, :subject, :mode, :show, :year, :report, :filter, :student_details,:report_pdf,:filter_report_pdf]
   end
 
   role :add_new_batch do
     has_permission_on [:configuration], :to => [:index]
-    has_permission_on [:courses], :to => [:index,:manage_course, :manage_batches,:find_course, :new, :create,:destroy,:edit,:update, :show, :update_batch]
-    has_permission_on [:batches], :to => [:index, :new, :create,:destroy,:edit,:update, :show, :init_data,:assign_tutor,:update_employees,:assign_employee]
+    has_permission_on [:courses], :to => [:index,:manage_course, :manage_batches,:find_course, :new, :create,:destroy,:edit,:update, :show, :update_batch,:grouped_batches,:create_batch_group,:edit_batch_group,:update_batch_group,:delete_batch_group]
+    has_permission_on [:batches], :to => [:index, :new, :create,:destroy,:edit,:update, :show, :init_data,:assign_tutor,:update_employees,:assign_employee,:batches_ajax]
     has_permission_on [:subjects], :to => [:index, :new, :create,:destroy,:edit,:update, :show]
     has_permission_on [:student], :to => [:electives, :assign_students, :unassign_students, :assign_all_students, :unassign_all_students, :profile, :guardians, :show_previous_details]
     has_permission_on [:batch_transfers],
@@ -434,7 +866,7 @@ authorization do
   end
   role :sms_management do
     has_permission_on [:configuration], :to => [:index]
-    has_permission_on [:sms], :to => [:index, :settings, :students, :batches, :employees, :departments,:all, :update_general_sms_settings, :list_students, :sms_all, :list_employees]
+    has_permission_on [:sms], :to => [:index, :settings, :students, :batches, :employees, :departments,:all, :update_general_sms_settings, :list_students, :sms_all, :list_employees, :show_sms_messages, :show_sms_logs]
   end
   role :event_management do
     
@@ -495,6 +927,7 @@ authorization do
       :update_fees_collection_dates,
       :load_fees_submission_batch,
       :update_ajax,
+      :update_batches,
       :update_fees_collection_dates_defaulters,
       :fees_defaulters_students,
       :monthly_report,
@@ -506,6 +939,7 @@ authorization do
       :one_click_approve,
       :employee_payslip_approve,
       :employee_payslip_reject,
+      :employee_payslip_accept_form,
       :employee_payslip_reject_form,
       :payslip_index,
       :view_monthly_payslip,
@@ -561,12 +995,12 @@ authorization do
       :fees_create,
       :master_fees,
       :show_master_categories_list,
-      :show_additional_fees_list,
+#      :show_additional_fees_list,
       :fees_particulars,
-      :additional_fees,
-      :additional_fees_create_form,
-      :additional_fees_create,
-      :additional_fees_view,
+#      :additional_fees,
+#      :additional_fees_create_form,
+#      :additional_fees_create,
+#      :additional_fees_view,
       :add_particulars,
       :fee_collection_batch_update,
       :fees_submission_student,
@@ -581,7 +1015,9 @@ authorization do
       :master_category_create,
       :master_category_new,
       :fees_particulars_new,
+      :fees_particulars_new2,
       :fees_particulars_create,
+      :fees_particulars_create2,
       :add_particulars_new,
       :add_particulars_create,
       :fee_collection_new,
@@ -609,14 +1045,14 @@ authorization do
       :master_category_particulars_edit,
       :master_category_particulars_update,
       :master_category_particulars_delete,
-      :additional_fees_list,
+#      :additional_fees_list,
       :additional_particulars,
       :add_particulars_edit,
       :add_particulars_update,
       :add_particulars_delete,
-      :additional_fees_edit,
-      :additional_fees_update,
-      :additional_fees_delete,
+#      :additional_fees_edit,
+#      :additional_fees_update,
+#      :additional_fees_delete,
       :month_date,
       :compare_report,
       :report_compare,
@@ -633,6 +1069,8 @@ authorization do
       :expense_list_update,
       :income_list,
       :income_list_update,
+      :income_details,
+      :income_details_pdf,
       :delete_transaction,
       :partial_payment,
       :donation_edit,
@@ -695,6 +1133,7 @@ authorization do
       :admission3,
       :edit3,
       :admission3_1,
+      :admission3_2,
       :edit3_1,
       :admission4,
       :change_reporting_manager,
@@ -748,6 +1187,10 @@ authorization do
       :activate_category,
       :delete_category,
       :inactivate_category ]
+    has_permission_on [:employee_attendance],
+      :to => [
+      :leave_app
+    ]
   end
 
   role :employee_attendance do
@@ -844,9 +1287,13 @@ authorization do
     ]
     has_permission_on [:payroll],
       :to => [
+      :manage_payroll,
+      :profile_payroll_details,
       :edit_payroll_details,
+      :view_payroll_details,
       :activate_category,
-      :inactivate_category ]
+      :inactivate_category,
+      :update_dependent_fields]
   end
 
   role :employee_search do
@@ -864,7 +1311,8 @@ authorization do
   end
 
   role :employee_timetable_access do
-    has_permission_on [:employee], :to => [:timetable,:timetable_pdf]
+    has_permission_on [:timetable], :to => [:employee_timetable,:update_employee_tt,:timetable_pdf]
+    #    has_permission_on [:employee], :to => [:timetable,:timetable_pdf]
   end
 
   # admin privileges
@@ -905,9 +1353,11 @@ authorization do
       :edit,
       :destroy,
       :list_subject,
-      :update
+      :update,
+      :subject_wise_register,
+      :daily_register
     ]
-    has_permission_on [:sms],  :to => [:index, :settings, :update_general_sms_settings, :students, :list_students, :batches, :sms_all, :employees, :list_employees, :departments, :all]
+    has_permission_on [:sms],  :to => [:index, :settings, :update_general_sms_settings, :students, :list_students, :batches, :sms_all, :employees, :list_employees, :departments, :all, :show_sms_messages, :show_sms_logs]
     has_permission_on [:sms_settings],  :to => [:index, :update_general_sms_settings]
     has_permission_on [:class_timings],  :to => [:index, :edit, :destroy, :show, :new, :create, :update]
     has_permission_on [:attendance_reports], :to => [:index, :subject, :mode, :show, :year, :report, :filter, :student_details,:report_pdf,:filter_report_pdf]
@@ -926,7 +1376,12 @@ authorization do
       :update,
       :destroy,
       :show,
-      :find_course
+      :find_course,
+      :grouped_batches,
+      :create_batch_group,
+      :edit_batch_group,
+      :update_batch_group,
+      :delete_batch_group
     ]
     has_permission_on [:batches],
       :to => [
@@ -941,7 +1396,8 @@ authorization do
       :assign_tutor,
       :update_employees,
       :assign_employee,
-      :remove_employee
+      :remove_employee,
+      :batches_ajax
     ]
     has_permission_on [:batch_transfers],
       :to => [
@@ -1021,6 +1477,26 @@ authorization do
       :destroy
 
     ]
+    has_permission_on [:ranking_levels],
+      :to => [
+      :index,
+      :load_ranking_levels,
+      :create_ranking_level,
+      :edit_ranking_level,
+      :update_ranking_level,
+      :delete_ranking_level,
+      :ranking_level_cancel,
+      :change_priority
+    ]
+    has_permission_on [:class_designations],
+      :to => [
+      :index,
+      :load_class_designations,
+      :create_class_designation,
+      :edit_class_designation,
+      :update_class_designation,
+      :delete_class_designation
+    ]
     has_permission_on [:exam],
       :to => [
       :index,
@@ -1034,16 +1510,61 @@ authorization do
       :consolidated_exam_report,
       :consolidated_exam_report_pdf,
       :subject_wise_report,
+      :subject_rank,
+      :course_rank,
+      :batch_groups,
+      :student_course_rank,
+      :student_course_rank_pdf,
+      :student_school_rank,
+      :student_school_rank_pdf,
+      :attendance_rank,
+      :student_attendance_rank,
+      :student_attendance_rank_pdf,
+      :generate_reports,
+      :generate_previous_reports,
+      :select_inactive_batches,
+      :settings,
+      :report_center,
+      :gpa_cwa_reports,
+      :list_batch_groups,
+      :ranking_level_report,
+      :student_ranking_level_report,
+      :student_ranking_level_report_pdf,
+      :transcript,
+      :student_transcript,
+      :student_transcript_pdf,
+      :combined_report,
+      :load_levels,
+      :student_combined_report,
+      :student_combined_report_pdf,
+      :load_batch_students,
+      :select_mode,
+      :select_batch_group,
+      :select_type,
+      :select_report_type,
+      :batch_rank,
+      :student_batch_rank,
+      :student_batch_rank_pdf,
+      :student_subject_rank,
+      :student_subject_rank_pdf,
       :list_subjects,
+      :list_batch_subjects,
       :generated_report2,
       :generated_report2_pdf,
       :generated_report3,
       :final_report_type,
       :generated_report4,
       :generated_report4_pdf,
+      :combined_grouped_exam_report_pdf,
       :previous_years_marks_overview,
       :previous_years_marks_overview_pdf,
       :academic_report,
+      :previous_batch_exams,
+      :list_inactive_batches,
+      :list_inactive_exam_groups,
+      :previous_exam_marks,
+      :edit_previous_marks,
+      :update_previous_marks,
       :create_exam,
       :update_batch_ex_result,
       :update_batch,
@@ -1052,6 +1573,10 @@ authorization do
       :graph_for_previous_years_marks_overview,
       :grouped_exam_report
     ]
+    has_permission_on [:scheduled_jobs],
+      :to => [
+      :index
+      ]
     has_permission_on [:exam_groups],
       :to => [
       :index,
@@ -1080,42 +1605,42 @@ authorization do
       :query_data
     ]
 
-    has_permission_on [:additional_exam],
-      :to => [
-      :index,
-      :update_exam_form,
-      :publish,
-      :create_additional_exam,
-      :update_batch
-    ]
+    #    has_permission_on [:additional_exam],
+    #      :to => [
+    #      :index,
+    #      :update_exam_form,
+    #      :publish,
+    #      :create_additional_exam,
+    #      :update_batch
+    #    ]
 
-    has_permission_on [:additional_exam_groups],
-      :to => [
-      :index,
-      :new,
-      :create,
-      :edit,
-      :update,
-      :destroy,
-      :show,
-      :initial_queries,
-      :set_additional_exam_minimum_marks,
-      :set_additional_exam_maximum_marks,
-      :set_additional_exam_weightage,
-      :set_additional_exam_group_name
-    ]
-    has_permission_on [:additional_exams],
-      :to => [
-      :index,
-      :show,
-      :new,
-      :create,
-      :edit,
-      :update,
-      :destroy,
-      :save_additional_scores,
-      :query_data
-    ]
+    #    has_permission_on [:additional_exam_groups],
+    #      :to => [
+    #      :index,
+    #      :new,
+    #      :create,
+    #      :edit,
+    #      :update,
+    #      :destroy,
+    #      :show,
+    #      :initial_queries,
+    #      :set_additional_exam_minimum_marks,
+    #      :set_additional_exam_maximum_marks,
+    #      :set_additional_exam_weightage,
+    #      :set_additional_exam_group_name
+    #    ]
+    #    has_permission_on [:additional_exams],
+    #      :to => [
+    #      :index,
+    #      :show,
+    #      :new,
+    #      :create,
+    #      :edit,
+    #      :update,
+    #      :destroy,
+    #      :save_additional_scores,
+    #      :query_data
+    #    ]
 
     has_permission_on [:finance],
       :to => [
@@ -1164,6 +1689,7 @@ authorization do
       :update_fees_collection_dates,
       :load_fees_submission_batch,
       :update_ajax,
+      :update_batches,
       :update_fees_collection_dates_defaulters,
       :fees_defaulters_students,
       :monthly_report,
@@ -1175,6 +1701,7 @@ authorization do
       :one_click_approve,
       :employee_payslip_approve,
       :employee_payslip_reject,
+      :employee_payslip_accept_form,
       :employee_payslip_reject_form,
       :payslip_index,
       :view_monthly_payslip,
@@ -1230,12 +1757,12 @@ authorization do
       :fees_create,
       :master_fees,
       :show_master_categories_list,
-      :show_additional_fees_list,
+#      :show_additional_fees_list,
       :fees_particulars,
-      :additional_fees,
-      :additional_fees_create_form,
-      :additional_fees_create,
-      :additional_fees_view,
+#      :additional_fees,
+#      :additional_fees_create_form,
+#      :additional_fees_create,
+#      :additional_fees_view,
       :add_particulars,
       :fee_collection_batch_update,
       :fees_submission_student,
@@ -1250,7 +1777,9 @@ authorization do
       :master_category_create,
       :master_category_new,
       :fees_particulars_new,
+      :fees_particulars_new2,
       :fees_particulars_create,
+      :fees_particulars_create2,
       :add_particulars_new,
       :add_particulars_create,
       :fee_discounts,
@@ -1278,14 +1807,14 @@ authorization do
       :master_category_particulars_edit,
       :master_category_particulars_update,
       :master_category_particulars_delete,
-      :additional_fees_list,
+#      :additional_fees_list,
       :additional_particulars,
       :add_particulars_edit,
       :add_particulars_update,
       :add_particulars_delete,
-      :additional_fees_edit,
-      :additional_fees_update,
-      :additional_fees_delete,
+#      :additional_fees_edit,
+#      :additional_fees_update,
+#      :additional_fees_delete,
       :month_date,
       :compare_report,
       :report_compare,
@@ -1302,6 +1831,8 @@ authorization do
       :expense_list_update,
       :income_list,
       :income_list_update,
+      :income_details,
+      :income_details_pdf,
       :delete_transaction,
       :partial_payment,
       :donation_edit,
@@ -1337,6 +1868,7 @@ authorization do
       :all,
       :delete,
       :delete_comment,
+      :comment_approved,
       :edit,
       :search_news_ajax,
       :view ]
@@ -1419,6 +1951,7 @@ authorization do
       :unassign_all_students,
       :edit_admission4,
       :admission3_1,
+      :admission3_2,
       :show_previous_details,
       :fees,
       :fee_details
@@ -1454,32 +1987,34 @@ authorization do
       :edit,
       :list_subjects ]
     has_permission_on [:timetable],
-      :to => [
-      :index,
-      :edit,
-      :delete_subject,
-      :select_class,
-      :tt_entry_update,
-      :tt_entry_noupdate,
-      :update_multiple_timetable_entries,
+      :to => [:index,
+      :new_timetable,
+      :update_timetable,
       :view,
+      :edit_master,
+      :teachers_timetable,
+      :update_teacher_tt,
       :update_timetable_view,
-      :tt_entry_noupdate2,
-      :select_class2,
-      :edit2,
-      :update_employees,
-      :update_multiple_timetable_entries2,
-      :delete_employee2,
-      :tt_entry_update2,
-      :generate,
+      :destroy,
+      :employee_timetable,
+      :update_employee_tt,
+      :student_view,
+      :update_student_tt,
       :weekdays,
-      :extra_class,
-      :extra_class_edit,
-      :list_employee_by_subject,
-      :save_extra_class,
       :timetable,
-      :timetable_pdf
-
+      :timetable_pdf,
+      :work_allotment
+    ]
+    has_permission_on [:timetable_entries],
+      :to => [
+      :new,
+      :select_batch,
+      :new_entry,
+      :update_employees,
+      :delete_employee2,
+      :update_multiple_timetable_entries2,
+      :tt_entry_update2,
+      :tt_entry_noupdate2
     ]
     has_permission_on [:weekdays],
       :to => [
@@ -1579,6 +2114,7 @@ authorization do
       :delete_bank_details,
       :admission3,
       :admission3_1,
+      :admission3_2,
       :add_additional_details,
       :edit_additional_details,
       :delete_additional_details,
@@ -1609,12 +2145,137 @@ authorization do
     ]
     has_permission_on [:calendar], :to => [:event_delete]
 
+    has_permission_on [:descriptive_indicators],
+      :to=>[
+      :index,
+      :new,
+      :create,
+      :show,
+      :edit,
+      :update,
+      :destroy,
+      :reorder,
+      :destroy_indicator
+    ]
+    has_permission_on [:fa_criterias],
+      :to=>[
+      :index,
+      :show
+    ]
+    has_permission_on [:fa_groups],
+      :to=>[
+      :index,
+      :new,
+      :create,
+      :edit,
+      :update,
+      :destroy,
+      :show,
+      :assign_fa_groups,
+      :select_subjects,
+      :select_fa_groups,
+      :update_subject_fa_groups,
+      :new_fa_criteria,
+      :create_fa_criteria,
+      :edit_fa_criteria,
+      :update_fa_criteria,
+      :destroy_fa_criteria,
+      :reorder
+
+    ]
+    has_permission_on [:observation_groups],
+      :to=>[
+      :index,
+      :new,
+      :show,
+      :create,
+      :edit,
+      :update,
+      :destroy,
+      :new_observation,
+      :edit_observation,
+      :create_observation,
+      :edit_osbervation,
+      :update_observation,
+      :destroy_observation,
+      :assign_courses,
+      :select_observation_groups,
+      :update_course_obs_groups,
+      :reorder
+    ]
+    has_permission_on [:observations],
+      :to=>[
+      :show
+    ]
+    has_permission_on [:assessment_scores],
+      :to=>[
+      :exam_fa_groups,
+      :fa_scores,
+      :observation_groups,
+      :observation_scores
+    ]
+    has_permission_on [:cce_exam_categories],
+      :to=>[
+      :index,
+      :new,
+      :show,
+      :create,
+      :edit,
+      :update,
+      :destroy
+    ]
+    has_permission_on [:cce_grade_sets],
+      :to=>[
+      :index,
+      :new,
+      :create,
+      :edit,
+      :update,
+      :destroy,
+      :show,
+      :index,
+      :new_grade,
+      :create_grade,
+      :edit_grade,
+      :update_grade,
+      :destroy_grade
+    ]
+    has_permission_on [:cce_reports],
+      :to=>[
+      :index,
+      :create_reports,
+      :student_wise_report,
+      :student_report_pdf,
+      :student_transcript,
+      :student_report
+    ]
+    has_permission_on [:cce_settings],
+      :to=>[
+      :index,
+      :basic,
+      :scholastic,
+      :co_scholastic
+    ]
+    has_permission_on [:cce_weightages],
+      :to=>[
+      :index,
+      :new,
+      :create,
+      :show,
+      :edit,
+      :update,
+      :destroy,
+      :assign_courses,
+      :assign_weightages,
+      :select_weightages,
+      :update_course_weightages
+    ]
   end
 
   # student- privileges
   role :student do
     has_permission_on [:course], :to => [:view]
-    has_permission_on [:exam], :to => [:generated_report, :generated_report4_pdf, :graph_for_generated_report, :academic_report, :previous_years_marks_overview,:previous_years_marks_overview_pdf, :graph_for_previous_years_marks_overview, :generated_report3, :graph_for_generated_report3 ,:generated_report4]
+    has_permission_on [:exam], :to => [:generated_report, :generated_report4_pdf, :graph_for_generated_report, :academic_report, :previous_years_marks_overview,:previous_years_marks_overview_pdf, :graph_for_previous_years_marks_overview, :generated_report3, :graph_for_generated_report3 ,:generated_report4,:student_transcript,:student_transcript_pdf]
     has_permission_on [:student],
       :to => [
       :exam_report,
@@ -1644,7 +2305,50 @@ authorization do
       :all,
       :search_news_ajax,
       :view,
-      :add_comment ]
+      :add_comment,
+      :delete_comment]
+    has_permission_on [:subject], :to => [:index,:list_subjects]
+    has_permission_on [:timetable], :to => [:student_view, :update_student_tt]
+    has_permission_on [:attendance], :to => [:student_report]
+    has_permission_on [:student_attendance], :to => [:index, :student, :month]
+    has_permission_on [:finance], :to => [:student_fees_structure]
+    has_permission_on [:cce_reports], :to => [:student_transcript,:student_report_pdf]
+  end
+
+  role :parent do
+    has_permission_on [:course], :to => [:view]
+    has_permission_on [:exam], :to => [:generated_report, :generated_report4_pdf, :combined_grouped_exam_report_pdf, :graph_for_generated_report, :academic_report, :previous_years_marks_overview,:previous_years_marks_overview_pdf, :graph_for_previous_years_marks_overview, :generated_report3, :graph_for_generated_report3 ,:generated_report4,:student_transcript,:student_transcript_pdf]
+    has_permission_on [:student],
+      :to => [
+      :exam_report,
+      :show,
+      :academic_pdf,
+      :profile,
+      :guardians,
+      :list_students_by_course,
+      :academic_report,
+      :previous_years_marks_overview,
+      :previous_years_marks_overview_pdf,
+      :reports,
+      :student_annual_overview,
+      :subject_wise_report,
+      :graph_for_previous_years_marks_overview,
+      :graph_for_student_annual_overview,
+      :graph_for_subject_wise_report_for_one_subject,
+      :graph_for_exam_report,
+      :graph_for_academic_report,
+      :show_previous_details,
+      :fees,
+      :fee_details
+    ]
+    has_permission_on [:news],
+      :to => [
+      :index,
+      :all,
+      :search_news_ajax,
+      :view,
+      :add_comment,
+      :delete_comment]
     has_permission_on [:subject], :to => [:index,:list_subjects]
     has_permission_on [:timetable], :to => [:student_view,:update_timetable_view]
     has_permission_on [:attendance], :to => [:student_report]
@@ -1676,8 +2380,6 @@ authorization do
       :mark_unread,
       :view_payslip,
       :view_attendance,
-      :timetable,
-      :timetable_pdf,
       :update_monthly_payslip,
       :create_reminder_1,
       :select_employee_department,
@@ -1689,13 +2391,15 @@ authorization do
       :show,
       :profile_pdf
     ]
+    has_permission_on [:timetable],:to => [:employee_timetable,:update_employee_tt]
     has_permission_on [:news],
       :to => [
       :index,
       :all,
       :search_news_ajax,
       :view,
-      :add_comment ]
+      :add_comment,
+      :delete_comment]
     has_permission_on [:employee_attendance],
       :to => [
       :index,
@@ -1731,11 +2435,21 @@ authorization do
       :delete_reminder_by_sender,
       :delete_reminder_by_recipient,
       :view_reminder,
-      :mark_unread ]  
+      :mark_unread ]
+    has_permission_on [:assessment_scores],
+      :to=>[
+      :exam_fa_groups,
+      :fa_scores,
+      :observation_groups,
+      :observation_scores
+    ]
+    has_permission_on [:attendances], :to => [:index, :list_subject, :show, :subject_wise_register, :daily_register, :new, :create, :edit,:update, :destroy]
+    has_permission_on [:attendance_reports], :to => [:new,:index, :subject, :mode, :show, :year, :report, :filter, :student_details,:report_pdf,:filter_report_pdf,:student]
+    has_permission_on [:cce_reports],:to=>[:index,:student_wise_report,:student_wise_report_pdf,:student_report,:student_report_pdf,:student_transcript]
   end
 
   role :subject_attendance do
-    has_permission_on [:attendances], :to => [:index, :list_subject, :show, :new, :create, :edit,:update, :destroy]
+    has_permission_on [:attendances], :to => [:index, :list_subject, :show, :new, :create, :edit,:update, :destroy,:subject_wise_register]
     has_permission_on [:attendance_reports], :to => [:index, :subject, :mode, :show, :year, :report, :filter, :student_details,:report_pdf,:filter_report_pdf]
     
   end
@@ -1754,13 +2468,48 @@ authorization do
       :consolidated_exam_report,
       :consolidated_exam_report_pdf,
       :subject_wise_report,
+      :subject_rank,
+      :course_rank,
+      :batch_groups,
+      :student_course_rank,
+      :student_course_rank_pdf,
+      :student_school_rank,
+      :student_school_rank_pdf,
+      :attendance_rank,
+      :student_attendance_rank,
+      :student_attendance_rank_pdf,
+      :report_center,
+      :gpa_cwa_reports,
+      :list_batch_groups,
+      :ranking_level_report,
+      :student_ranking_level_report,
+      :student_ranking_level_report_pdf,
+      :transcript,
+      :student_transcript,
+      :student_transcript_pdf,
+      :combined_report,
+      :load_levels,
+      :student_combined_report,
+      :student_combined_report_pdf,
+      :load_batch_students,
+      :select_mode,
+      :select_batch_group,
+      :select_type,
+      :select_report_type,
+      :batch_rank,
+      :student_batch_rank,
+      :student_batch_rank_pdf,
+      :student_subject_rank,
+      :student_subject_rank_pdf,
       :list_subjects,
+      :list_batch_subjects,
       :generated_report2,
       :generated_report2_pdf,
       :grouped_exam_report,
       :final_report_type,
       :generated_report4,
-      :generated_report4_pdf
+      :generated_report4_pdf,
+      :combined_grouped_exam_report_pdf
     ]
     has_permission_on [:exam_groups],
       :to => [
@@ -1774,32 +2523,34 @@ authorization do
       :show,
       :save_scores
     ]
-    has_permission_on [:additional_exam],
-      :to =>[
-      :create_additional_exam,
-      :update_batch
-    ]
-    has_permission_on [:additional_exam_groups],
-      :to =>[
-      :index,
-      :show,
-      :set_additional_exam_minimum_marks,
-      :set_additional_exam_maximum_marks,
-      :set_additional_exam_weightage,
-      :set_additional_exam_group_name
-    ]
-    has_permission_on [:additional_exams],
-      :to => [
-      :index,
-      :show,
-      :save_additional_scores
-    ]
+    #    has_permission_on [:additional_exam],
+    #      :to =>[
+    #      :create_additional_exam,
+    #      :update_batch
+    #    ]
+    #    has_permission_on [:additional_exam_groups],
+    #      :to =>[
+    #      :index,
+    #      :show,
+    #      :set_additional_exam_minimum_marks,
+    #      :set_additional_exam_maximum_marks,
+    #      :set_additional_exam_weightage,
+    #      :set_additional_exam_group_name
+    #    ]
+    #    has_permission_on [:additional_exams],
+    #      :to => [
+    #      :index,
+    #      :show,
+    #      :save_additional_scores
+    #    ]
   end
 
   role :archived_exam_reports do
     has_permission_on [:exam_reports],
       :to => [
       :archived_exam_wise_report,
+      :list_inactivated_batches,
+      :final_archived_report_type,
       :consolidated_exam_report,
       :consolidated_exam_report_pdf,
       :archived_batches_exam_report,

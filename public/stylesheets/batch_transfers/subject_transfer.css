@@ -38,7 +38,7 @@
 #category-list li div.category-name {
     font-weight: bold;
     font-size:13px;
-    min-width: 350px;
+    min-width: 500px;
 }
 
 #category-list li div.category-code {
@@ -111,7 +111,7 @@
 }
 
 .linker2 a:hover{
-    color:#42a5cc;
+    color:#bb0000;
     text-decoration: none;
 }
 
@@ -124,7 +124,7 @@
 }
 
 .linker a:hover{
-    color:#42a5cc;
+    color:#bb0000;
     text-decoration: none;
 }
 
@@ -138,7 +138,7 @@
 }
 
 .add_sub a:hover{
-    color:#42a5cc;
+    color:#bb0000;
     text-decoration: none;
 }
 
@@ -148,7 +148,7 @@
 
 
 h5{
-    color: #42a5cc;
+    color: #bb0000;
     text-align: center;
 }
 

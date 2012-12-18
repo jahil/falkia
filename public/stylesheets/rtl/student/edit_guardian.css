@@ -32,7 +32,7 @@
 
 #create_user {width:20px;display:inline;}
 #address_text_area {width:232px;height:162px;background:#fff url(../../../images/admission/address_area_bg.jpg) no-repeat;margin-bottom:40px;}
-#master_student_address, #parent_detail_office_address {padding-right:10px;padding-top:5px;width:222px;height:162px;border:none;background:transparent;color:#42a5cc;font-weight:bold;}
+#master_student_address, #parent_detail_office_address {padding-right:10px;padding-top:5px;width:222px;height:162px;border:none;background:transparent;color:#b00;font-weight:bold;}
 #create_user_option {display:inline;margin:0px;padding:0px;}
 
 

@@ -18,20 +18,33 @@
 #under the License. -%>
 
 <div class="add_grade">
-<%= link_to_remote "#{t('add_grades')}", :url => { :action => 'new', :id => @batch }%>
+  <%= link_to_remote "#{t('add_grades')}", :url => { :action => 'new', :id => @batch }%>
 
 </div>
+<% if @batch.present?
+  @credit = @batch.gpa_enabled? || @batch.cce_enabled?
+else
+  @credit = Configuration.cce_enabled? || Configuration.get_config_value('CWA')=='1' || Configuration.get_config_value('GPA')=='1'
+end %>
 <%  unless @grading_levels.empty? %>
   <table id="listing" align="center" width="100%" cellpadding="1" cellspacing="1">
     <tr class="tr-head">
       <td><%= t('name') %></td>
       <td><%= t('min_score') %></td>
+      <% if @credit %>
+        <td>Credit Points</td>
+      <% end %>
+      <td>Description</td>
       <td></td>
     </tr>
     <% @grading_levels.each do |grade| %>
       <tr id="grading-level-<%= grade.id %>" class="tr-<%= cycle('odd', 'even') %>">
         <td class="col-2"><%= grade.name %></td>
         <td class="col-2"><%= grade.min_score %></td>
+        <% if @credit %>
+          <td class="col-2"><%= grade.credit_points %></td>
+        <% end %>
+        <td class="col-2"><%= grade.description.present? ? grade.description : "-" %></td>
         <td class="col-1"><small><%= link_to_remote(t('edit_text'),
               :url => edit_grading_level_path(grade), :method => 'get' ) %>
             | <%= link_to_remote(t('delete_text'),

@@ -125,7 +125,7 @@
     height:162px;
     border:none;
     background:transparent;
-    color:#42a5cc;
+    color:#b00;
     font-weight:bold;
 }
 #create_user_option {
@@ -160,7 +160,7 @@
     height:28px;
     background:#fff url(../../../images/admission/text_input.jpg) no-repeat;
     margin-bottom:20px;
-    color:#42a5cc;
+    color:#b00;
     font-weight:bold;
     padding-right:10px;
     padding-top:3px;
@@ -222,7 +222,7 @@ input#student_image_file {
 }
 .text-input-bg-admission input:focus{
     background: #fff;
-    border: 1px solid #42a5cc;
+    border: 1px solid #9e0f15;
 }
 
 input#student_photo{

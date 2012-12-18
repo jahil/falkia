@@ -7,7 +7,7 @@
 }
 .link-heading a {
     font-weight:bold;
-    color:#3293bc;
+    color:#900;
 }
 .link-descr {
     margin-top:5px;
@@ -164,13 +164,38 @@
     padding-top:3px;
     width:600px;
 }
+.each_category{
+    font-size: 12px;
+    overflow:auto;
+    width:auto;
+
+}
+.each_category input{
+    float:left;
+    width:auto;
+}
+
+.each_category label {
+    float: right;
+    margin-left: 22px;
+    margin-top: -6px;
+    width: 138px;
+}
+.categories {
+    height: 100px;
+    overflow: auto;
+    max-width: 220px;
+    float: left;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
 .sel-list {
     margin-bottom:2px;
     width:200px;
 }
 
 #inner-tab-menu ul li {
-    background-color: #42A5CC;
+    background-color: #9D0E00;
     color: #FFFFFF;
     float: left;
     font-size: 0.9em;
@@ -182,5 +207,8 @@
     width: 142px;
 }
 table#listing td.col-4 {
-    width: 28%;
+    width: 36%;
+}
+table#listing td.col-1 {
+    width: 2%;
 }

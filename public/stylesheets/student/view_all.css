@@ -59,7 +59,7 @@ table{
 }
 tr.tr-head{
     background: #fff;
-    color:#1b495c;
+    color:#990a10;
     font-weight:bold;
     text-align:left;
 }
@@ -98,7 +98,7 @@ td a{
     color:#27292b;
 }
 td a:hover{
-    color:#1b495c;
+    color:#990a10;
     text-decoration:underline;
 }
 td.col-3{

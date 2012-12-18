@@ -62,6 +62,12 @@ class UserController < ApplicationController
         page.replace_html 'users', :text => ''
         page.replace_html 'employee_user', :text => ''
       end
+    elsif params[:user_type] == "Parent"
+      render(:update) do |page|
+        page.replace_html 'student_user', :partial=> 'parent_user'
+        page.replace_html 'users', :text => ''
+        page.replace_html 'employee_user', :text => ''
+      end
     elsif params[:user_type] == ''
       @users = ""
       render(:update) do |page|
@@ -88,6 +94,15 @@ class UserController < ApplicationController
     render(:update) {|page| page.replace_html 'users', :partial=> 'users'}
   end
 
+  def list_parent_user
+    batch = params[:batch_id]
+    @guardian = Guardian.find(:all, :select=>'guardians.*',:joins=>'INNER JOIN students ON students.id = guardians.ward_id', :conditions => 'students.batch_id = ' + batch + ' AND is_active=1',:order =>'first_name ASC')
+    users = @guardian.collect { |g| g.user}
+    users.compact!
+    @users  = users.paginate(:page=>params[:page],:per_page=>20)
+    render(:update) {|page| page.replace_html 'users', :partial=> 'users'}
+  end
+
   def change_password
     
     if request.post?
@@ -110,19 +125,20 @@ class UserController < ApplicationController
   end
 
   def user_change_password
-    user = User.find_by_username(params[:id])
+    @user = User.find_by_username(params[:id])
 
     if request.post?
       if params[:user][:new_password]=='' and params[:user][:confirm_password]==''
         flash[:warn_notice]= "<p>#{t('flash6')}</p>"
       else
         if params[:user][:new_password] == params[:user][:confirm_password]
-          user.password = params[:user][:new_password]
-          user.update_attributes(:password => user.password,
-            :role => user.role_name
-          )
-          flash[:notice]= "#{t('flash7')}"
-          redirect_to :action=>"edit", :id=>user.username
+          @user.password = params[:user][:new_password]
+          if @user.update_attributes(:password => @user.password,:role => @user.role_name)
+            flash[:notice]= "#{t('flash7')}"
+            redirect_to :action=>"edit", :id=>@user.username
+          else
+            render :user_change_password
+          end
         else
           flash[:warn_notice] =  "<p>#{t('flash10')}</p>"
         end
@@ -162,8 +178,13 @@ class UserController < ApplicationController
     @user = current_user
     @config = Configuration.available_modules
     @employee = @user.employee_record if ['employee','admin'].include?(@user.role_name.downcase)
-    @student = @user.student_record  if @user.role_name.downcase == 'student'
-    @dash_news = News.find(:all, :limit => 5)
+    if @user.student?
+      @student = Student.find_by_admission_no(@user.username)
+    end
+    if @user.parent?
+      @student = Student.find_by_admission_no(@user.username[1..@user.username.length])
+    end
+    #    @dash_news = News.find(:all, :limit => 3)
   end
 
   def edit
@@ -181,32 +202,45 @@ class UserController < ApplicationController
     @network_state = Configuration.find_by_config_key("NetworkState")
     if request.post? and params[:reset_password]
       if user = User.find_by_username(params[:reset_password][:username])
-        user.reset_password_code = Digest::SHA1.hexdigest( "#{user.email}#{Time.now.to_s.split(//).sort_by {rand}.join}" )
-        user.reset_password_code_until = 1.day.from_now
-        user.role = user.role_name
-        user.save(false)
-        url = "#{request.protocol}#{request.host_with_port}"
-        UserNotifier.deliver_forgot_password(user,url)
-        flash[:notice] = "#{t('flash18')}"
-        redirect_to :action => "index"
+        unless user.email.blank?
+          user.reset_password_code = Digest::SHA1.hexdigest( "#{user.email}#{Time.now.to_s.split(//).sort_by {rand}.join}" )
+          user.reset_password_code_until = 1.day.from_now
+          user.role = user.role_name
+          user.save(false)
+          url = "#{request.protocol}#{request.host_with_port}"
+          UserNotifier.deliver_forgot_password(user,url)
+          flash[:notice] = "#{t('flash18')}"
+          redirect_to :action => "index"
+        else
+          flash[:notice] = "#{t('flash20')}"
+          return
+        end
       else
         flash[:notice] = "#{t('flash19')} #{params[:reset_password][:username]}"
       end
     end
   end
 
+
   def login
     @institute = Configuration.find_by_config_key("LogoName")
-    if request.post? and params[:user]
-      @user = User.new(params[:user])
-      user = User.find_by_username @user.username
-      if user and User.authenticate?(@user.username, @user.password)
-        session[:user_id] = user.id
-        flash[:notice] = "#{t('welcome')}, #{user.first_name} #{user.last_name}!"
-        redirect_to session[:back_url] || {:controller => 'user', :action => 'dashboard'}
-      else
-        flash[:notice] = "#{t('login_error_message')}"
+    available_login_authes = FedenaPlugin::AVAILABLE_MODULES.select{|m| m[:name].classify.constantize.respond_to?("login_hook")}
+    selected_login_hook = available_login_authes.first if available_login_authes.count>=1
+    if selected_login_hook
+      authenticated_user = selected_login_hook[:name].classify.constantize.send("login_hook",self)
+    else
+      if request.post? and params[:user]
+        @user = User.new(params[:user])
+        user = User.find_by_username @user.username
+        if user.present? and User.authenticate?(@user.username, @user.password)
+          authenticated_user = user 
+        end
       end
+    end
+    if authenticated_user.present?
+      successful_user_login(authenticated_user) and return
+    elsif authenticated_user.blank? and request.post?
+      flash[:notice] = "#{t('login_error_message')}"
     end
   end
 
@@ -216,7 +250,13 @@ class UserController < ApplicationController
     session[:user_id] = nil
     session[:language] = nil
     flash[:notice] = "#{t('logged_out')}"
-    redirect_to :controller => 'user', :action => 'login'
+    available_login_authes = FedenaPlugin::AVAILABLE_MODULES.select{|m| m[:name].classify.constantize.respond_to?("logout_hook")}
+    selected_logout_hook = available_login_authes.first if available_login_authes.count>=1
+    if selected_logout_hook
+      selected_logout_hook[:name].classify.constantize.send("logout_hook",self,"/")
+    else
+      redirect_to :controller => 'user', :action => 'login' and return
+    end    
   end
 
   def profile
@@ -227,6 +267,8 @@ class UserController < ApplicationController
     unless @user.nil?
       @employee = Employee.find_by_employee_number(@user.username)
       @student = Student.find_by_admission_no(@user.username)
+      @ward  = @user.parent_record if @user.parent
+
     else
       flash[:notice] = "#{t('flash14')}"
       redirect_to :action => 'dashboard'
@@ -250,18 +292,18 @@ class UserController < ApplicationController
 
   def search_user_ajax
     unless params[:query].nil? or params[:query].empty? or params[:query] == ' '
-      if params[:query].length>= 3
-        @user = User.first_name_or_last_name_or_username_begins_with params[:query].split
-        #      @user = User.find(:all,
-        #                :conditions => "(first_name LIKE \"#{params[:query]}%\"
-        #                       OR username LIKE \"#{params[:query]}%\"
-        #                       OR last_name LIKE \"#{params[:query]}%\"
-        #                       OR (concat(first_name, \" \", last_name) LIKE \"#{params[:query]}%\"))",
-        #                :order => "role_name asc,first_name asc") unless params[:query] == ''
-      else
-        @user = User.first_name_or_last_name_or_username_equals params[:query].split
-      end
-      @user = @user.sort_by { |u1| [u1.role_name,u1.full_name] } unless @user.nil?
+      #      if params[:query].length>= 3
+      #        @user = User.first_name_or_last_name_or_username_begins_with params[:query].split
+      @user = User.find(:all,
+        :conditions => "(first_name LIKE \"#{params[:query]}%\"
+                       OR last_name LIKE \"#{params[:query]}%\"
+                       OR (concat(first_name, \" \", last_name) LIKE \"#{params[:query]}%\")
+                       OR username LIKE  \"#{params[:query]}\")",
+        :order => "first_name asc") unless params[:query] == ''
+      #      else
+      #        @user = User.first_name_or_last_name_or_username_equals params[:query].split
+      #      end
+      #      @user = @user.sort_by { |u1| [u1.role_name,u1.full_name] } unless @user.nil?
     else
       @user = ''
     end
@@ -295,7 +337,7 @@ class UserController < ApplicationController
     @privileges = Privilege.find(:all)
     @user = User.find_by_username(params[:id])
     @finance = Configuration.find_by_config_value("Finance")
-    @sms = Configuration.find_by_config_value("SMS")
+    @sms_setting = SmsSetting.new()
     @hr = Configuration.find_by_config_value("HR")
     if request.post?
       new_privileges = params[:user][:privilege_ids] if params[:user]
@@ -315,6 +357,14 @@ class UserController < ApplicationController
     @employee ||= Employee.first if current_user.admin?
     @student = Student.find_by_admission_no(@user.username)
     render :partial=>'header_link'
+  end
+
+
+  private
+  def successful_user_login(user)
+    session[:user_id] = user.id
+    flash[:notice] = "#{t('welcome')}, #{user.first_name} #{user.last_name}!"
+    redirect_to session[:back_url] || {:controller => 'user', :action => 'dashboard'}
   end
 end
 

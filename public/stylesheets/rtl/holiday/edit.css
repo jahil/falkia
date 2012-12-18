@@ -30,12 +30,12 @@
     padding : 20px 0 30px 0;
 }
 .fieldWithErrors{
-    border : 2px solid #42a5cc;
+    border : 2px solid #b00;
     height : 25px; width : 225px;
 }
 .errorExplanation {
     background-color : #ffb1b1;
-    border : 1px solid #42a5cc;
+    border : 1px solid #b00;
     height : auto; width : 510px;
     margin : 20px 50px 40px 0;
     padding : 10px 20px 20px 0;

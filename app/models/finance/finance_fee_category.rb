@@ -20,7 +20,7 @@ class FinanceFeeCategory < ActiveRecord::Base
   belongs_to :batch
   belongs_to :student
 #
-  has_many   :fee_particulars, :class_name => "FinanceFeeParticulars"
+  has_many   :fee_particulars, :class_name => "FinanceFeeParticular"
   has_many   :fee_collections, :class_name => "FinanceFeeCollection"
   has_many   :fee_discounts
 
@@ -33,7 +33,7 @@ class FinanceFeeCategory < ActiveRecord::Base
   validates_uniqueness_of :name, :scope=>[:batch_id, :is_deleted],:if=> 'is_deleted == false'
 
   def fees(student)
-    FinanceFeeParticulars.find_all_by_finance_fee_category_id(self.id,
+    FinanceFeeParticular.find_all_by_finance_fee_category_id(self.id,
       :conditions => ["((student_category_id IS NULL AND admission_no IS NULL )OR(student_category_id = '#{student.student_category_id}'AND admission_no IS NULL) OR (student_category_id IS NULL AND admission_no = '#{student.admission_no}')) and is_deleted=0"])
   end
 
@@ -59,7 +59,7 @@ class FinanceFeeCategory < ActiveRecord::Base
   end
 
   def student_fee_balance(student,date)
-    particulars= FinanceFeeParticulars.find_all_by_finance_fee_category_id(self.id,
+    particulars= FinanceFeeParticular.find_all_by_finance_fee_category_id(self.id,
       :conditions => ["((student_category_id IS NULL AND admission_no IS NULL )OR(student_category_id = '#{student.student_category_id}'AND admission_no IS NULL) OR (student_category_id IS NULL AND admission_no = '#{student.admission_no}')) and is_deleted=0"])
     financefee = student.finance_fee_by_date(date)
 
@@ -103,6 +103,10 @@ class FinanceFeeCategory < ActiveRecord::Base
     collection = FinanceFeeCollection.find_all_by_fee_category_id(self.id,:conditions=>"start_date < '#{Date.today.to_date}' and due_date > '#{Date.today.to_date}'")
     collection.reject!{ |c|c.no_transaction_present } unless collection.nil?
     collection.present?
+  end
+
+  def have_common_particular?
+     self.fee_particulars.find_all_by_student_category_id_and_admission_no(nil,nil).count > 0 ? true : false
   end
   
   

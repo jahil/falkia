@@ -18,7 +18,7 @@
 #under the License. -%>
 
 <div id="content-header">
-<%= image_tag("/images/show_finance.png") %>
+  <%= image_tag("/images/show_finance.png") %>
   <h1><%= t('income') %></h1>
   <h3><%= t('income_list') %></h3>
   <div id="app-back-button">
@@ -28,28 +28,29 @@
 <div id="inner-tab-menu">
   <ul>
     <li><%= link_to "#{t('pdf_report')}",
-            {:controller => "finance", :action => "income_list_pdf", :start_date => @start_date, :end_date=>@end_date},:target => '_blank' %></li>
+        {:controller => "finance", :action => "income_list_pdf", :start_date => @start_date, :end_date=>@end_date, :page_height=>1100},:target => '_blank' %></li>
   </ul>
 </div>
 <% unless @incomes.empty? %>
   <div id="page-yield">
-    <table id="listing">
+    <table id="listing" align="center" width="100%">
       <tr class="tr-head">
-        <td><%= t('name') %></td>
-        <td><%= t('description') %></td>
-        <td><%= t('receipt_no') %></td>
-        <td><%= t('amount') %></td>
-        <td><%= t('transaction_date') %></td>
-        <td></td>
+        <td class="name"><%= t('name') %></td>
+        <td class="description"><%= t('description') %></td>
+        <td class="amount"><%= t('amount') %></td>
+        <td class="transaction_date"><%= t('transaction_date') %></td>
+        <td class="transaction_date"><%= t('receipt_no') %></td>
+        <td class="options"></td>
       </tr>
-      <% @incomes.each do |d| %>
+      <tr class="tr-blank"></tr>
+      <% @incomes.each do |i| %>
         <tr class="tr-<%= cycle('odd','even') %>">
-          <td class="col-3"><%= d.title %></td>
-          <td class="col-3"><%= d.description %></td>
-          <td class="col-3"><%= d.receipt_no %></td>
-          <td class="col-3"><%= d.amount %></td>
-          <td class="col-3"><%= d.transaction_date.strftime("%d-%m-%y") unless d.transaction_date.nil?%></td>
-          <td class="col-3"><small><%= link_to "#{t('edit_text')}",:action=>'income_edit',:id=>d.id %></small> | <small><%= link_to "#{t('delete_text')}",:action=>'delete_transaction',:id=>d.id %></small></td>
+          <td class="name"><%= i.title %></td>
+          <td class="description"><%= i.description %></td>
+          <td class="amount"><%= i.amount %></td>
+          <td class="transaction_date"><%= i.transaction_date.strftime("%d-%m-%y") %></td>
+          <td class="receipt_no"><%= i.receipt_no %></td>
+          <td><small><%= link_to "#{t('edit_text')}",:action=>'income_edit',:id=>i.id %></small> | <small><%= link_to "#{t('delete_text')}",:action=>'delete_transaction',:id=>i.id %></small></td>
         </tr>
       <% end %>
 

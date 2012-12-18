@@ -33,7 +33,7 @@ class BatchTransfersController < ApplicationController
     unless params[:transfer][:students].nil?
       students = Student.find(params[:transfer][:students])
       students.each do |s|
-        s.graduated_batches << s.batch
+        s.batch_students.create(:batch_id => s.batch.id)
         s.update_attribute(:batch_id, params[:transfer][:to])
         s.update_attribute(:has_paid_fees,0)
       end
@@ -80,7 +80,7 @@ class BatchTransfersController < ApplicationController
 
   def subject_transfer
     @batch = Batch.find(params[:id])
-    @elective_groups = @batch.elective_groups
+    @elective_groups = @batch.elective_groups.all(:conditions => {:is_deleted => false})
     @normal_subjects = @batch.normal_batch_subject
     @elective_subjects = Subject.find_all_by_batch_id(@batch.id,:conditions=>["elective_group_id IS NOT NULL AND is_deleted = false"])
   end
@@ -94,7 +94,7 @@ class BatchTransfersController < ApplicationController
     @previous_batch = all_batches[all_batches.size-2]
     unless @previous_batch.blank?
     @previous_batch_normal_subject = @previous_batch.normal_batch_subject
-    @elective_groups = @previous_batch.elective_groups
+    @elective_groups = @previous_batch.elective_groups.all(:conditions => {:is_deleted => false})
     @previous_batch_electives = Subject.find_all_by_batch_id(@previous_batch.id,:conditions=>["elective_group_id IS NOT NULL AND is_deleted = false"])
     render(:update) do |page|
       page.replace_html 'previous-batch-subjects', :partial=>"previous_batch_subjects"
@@ -122,17 +122,17 @@ class BatchTransfersController < ApplicationController
     if sub_exists.nil?
       if subject.elective_group_id == nil
         Subject.create(:name=>subject.name,:code=>subject.code,:batch_id=>batch.id,:no_exams=>subject.no_exams,
-          :max_weekly_classes=>subject.max_weekly_classes,:elective_group_id=>subject.elective_group_id,:is_deleted=>false)
+          :max_weekly_classes=>subject.max_weekly_classes,:credit_hours=>subject.credit_hours,:elective_group_id=>subject.elective_group_id,:is_deleted=>false)
       else
         elect_group_exists = ElectiveGroup.find_by_name_and_batch_id(ElectiveGroup.find(subject.elective_group_id).name,batch.id)
         if elect_group_exists.nil?
           elect_group = ElectiveGroup.create(:name=>ElectiveGroup.find(subject.elective_group_id).name,
             :batch_id=>batch.id,:is_deleted=>false)
           Subject.create(:name=>subject.name,:code=>subject.code,:batch_id=>batch.id,:no_exams=>subject.no_exams,
-            :max_weekly_classes=>subject.max_weekly_classes,:elective_group_id=>elect_group.id,:is_deleted=>false)
+            :max_weekly_classes=>subject.max_weekly_classes,:credit_hours=>subject.credit_hours,:elective_group_id=>elect_group.id,:is_deleted=>false)
         else
           Subject.create(:name=>subject.name,:code=>subject.code,:batch_id=>batch.id,:no_exams=>subject.no_exams,
-            :max_weekly_classes=>subject.max_weekly_classes,:elective_group_id=>elect_group_exists.id,:is_deleted=>false)
+            :max_weekly_classes=>subject.max_weekly_classes,:credit_hours=>subject.credit_hours,:elective_group_id=>elect_group_exists.id,:is_deleted=>false)
         end
       end
       render(:update) do |page|
@@ -158,21 +158,21 @@ class BatchTransfersController < ApplicationController
     @previous_batch = all_batches[all_batches.size-2]
     subjects = Subject.find_all_by_batch_id(@previous_batch.id,:conditions=>'is_deleted=false')
     subjects.each do |subject|
-      sub_exists = Subject.find_by_batch_id_and_name(batch.id,subject.name)
+      sub_exists = Subject.find_by_batch_id_and_name(batch.id,subject.name, :conditions => { :is_deleted => false})
       if sub_exists.nil?
         if subject.elective_group_id.nil?
           Subject.create(:name=>subject.name,:code=>subject.code,:batch_id=>batch.id,:no_exams=>subject.no_exams,
-            :max_weekly_classes=>subject.max_weekly_classes,:elective_group_id=>subject.elective_group_id,:is_deleted=>false)
+            :max_weekly_classes=>subject.max_weekly_classes,:credit_hours=>subject.credit_hours,:elective_group_id=>subject.elective_group_id,:is_deleted=>false)
         else
           elect_group_exists = ElectiveGroup.find_by_name_and_batch_id(ElectiveGroup.find(subject.elective_group_id).name,batch.id)
           if elect_group_exists.nil?
             elect_group = ElectiveGroup.create(:name=>ElectiveGroup.find(subject.elective_group_id).name,
               :batch_id=>batch.id,:is_deleted=>false)
             Subject.create(:name=>subject.name,:code=>subject.code,:batch_id=>batch.id,:no_exams=>subject.no_exams,
-              :max_weekly_classes=>subject.max_weekly_classes,:elective_group_id=>elect_group.id,:is_deleted=>false)
+              :max_weekly_classes=>subject.max_weekly_classes,:credit_hours=>subject.credit_hours,:elective_group_id=>elect_group.id,:is_deleted=>false)
           else
             Subject.create(:name=>subject.name,:code=>subject.code,:batch_id=>batch.id,:no_exams=>subject.no_exams,
-              :max_weekly_classes=>subject.max_weekly_classes,:elective_group_id=>elect_group_exists.id,:is_deleted=>false)
+              :max_weekly_classes=>subject.max_weekly_classes,:credit_hours=>subject.credit_hours,:elective_group_id=>elect_group_exists.id,:is_deleted=>false)
           end
         end
         msg += "<li> #{t('the_subject')} #{subject.name}  #{t('has_been_added_to_batch')} #{batch.name}</li>"

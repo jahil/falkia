@@ -32,7 +32,7 @@
 
 #create_user {display:inline;}
 #address_text_area {width:232px;height:162px;background:#fff url(../../../images/admission/address_area_bg.jpg) no-repeat;margin-bottom:40px;}
-#master_student_address, #parent_detail_office_address {padding-right:10px;padding-top:5px;width:222px;height:162px;border:none;background:transparent;color:#42a5cc;font-weight:bold;}
+#master_student_address, #parent_detail_office_address {padding-right:10px;padding-top:5px;width:222px;height:162px;border:none;background:transparent;color:#b00;font-weight:bold;}
 #create_user_option {display:inline;margin:0px;padding:0px;}
 
 .submit_button {
@@ -50,7 +50,7 @@
     cursor:pointer;
 }
 .submit_button3 {margin-top:30px;margin-right:50px;float:right;}
-.text_display {width:230px;height:28px;background:#fff url(../../../images/admission/text_input.jpg) no-repeat;margin-bottom:20px;color:#42a5cc;font-weight:bold;padding-right:10px;padding-top:3px;}
+.text_display {width:230px;height:28px;background:#fff url(../../../images/admission/text_input.jpg) no-repeat;margin-bottom:20px;color:#b00;font-weight:bold;padding-right:10px;padding-top:3px;}
 
 .necessary-field {
     color : #f00;

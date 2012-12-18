@@ -65,8 +65,9 @@
     font-weight:bold;
     margin:0 20px 0 20px;
 }
-table#attendance{
-
+table{
+    display: block;
+    overflow-x: auto;
 }
 .tr-odd{
     background: #fff;

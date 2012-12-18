@@ -54,8 +54,8 @@
 
       <div class="label-field-pair">
         <label for="employee_joining_date"><%= t('joining_date') %></label>
-        <div class="text-input-bg"><%= calendar_date_select_tag 'employee[joining_date]', I18n.l(Date.today,:format=>:normal),
-            :year_range => 25.years.ago..0.years.from_now %></div>
+        <div class="text-input-bg"><%= calendar_date_select_tag 'employee[joining_date]', I18n.l(Date.today,:format=>:default),
+            :year_range => 25.years.ago..0.years.from_now , :popup=>"force"%></div>
       </div>
       <hr class="label-underline"></hr>
       <div class="label-field-pair">
@@ -73,6 +73,12 @@
         <div class="text-input-bg"><%= a.text_field :last_name %></div>
       </div>
       <hr class="label-underline"></hr>
+      <div class="label-field-pair">
+        <label><%= t('email') %></label>
+        <div class="text-input-bg"><%= a.text_field :email %></div>
+        <div class="extender"></div>
+      </div>
+      <hr class="label-underline"></hr>
       <div class="label_field_pair">
         <label class="label_for_employee_gender" for="master_student_gender"><%= t('gender') %></label>
         <div class="employee_gender_value">
@@ -86,8 +92,8 @@
       <hr class="label-underline"></hr>
       <div class="label-field-pair">
         <label for="dob"><%= t('date_of_birth') %><span class="necessary-field">*</span></label>
-        <div class="text-input-bg"><%= calendar_date_select_tag 'employee[date_of_birth]', I18n.l(Date.today-10.years,:format=>:normal),
-            :year_range => 70.years.ago..4.years.ago %></div>
+        <div class="text-input-bg"><%= calendar_date_select_tag 'employee[date_of_birth]', I18n.l(Date.today-10.years,:format=>:default),
+            :year_range => 70.years.ago..4.years.ago, :popup=>"force" %></div>
       </div>
       <hr class="label-underline"></hr>
       <div class="label-field-pair">
@@ -153,14 +159,14 @@
       <hr class="sub-heading"></hr>
       <div class="label-field-pair">
         <label for="employee_martial_status"><%= t('marital_status') %></label>
-        <div class="text-input-bg"><%= select :employee, :marital_status, [["#{t('single')}","single"], ["#{t('married')}","married"],["#{t('divorced')}","divorced"]] %></div>
+        <div class="text-input-bg"><%= select :employee, :marital_status, [["#{t('single')}","single"], ["#{t('married')}","married"],["#{t('divorced')}","divorced"]], {}, {:onchange=>"hide_or_show_fields(this.value)"} %></div>
       </div>
       <hr class="label-underline"></hr>
-      <div class="label-field-pair">
+      <div class="label-field-pair hide-on-single">
         <label for="children_count"><%= t('no_of_children') %></label>
         <div class="text-input-bg"><%= a.text_field :children_count %></div>
       </div>
-      <hr class="label-underline"></hr>
+      <hr class="label-underline hide-on-single"></hr>
       <div class="label-field-pair">
         <label for="employee_father"><%= t('father_name') %></label>
         <div class="text-input-bg"><%= a.text_field :father_name %></div>
@@ -171,19 +177,19 @@
         <div class="text-input-bg"><%= a.text_field :mother_name %></div>
       </div>
       <hr class="label-underline"></hr>
-      <div class="label-field-pair">
+      <div class="label-field-pair hide-on-single">
         <label for="employee_spouse"><%= t('spouse_name') %></label>
         <div class="text-input-bg"><%= a.text_field :husband_name %></div>
       </div>
-      <hr class="label-underline"></hr>
+      <hr class="label-underline hide-on-single"></hr>
       <div class="label-field-pair">
         <label for="employee_blood"><%= t('blood_group') %></label>
-        <div class="text-input-bg"><%= select :employee, :blood_group, ["Unknown","A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"],{:prompt=> "#{t('unknown')}"} %></div>
+        <div class="text-input-bg"><%= select :employee, :blood_group, ["#{t('unknown')}","A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"] %></div>
       </div>
       <hr class="label-underline"></hr>
       <div class="label-field-pair">
         <label for="employee_nationality"><%= t('nationality') %></label>
-        <div class="text-input-bg"><%= select :employee, :nationality_id, @nationalities.map {|c| [c.name, c.id]}, :selected => 133 %></div>
+        <div class="text-input-bg"><%= select :employee, :nationality_id, @nationalities.map {|c| [c.name, c.id]}, :selected => @employee.nationality_id || @selected_value %></div>
       </div>
       <hr class="label-underline"></hr>
       <script>
@@ -202,3 +208,24 @@
   <% end %>
 
 </div>
+
+<% content_for :head do %>
+  <script type="text/javascript">
+    document.observe("dom:loaded", function() {
+      hide_or_show_fields('single');
+    });
+    function hide_or_show_fields(value){
+      if(value == 'single'){
+        $$('.hide-on-single').each(function (elem){
+          elem.hide();
+        });
+      }
+      else{
+        $$('.hide-on-single').each(function (elem){
+          elem.show();
+        });
+      }
+    }
+
+  </script>
+<% end %>

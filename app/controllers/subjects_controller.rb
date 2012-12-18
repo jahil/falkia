@@ -42,8 +42,9 @@ class SubjectsController < ApplicationController
         @elective_groups = ElectiveGroup.find_all_by_batch_id(@batch.id)
         flash[:notice] = "Subject created successfully!"
       else
-        @elective_group = params[:subject][:elective_group_id].to_i
-        @subjects = @subject.batch.elective_batch_subject(@elective_group)
+        @batch = @subject.batch
+        @elective_groups = ElectiveGroup.find_all_by_batch_id(@batch.id, :conditions =>{:is_deleted=>false})
+        @subjects = @subject.batch.normal_batch_subject
         flash[:notice] = "Elective subject created successfully!"
       end
     else
@@ -53,6 +54,7 @@ class SubjectsController < ApplicationController
 
   def edit
     @subject = Subject.find params[:id]
+    @batch = @subject.batch
     @elective_group = ElectiveGroup.find params[:id2] unless params[:id2].nil?
     respond_to do |format|
       format.html { }
@@ -66,10 +68,13 @@ class SubjectsController < ApplicationController
     if @subject.update_attributes(params[:subject])
       if params[:subject][:elective_group_id] == ""
         @subjects = @subject.batch.normal_batch_subject
+        @normal_subjects = @subject
+        @elective_groups = ElectiveGroup.find_all_by_batch_id(@batch.id)
         flash[:notice] = "Subject updated successfully!"
       else
-        elect_group = params[:subject][:elective_group_id].to_i
-        @subjects = @subject.batch.elective_batch_subject(elect_group)
+        @batch = @subject.batch
+        @elective_groups = ElectiveGroup.find_all_by_batch_id(@batch.id, :conditions =>{:is_deleted=>false})
+        @subjects = @subject.batch.normal_batch_subject
         flash[:notice] = "Elective subject updated successfully!"
       end
     else
@@ -78,13 +83,14 @@ class SubjectsController < ApplicationController
   end
 
   def destroy
-     @subject = Subject.find params[:id]
-   @subject_exams= Exam.find_by_subject_id(@subject.id)
-   if @subject_exams.nil?
-    @subject.inactivate
-   else
-    @error_text = "#{t('cannot_delete_subjects')}"
+    @subject = Subject.find params[:id]
+    @subject_exams= Exam.find_by_subject_id(@subject.id)
+    if @subject_exams.nil?
+      @subject.inactivate
+    else
+      @error_text = "#{t('cannot_delete_subjects')}"
     end
+    flash[:notice] = "Subject Deleted successfully!"
   end
 
   def show

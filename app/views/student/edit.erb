@@ -48,8 +48,8 @@
         <div class="label-field-pair-edit">
           <label for="master_student_admission_date"><%= t('admission_date') %> <span class="necessary-field">*</span></label>
           <div class="text-input-bg">
-            <%= calendar_date_select_tag 'student[admission_date]', I18n.l(@student.admission_date,:format=>:normal),
-              :year_range => 15.years.ago..5.years.from_now %>
+            <%= calendar_date_select_tag 'student[admission_date]', I18n.l(@student.admission_date,:format=>:default),
+              :year_range => 15.years.ago..5.years.from_now,:popup => "force" %>
           </div>
         </div>
 
@@ -95,7 +95,7 @@
           <label for="master_student_date_of_birth"><%= t('date_of_birth') %><span class="necessary-field">*</span></label>
           <div class="text-input-bg">
             <%= calendar_date_select_tag 'student[date_of_birth]',
-              I18n.l(@student.date_of_birth,:format=>:normal), :year_range => 40.years.ago..0.years.ago %>
+              I18n.l(@student.date_of_birth,:format=>:default), :year_range => 40.years.ago..0.years.ago ,:readonly=>true,:popup => "force"  %>
           </div>
         </div>
 
@@ -242,6 +242,7 @@
           <div class="text-input-bg"><%= s.file_field :photo, :size=>12 %></div>
         </div>
       </div>
+       <div class="extender"></div>
     </div>
 
     <%= submit_tag "", :class => "submit_button", :value => "► #{t('update')}" %>

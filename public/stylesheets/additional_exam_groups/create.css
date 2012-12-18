@@ -6,7 +6,7 @@
 }
 .link-heading a {
     font-weight:bold;
-    color:#3293bc;
+    color:#900;
 }
 .link-descr {
     margin-top:5px;
@@ -70,7 +70,7 @@
 }
 .label-field-pair input:focus{
     background: #fff;
-    border: 1px solid #42a5cc;
+    border: 1px solid #9e0f15;
 }
 
 .label-field-pair2 input {
@@ -85,7 +85,7 @@
 }
 .label-field-pair2 input:focus{
     background: #fff;
-    border: 1px solid #42a5cc;
+    border: 1px solid #9e0f15;
 }
 
 .text-input-bg2 {
@@ -107,7 +107,7 @@
 }
 .label-field-pair3 input:focus{
     background: #fff;
-    border: 1px solid #42a5cc;
+    border: 1px solid #9e0f15;
 }
 
 .text-input-bg3 {
@@ -126,7 +126,7 @@
 }
 
 .type_link:hover{
-    color:#1b495c;
+    color:#990a10;
     text-decoration:none;
 }
 
@@ -165,7 +165,7 @@
 }
 .link-heading a {
     font-weight:bold;
-    color:#3293bc;
+    color:#900;
 }
 .link-descr {
     margin-top:5px;

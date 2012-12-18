@@ -7,7 +7,7 @@
     font-weight: bold;
 }
 #create_date {
-    color: #42a5cc;
+    color: #b00;
     font-size: 90%;
     padding-top: 5px;
 }
@@ -98,10 +98,11 @@
 }
 .comment-details .comment-posted-at {
     float: right;
+   padding-left: 10px;
 }
 .comment-details .delete-comment {
     float: right;
-    margin: 0 0 0 20px;
+    margin: 0 0 0 4px;
 }
 .comment-content {
 
@@ -119,7 +120,7 @@
 
 .comment-content textarea:focus{
     background: #fff;
-    border: 1px solid #42a5cc;
+    border: 1px solid #9e0f15;
 }
 
 #submit-button {
@@ -141,6 +142,10 @@
     width:auto;
     cursor:pointer;
 }
-
+.approve
+{
+    float: right;
+    width: 220px;
+}
 
 

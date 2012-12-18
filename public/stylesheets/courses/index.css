@@ -1,5 +1,5 @@
 #inner-tab-menu ul li {
-    background-color:#42A5CC;
+    background-color:#9D0E00;
     color:#FFFFFF;
     float:left;
     font-size:0.9em;
@@ -20,7 +20,7 @@
 }
 .link-heading a {
     font-weight:bold;
-    color:#3293bc;
+    color:#900;
 }
 .link-descr {
     margin-top:5px;

@@ -39,21 +39,25 @@ class Employee < ActiveRecord::Base
     :message => "#{t('must_be_a_valid_email_address')}"
 
   validates_presence_of :employee_category_id, :employee_number, :first_name, :employee_position_id,
-    :employee_department_id,  :date_of_birth
+    :employee_department_id,  :date_of_birth,:joining_date
   validates_uniqueness_of  :employee_number
 
   validates_associated :user
   before_validation :create_user_and_validate
 
   has_attached_file :photo,
-    :styles => {
-    :thumb=> "100x100#",
-    :small  => "150x150>"},
+    :styles => {:original=> "125x125#"},
     :url => "/system/:class/:attachment/:id/:style/:basename.:extension",
     :path => ":rails_root/public/system/:class/:attachment/:id/:style/:basename.:extension"
 
+  VALID_IMAGE_TYPES = ['image/gif', 'image/png','image/jpeg', 'image/jpg']
+
+  validates_attachment_content_type :photo, :content_type =>VALID_IMAGE_TYPES,
+    :message=>'Image can only be GIF, PNG, JPG',:if=> Proc.new { |p| !p.photo_file_name.blank? }
+  validates_attachment_size :photo, :less_than => 512000,\
+    :message=>'must be less than 500 KB.',:if=> Proc.new { |p| p.photo_file_name_changed? }
+
   def create_user_and_validate
-    self.email ||="noreply" + self.employee_number.to_s + "@falkia.com"
     if self.new_record?
       user_record = self.build_user
       user_record.first_name = self.first_name
@@ -61,15 +65,16 @@ class Employee < ActiveRecord::Base
       user_record.username = self.employee_number.to_s
       user_record.password = self.employee_number.to_s + "123"
       user_record.role = 'Employee'
-      user_record.email = self.email.blank? ? "noreply#{self.employee_number.to_s}@falkia.com" : self.email.to_s
+      user_record.email = self.email.blank? ? "" : self.email.to_s
       check_user_errors(user_record)
     else
       changes_to_be_checked = ['employee_number','first_name','last_name','email']
       check_changes = self.changed & changes_to_be_checked
-#      self.user.role ||= "Employee"
+      #      self.user.role ||= "Employee"
       unless check_changes.blank?
         emp_user = self.user
         emp_user.username = self.employee_number if check_changes.include?('employee_number')
+        emp_user.password = self.employee_number.to_s + "123" if check_changes.include?('employee_number')
         emp_user.first_name = self.first_name if check_changes.include?('first_name')
         emp_user.last_name = self.last_name if check_changes.include?('last_name')
         emp_user.email = self.email.to_s if check_changes.include?('email')
@@ -79,7 +84,7 @@ class Employee < ActiveRecord::Base
   end
 
   def check_user_errors(user)
-   unless user.valid?
+    unless user.valid?
       user.errors.each{|attr,msg| errors.add(attr.to_sym,"#{msg}")}
     end
     user.errors.blank?
@@ -99,7 +104,9 @@ class Employee < ActiveRecord::Base
   def max_hours_per_week
     self.employee_grade.max_hours_week unless self.employee_grade.blank?
   end
-
+  alias_method(:max_hours_day, :max_hours_per_day)
+  alias_method(:max_hours_week, :max_hours_per_week)
+  
   def next_employee
     next_st = self.employee_department.employees.first(:conditions => "id>#{self.id}",:order => "id ASC")
     next_st ||= employee_department.employees.first(:order => "id ASC")
@@ -275,29 +282,14 @@ class Employee < ActiveRecord::Base
   end
 
   def has_dependency
-    flag = false
-    flag = true if self.monthly_payslips.present?
-    flag = true if self.employee_salary_structures.present?
-    flag = true if self.employees_subjects.present?
-    flag = true if self.apply_leaves.present?
-    flag = true if self.finance_transactions.present?
-    flag = true if self.timetable_entries.present?
-    flag = true if self.employee_attendances.present?
-    plugin_dependencies = FedenaPlugin.check_dependency(self,"permanant")
-    plugin_dependencies.each do |k,v|
-      if v.kind_of?(Array)
-        flag=true unless  v.blank?
-      else
-         v.each do |h,a|
-           flag=true unless  a.blank?
-         end
-      end
-    end
-    return flag
+    return true if self.monthly_payslips.present? or self.employee_salary_structures.present? or self.employees_subjects.present? \
+      or self.apply_leaves.present? or self.finance_transactions.present? or self.timetable_entries.present? or self.employee_attendances.present?
+    return true if FedenaPlugin.check_dependency(self,"permanant").present?
+    return false
   end
 
   def former_dependency
-   plugin_dependencies = FedenaPlugin.check_dependency(self,"former")
+    FedenaPlugin.check_dependency(self,"former")
   end
   
 end

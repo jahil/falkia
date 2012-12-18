@@ -60,7 +60,7 @@ input#student_image_file{
     font-family:arial;
     font-size:14px;
     font-weight:bold;
-    margin-right:268px;
+    margin-right:10px;
     margin-top:30px;
     padding:7px 10px;
     border:none;
@@ -111,7 +111,7 @@ width:205px;
 }
 .label-field-pair-edit input:focus{
     background: #fff;
-    border: 1px solid #42a5cc;
+    border: 1px solid #9e0f15;
 }
 .label-underline{
     background:  #eeeeee;

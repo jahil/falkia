@@ -52,7 +52,7 @@ class EmployeeController < ApplicationController
       else
         flash[:warn_notice] = "<p>#{t('flash2')}</p>"
       end
-           
+      
     end
   end
 
@@ -180,14 +180,14 @@ class EmployeeController < ApplicationController
       flash[:notice]=t('flash3')
       redirect_to :action => "add_grade"
     else
-      flash[:notice]=t('flash11')
+      flash[:notice]=t('flash4')
       redirect_to :action => "add_grade"
     end
   end
 
   def add_bank_details
-    @bank_details = BankField.find(:all,:order => "name asc",:conditions=>'status = 1')
-    @inactive_bank_details = BankField.find(:all,:order => "name asc",:conditions=>'status = 0')
+    @bank_details = BankField.find(:all,:order => "name asc",:conditions=>{:status => true})
+    @inactive_bank_details = BankField.find(:all,:order => "name asc",:conditions=>{:status => false})
     @bank_field = BankField.new(params[:bank_field])
     if request.post? and @bank_field.save
       flash[:notice] =t('flash11')
@@ -259,6 +259,7 @@ class EmployeeController < ApplicationController
     @departments = EmployeeDepartment.find(:all,:order => "name asc",:conditions => "status = true")
     @nationalities = Country.all
     @employee = Employee.new(params[:employee])
+    @selected_value = Configuration.default_country
     @last_admitted_employee = Employee.find(:last,:conditions=>"employee_number != 'admin'")
     @config = Configuration.find_by_config_key('EmployeeNumberAutoIncrement')
 
@@ -267,26 +268,30 @@ class EmployeeController < ApplicationController
       unless params[:employee][:employee_number].to_i ==0
         @employee.employee_number= "E" + params[:employee][:employee_number].to_s
       end
-      if @employee.save
-        if params[:employee][:gender] == "true"
-          Employee.update(@employee.id, :gender => true)
-        else
-          Employee.update(@employee.id, :gender => false)
-        end
+      unless @employee.employee_number.to_s.downcase == 'admin'
+        if @employee.save
+          if params[:employee][:gender] == "true"
+            Employee.update(@employee.id, :gender => true)
+          else
+            Employee.update(@employee.id, :gender => false)
+          end
 
-        if params[:employee][:status] == "true"
-          Employee.update(@employee.id, :status => true)
-        else
-          Employee.update(@employee.id, :status => false)
-        end
+          if params[:employee][:status] == "true"
+            Employee.update(@employee.id, :status => true)
+          else
+            Employee.update(@employee.id, :status => false)
+          end
 
 
-        @leave_type = EmployeeLeaveType.all
-        @leave_type.each do |e|
-          EmployeeLeave.create( :employee_id => @employee.id, :employee_leave_type_id => e.id, :leave_count => e.max_leave_count)
+          @leave_type = EmployeeLeaveType.all
+          @leave_type.each do |e|
+            EmployeeLeave.create( :employee_id => @employee.id, :employee_leave_type_id => e.id, :leave_count => e.max_leave_count)
+          end
+          flash[:notice] = "#{t('flash15')} #{@employee.first_name} #{t('flash16')}"
+          redirect_to :controller =>"employee" ,:action => "admission2", :id => @employee.id
         end
-        flash[:notice] = "#{t('flash15')} #{@employee.first_name} #{t('flash16')}"
-        redirect_to :controller =>"employee" ,:action => "admission2", :id => @employee.id
+      else
+        @employee.errors.add(:employee_number, "#{t('should_not_be_admin')}")
       end
       @positions = EmployeePosition.find_all_by_employee_category_id(params[:employee][:employee_category_id])
     end
@@ -307,21 +312,27 @@ class EmployeeController < ApplicationController
     @departments = EmployeeDepartment.find(:all,:order => "name asc", :conditions => "status = true")
     @employee = Employee.find(params[:id])
     @employee_user = @employee.user
-    if request.post? and @employee.update_attributes(params[:employee])
-      if params[:employee][:gender] == "true"
-        Employee.update(@employee.id, :gender => true)
-      else
-        Employee.update(@employee.id, :gender => false)
-      end
+    if request.post?
+      if  params[:employee][:employee_number].downcase != 'admin' or @employee_user.admin
+        if @employee.update_attributes(params[:employee])
+          if params[:employee][:gender] == "true"
+            Employee.update(@employee.id, :gender => true)
+          else
+            Employee.update(@employee.id, :gender => false)
+          end
 
-      if params[:employee][:status] == "true"
-        Employee.update(@employee.id, :status => true)
-      else
-        Employee.update(@employee.id, :status => false)
-      end
+          if params[:employee][:status] == "true"
+            Employee.update(@employee.id, :status => true)
+          else
+            Employee.update(@employee.id, :status => false)
+          end
 
-      flash[:notice] = "#{t('flash15')}  #{@employee.first_name} #{t('flash17')}"
-      redirect_to :controller =>"employee" ,:action => "profile", :id => @employee.id
+          flash[:notice] = "#{t('flash15')}  #{@employee.first_name} #{t('flash17')}"
+          redirect_to :controller =>"employee" ,:action => "profile", :id => @employee.id
+        end
+      else
+        @employee.errors.add(:employee_number, "#{t('should_not_be_admin')}")
+      end
     end
   end
 
@@ -346,13 +357,13 @@ class EmployeeController < ApplicationController
   def admission2
     @countries = Country.find(:all)
     @employee = Employee.find(params[:id])
+    @selected_value = Configuration.default_country
     if request.post? and @employee.update_attributes(params[:employee])
       sms_setting = SmsSetting.new()
       if sms_setting.application_sms_active and sms_setting.employee_sms_active
         recipient = ["#{@employee.mobile_phone}"]
-        message = "#{t('joinning_info')} #{@employee.first_name}. #{t('username')}: #{@employee.employee_number}, #{t('password')}: #{@employee.employee_number}123. #{t('change_password_after_login')}"
-        sms = SmsManager.new(message,recipient)
-        sms.send_sms
+        message = "#{t('joining_info')} #{@employee.first_name}. #{t('username')}: #{@employee.employee_number}, #{t('password')}: #{@employee.employee_number}123. #{t('change_password_after_login')}"
+        Delayed::Job.enqueue(SmsManager.new(message,recipient))
       end
       flash[:notice] = "#{t('flash20')} #{ @employee.first_name}"
       redirect_to :action => "admission3", :id => @employee.id
@@ -525,11 +536,11 @@ class EmployeeController < ApplicationController
                        OR employee_number = ? OR (concat(first_name, \" \", last_name) LIKE ? ))"+ other_conditions,
           "#{params[:query]}%","#{params[:query]}%","#{params[:query]}%",
           "#{params[:query]}", "#{params[:query]}" ],
-        :order => "employee_department_id asc,first_name asc") unless params[:query] == ''
+        :order => "employee_department_id asc,first_name asc",:include=>"employee_department") unless params[:query] == ''
     else
       @employee = Employee.find(:all,
         :conditions => ["(employee_number = ? )"+ other_conditions, "#{params[:query]}"],
-        :order => "employee_department_id asc,first_name asc") unless params[:query] == ''
+        :order => "employee_department_id asc,first_name asc",:include=>"employee_department") unless params[:query] == ''
     end
     render :layout => false
   end
@@ -746,15 +757,6 @@ class EmployeeController < ApplicationController
     @new_payslip_category = IndividualPayslipCategory.find_all_by_employee_id_and_salary_date(@employee.id,nil)
     @individual = IndividualPayslipCategory.find_all_by_employee_id_and_salary_date(@employee.id,Date.today)
     @user = current_user
-    privilege = Privilege.find_by_name("FinanceControl")
-    finance_manager = privilege.users
-    subject = t('payslip_generated')
-    body = "#{t('payslip_generated_for')}  "+@employee.first_name+" "+@employee.last_name+". #{t('kindly_approve')}"
-    finance_manager.each do |f|
-      Reminder.create(:sender=>@user.id, :recipient=>f.id, :subject=> subject,
-        :body => body, :is_read=>false, :is_deleted_by_sender=>false,:is_deleted_by_recipient=>false)
-    end
-
     if request.post?
       salary_date = Date.parse(params[:salary_date])
       unless salary_date.to_date < @employee.joining_date.to_date
@@ -779,7 +781,6 @@ class EmployeeController < ApplicationController
             IndividualPayslipCategory.update(c.id, :salary_date=>start_date)
           end
           flash[:notice] = "#{@employee.first_name} #{t('flash27')} #{params[:salary_date]}"
-          redirect_to :controller => "employee", :action => "select_department_employee"
         else #else for if payslip_exists == []
           individual_payslips_generated = IndividualPayslipCategory.find_all_by_employee_id_and_salary_date(@employee.id,nil)
           unless individual_payslips_generated.nil?
@@ -788,8 +789,16 @@ class EmployeeController < ApplicationController
             end
           end
           flash[:notice] = "#{@employee.first_name} #{t('flash28')} #{params[:salary_date]}"
-          redirect_to :controller => "employee", :action => "select_department_employee"
         end
+        privilege = Privilege.find_by_name("FinanceControl")
+        finance_manager_ids = privilege.user_ids
+        subject = t('payslip_generated')
+        body = "#{t('payslip_generated_for')}  "+@employee.first_name+" "+@employee.last_name+". #{t('kindly_approve')}"
+        Delayed::Job.enqueue(DelayedReminderJob.new( :sender_id  => @user.id,
+            :recipient_ids => finance_manager_ids,
+            :subject=>subject,
+            :body=>body ))
+        redirect_to :controller => "employee", :action => "select_department_employee"
       else
         flash[:warn_notice] = "#{t('flash45')} #{params[:salary_date]}"
       end
@@ -968,7 +977,7 @@ class EmployeeController < ApplicationController
     @employee = Employee.find(params[:id])
     @weekday = ["#{t('sun')}", "#{t('mon')}", "#{t('tue')}", "#{t('wed')}", "#{t('thu')}", "#{t('fri')}", "#{t('sat')}"]
     @employee_subjects = @employee.subjects
-    @employee_timetable_subjects = @employee_subjects.map {|sub| sub.elective_group_id.nil? ? sub : sub.elective_group.subjects.first}
+    @employee_timetable_subjects = @employee_subjects.map {|sub| sub.elective_group_id.nil? ? sub : sub.elective_group.subjects}.flatten!
     @subject_timetable_entries = @employee_timetable_subjects.map{|esub| esub.timetable_entries}
     @employee_subjects_ids = @employee_subjects.map {|sub| sub.id}
     @weekday_timetable = Hash.new
@@ -986,14 +995,16 @@ class EmployeeController < ApplicationController
     @employee = Employee.find(params[:id])
     @weekday = ["#{t('sun')}", "#{t('mon')}", "#{t('tue')}", "#{t('wed')}", "#{t('thu')}", "#{t('fri')}", "#{t('sat')}"]
     @employee_subjects = @employee.subjects
-    @employee_timetable_subjects = @employee_subjects.map {|sub| sub.elective_group_id .nil? ? sub:sub.elective_group.subjects.first}
+    @employee_timetable_subjects = @employee_subjects.map {|sub| sub.elective_group_id.nil? ? sub : sub.elective_group.subjects}.flatten!
     @subject_timetable_entries = @employee_timetable_subjects.map{|esub| esub.timetable_entries}
     @employee_subjects_ids = @employee_subjects.map {|sub| sub.id}
     @weekday_timetable = Hash.new
     @subject_timetable_entries.each do  |subtt|
       subtt.each do |tte|
-        @weekday_timetable[tte.weekday.weekday] ||=[]
-        @weekday_timetable[tte.weekday.weekday] << tte
+        if tte.employee_id == @employee.id
+          @weekday_timetable[tte.weekday.weekday] ||=[]
+          @weekday_timetable[tte.weekday.weekday] << tte
+        end
       end
     end
     render :pdf=>'timetable_pdf'
@@ -1068,13 +1079,13 @@ class EmployeeController < ApplicationController
         IndividualPayslipCategory.update(c.id, :salary_date=>start_date)
       end
       privilege = Privilege.find_by_name("FinanceControl")
-      finance_manager = privilege.users
+      available_user_ids = privilege.user_ids
       subject = "#{t('rejected_payslip_regenerated')}"
       body = "#{t('payslip_has_been_generated_for')}"+@employee.first_name+" "+@employee.last_name + " (#{t('employee_number')} :#{@employee.employee_number})" + " #{t('for_the_month')} #{salary_date.to_date.strftime("%B %Y")}. #{t('kindly_approve')}"
-      finance_manager.each do |f|
-        Reminder.create(:sender=>@user.id, :recipient=>f.id, :subject=> subject,
-          :body => body, :is_read=>false, :is_deleted_by_sender=>false,:is_deleted_by_recipient=>false)
-      end
+      Delayed::Job.enqueue(DelayedReminderJob.new( :sender_id  => @user.id,
+          :recipient_ids => available_user_ids,
+          :subject=>subject,
+          :body=>body ))
       flash[:notice] = "#{@employee.first_name} #{t('flash27')} #{params[:salary_date]}"
       redirect_to :controller => "employee", :action => "profile", :id=> @employee.id
       
@@ -1168,10 +1179,11 @@ class EmployeeController < ApplicationController
     end_date = start_date + 1.month
     employees = Employee.find(:all)
     unless(finance_manager.nil? and finance.nil?)
-      finance_manager.each do |f|
-        Reminder.create(:sender=>@user.id, :recipient=>f.id, :subject=> subject,
-          :body => body, :is_read=>false, :is_deleted_by_sender=>false,:is_deleted_by_recipient=>false)
-      end
+      finance_manager_ids = Privilege.find_by_name('FinanceControl').user_ids
+      Delayed::Job.enqueue(DelayedReminderJob.new( :sender_id  => @user.id,
+          :recipient_ids => finance_manager_ids,
+          :subject=>subject,
+          :body=>body ))
       employees.each do|e|
         payslip_exists = MonthlyPayslip.find_all_by_employee_id(e.id,
           :conditions => ["salary_date >= ? and salary_date < ?", start_date, end_date])
@@ -1222,13 +1234,13 @@ class EmployeeController < ApplicationController
         payslip_record = MonthlyPayslip.find_all_by_employee_id(e.id,
           :conditions => ["salary_date >= ? and salary_date < ?", start_date, end_date])
         payslip_record.each do |pr|
-          pr.destroy
+          pr.destroy unless pr.is_approved
         end
         individual_payslip_record = IndividualPayslipCategory.find_all_by_employee_id(e.id,
           :conditions => ["salary_date >= ? and salary_date < ?", start_date, end_date])
         unless individual_payslip_record.nil?
           individual_payslip_record.each do|ipr|
-            ipr.destroy
+            ipr.destroy unless ipr.is_approved
           end
         end
       end
@@ -1326,6 +1338,15 @@ class EmployeeController < ApplicationController
 
   #PDF methods
 
+  def view_employee_payslip_pdf
+    @employee = Employee.find(:first,:conditions => {:id => params[:id]})
+    @employee ||= ArchivedEmployee.find(:first,:conditions => {:former_id => params[:id]})
+    @monthly_payslips = MonthlyPayslip.find(:all,:conditions=>["employee_id=? AND salary_date = ?",params[:id],params[:salary_date]],:include=>:payroll_category)
+    @individual_payslips =  IndividualPayslipCategory.find(:all,:conditions=>["employee_id=? AND salary_date = ?",params[:id],params[:salary_date]])
+    @salary  = Employee.calculate_salary(@monthly_payslips, @individual_payslips)
+    @salary_date = params[:salary_date] if params[:salary_date]
+  end
+
   def department_payslip_pdf
     @department = EmployeeDepartment.find(params[:department])
     @employees = Employee.find_all_by_employee_department_id(@department.id)
@@ -1402,7 +1423,9 @@ class EmployeeController < ApplicationController
     #    end
   end
   def employee_individual_payslip_pdf
-    @employee = Employee.find(params[:id])
+    @employee = Employee.find(:first,:conditions=>"id=#{params[:id]}")
+    @bank_details = EmployeeBankDetail.find_all_by_employee_id(@employee.id)
+    @employee ||= ArchivedEmployee.find(:first,:conditions=>"former_id=#{params[:id]}")
     @department = EmployeeDepartment.find(@employee.employee_department_id).name
     @currency_type = Configuration.find_by_config_key("CurrencyType").config_value
     @category = EmployeeCategory.find(@employee.employee_category_id).name
@@ -1410,11 +1433,11 @@ class EmployeeController < ApplicationController
     @position = EmployeePosition.find(@employee.employee_position_id).name
     @salary_date = Date.parse(params[:id2])
     @monthly_payslips = MonthlyPayslip.find_all_by_salary_date(@salary_date,
-      :conditions=> "employee_id =#{@employee.id}",
+      :conditions=> "employee_id =#{params[:id]}",
       :order=> "payroll_category_id ASC")
 
     @individual_payslip_category = IndividualPayslipCategory.find_all_by_salary_date(@salary_date,
-      :conditions=>"employee_id =#{@employee.id}",
+      :conditions=>"employee_id =#{params[:id]}",
       :order=>"id ASC")
     @individual_category_non_deductionable = 0
     @individual_category_deductionable = 0
@@ -1478,11 +1501,11 @@ class EmployeeController < ApplicationController
 
   def list_doj_year
     doj_option = params[:doj_option]
-    if doj_option == "equal to"
+    if doj_option == "equal_to"
       render :update do |page|
         page.replace_html 'doj_year', :partial=>"equal_to_select"
       end
-    elsif doj_option == "less than"
+    elsif doj_option == "less_than"
       render :update do |page|
         page.replace_html 'doj_year', :partial=>"less_than_select"
       end
@@ -1522,11 +1545,11 @@ class EmployeeController < ApplicationController
 
   def list_dob_year
     dob_option = params[:dob_option]
-    if dob_option == "equal to"
+    if dob_option == "equal_to"
       render :update do |page|
         page.replace_html 'dob_year', :partial=>"equal_to_select_dob"
       end
-    elsif dob_option == "less than"
+    elsif dob_option == "less_than"
       render :update do |page|
         page.replace_html 'dob_year', :partial=>"less_than_select_dob"
       end
@@ -1591,10 +1614,6 @@ class EmployeeController < ApplicationController
   def change_to_former
     @employee = Employee.find(params[:id])
     @dependency = @employee.former_dependency
-    @has_dependency = false
-    @dependency.each do |k,v|
-      @has_dependency = true unless  v.blank?
-    end
     if request.post?
       flash[:notice]= "#{t('flash32')}  #{@employee.employee_number}"
       EmployeesSubject.destroy_all(:employee_id=>@employee.id)

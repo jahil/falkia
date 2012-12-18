@@ -63,7 +63,7 @@
 }
 #guardians-links ul li a:hover {
     text-decoration : underline;
-    color:#42a5cc;
+    color:#b00;
 }
 #parent-list {
     height : auto;
@@ -191,7 +191,7 @@
     margin:20px auto;
 }
 #inner-tab-menu ul li {
-    background-color:#42A5CC;
+    background-color:#9D0E00;
     color:#FFFFFF;
     float:left;
     font-size:0.9em;

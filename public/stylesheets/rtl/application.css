@@ -9,18 +9,19 @@ body {
     clear:both;
 }
 #header_bg {
-    height : 60px;
-    background : #b00 url(../../../images/application/app_layout_header_bg.jpg) repeat;
+    height : 80px;
+    background : #b00 url(/images/application/pattern_fedena_header.png) repeat;
 }
 #header {
-    width : 980px; height : 60px;
+    width : 980px;
+    height : 80px;
     margin:0 auto;
 }
 #header_link {
     color : #fff;
     height : 22px;
     float: left;
-    font-size : 0.9em;
+    font-size : 0.8em;
     padding : 10px 0 0 0;
 }
 #header a {
@@ -45,6 +46,7 @@ body {
 }
 #outer-main-menu {
     float: right;
+    margin: 20px 0 0 0;
 }
 #outer-header-link {
     height: 32px;
@@ -55,7 +57,7 @@ body {
 #header_link {
     color: #FFFFFF;
     float: left;
-    font-size: 0.9em;
+    font-size: 0.8em;
     height: 25px;
     padding: 10px 0 0;
 }
@@ -74,7 +76,7 @@ body {
 }
 #main-menu li a {
     background : #fff;
-    color : #42a5cc;
+    color : #b00;
     display : block;
     font-size : 0.8em;
     float : right;
@@ -93,7 +95,7 @@ body {
     width : 160px;
     list-style-type: none;
     position: absolute;
-    top: 60px;
+    top: 80px;
     z-index: 999;
     visibility : hidden;
     border : 1px solid black;
@@ -195,8 +197,8 @@ p.flash-msg {
 }
 #side_bar { float:right; width:200px; }
 #fedena_logo {
-    background: #fff url(../../../images/application/app_falkia_logo.jpg) center center no-repeat;
-    height: 107px;
+    width: 157px;
+    text-align: center;
     margin-top: 30px;
 }
 #content { float: right; width: 980px; }
@@ -225,7 +227,7 @@ p.flash-msg {
 #content-header h3 {
     margin:0px;
     padding:0 100px 0 0;
-    color:#42a5cc;
+    color:#b00;
     font-size: 17px;
 }
 #app-back-button {
@@ -259,7 +261,7 @@ p.flash-msg {
 }
 #news_feed small {
     padding-top:0px;
-    color:#42a5cc;
+    color:#b00;
 }
 #news_feed_top_img {
     margin:0 auto;
@@ -447,16 +449,16 @@ body > #content_wrapper {
 /* Validation error messages */
 
 .fieldWithErrors input{
-    border : 1px solid #42a5cc;
+    border : 1px solid #b00;
 
 }
 .errorExplanation {
-    background: #ffdedf url(/../images/_global/error.png) no-repeat 10px 14px;
+    background: #ffdedf url(/images/_global/error.png) no-repeat 10px 14px;
     -moz-border-radius:10px;
     -webkit-border-radius:10px;
     height : auto; width : 510px;
     margin : 20px auto;
-    padding: 15px 0 19px 47px;
+    padding : 10px 20px 20px 0;
 }
 .errorExplanation h2 {
     margin : 5px 20px 0 0;
@@ -486,16 +488,17 @@ body > #content_wrapper {
     padding : 0;
 }
 #inner-tab-menu ul li {
-    background-color : #42a5cc;
+    background-color : #9d0e00;
     color : #fff;
     float : right;
     font-size : 0.9em;
     height : 1.5em;
     list-style-type : none;
     margin : 0 10px 0 0;
-    padding : 0;
+    padding : 0 10px !important;
     text-align : center;
-    width : 100px;
+    width : auto !important;
+    min-width: 50px !important;
 }
 #inner-tab-menu ul li a {
     color : #fff;
@@ -507,7 +510,7 @@ body > #content_wrapper {
 }
 .label-field-pair input:focus{
     background: #fff;
-    border: 1px solid #42a5cc;
+    border: 1px solid #9e0f15;
 }
 
 
@@ -558,7 +561,7 @@ body > #content_wrapper {
     font-size:16px;
 }
 #MB_frame .head_label span{
-    color:#42A5CC;
+    color:#BB0000;
 }
 #MB_frame #delete-button{
     float:right;
@@ -698,7 +701,7 @@ body > #content_wrapper {
     font-size:16px;
 }
 #MB_frame .head_label span{
-    color:#42A5CC;
+    color:#BB0000;
 }
 #MB_frame .modelbox-time-pair {
     height : 40px;
@@ -744,7 +747,7 @@ table#listing{
 }
 table#listing tr.tr-head{
     background: #fff;
-    color:#1b495c;
+    color:#990a10;
     font-weight:bold;
     text-align:right;
 }
@@ -801,7 +804,7 @@ table#listing td a{
     color:#27292b;
 }
 table#listing td a:hover{
-    color:#1b495c;
+    color:#990a10;
     text-decoration:underline;
 }
 table#listing td.col-3{
@@ -821,7 +824,7 @@ table#listing td.col-5{
 }
 table#listing td.col-6{
     text-align: left;
-    width:13%;
+   width:13%;
     padding: 5px;
     padding-right:10px;
 }
@@ -868,7 +871,7 @@ tr.tr-blank{
     border:none;
 }
 .pagination .current{
-    color:#1b495c;
+    color:#990a10;
     font-weight:bold;
     padding:3px;
     font-size:14px;
@@ -880,26 +883,26 @@ tr.tr-blank{
 }
 
 .sel-list a{
-    color:#42a5cc;
+    color:#bb0000;
     text-decoration:none;
 }
 
 .bread_crumb {
-    color:#42a5cc;
+    color:#bb0000;
     font-weight: bold;
     font-size: 13px;
     margin-bottom: 10px;
 }
 .bread_crumb a {
-    color:#000;
+   color:#000;
     text-decoration: none;
 }
 .bread_crumb a:hover {
-    color:#42a5cc;
+   color:#bb0000;
     text-decoration: underline;
 }
 #error-box {
-    background: #ffdedf url(/../images/_global/error.png) no-repeat 10px 14px;
+    background: #ffdedf url(/images/_global/error.png) no-repeat 10px 14px;
     -moz-border-radius:10px;
     -webkit-border-radius:10px;
     height : auto;
@@ -912,9 +915,9 @@ tr.tr-blank{
     margin-top : -33px; */
     height : 66px;
     clear : both;
-    background: url(/../images/foot.png) repeat-x;
+    background: url(/images/foot.png) repeat-x;
     width:100%;
-    margin-top:15px;
+     margin-top:15px;
 }
 #footer_logo {
     height:66px;
@@ -928,22 +931,23 @@ tr.tr-blank{
     height:66px;
     margin-top:-55px;
     width:210px;
-    background: url(/../images/footer-logo.png) no-repeat 0 0 transparent;
+    background: url(/images/footer-logo.png) no-repeat 0 0 transparent;
 }
 
 #footer_logo a.footer-logo:hover {
-    background: url(/../images/footer-logo.png) no-repeat -210px 0 transparent;
+    background: url(/images/footer-logo.png) no-repeat -210px 0 transparent;
 
 }
 
 #powered_by {
     height:20px;
     padding:35px 0 0 0;
-    width:980px;
+    width:auto;
     margin:0 auto;
     color:#fff;
     font-size:12px;
     font-weight:bold;
+    float: left;
 }
 #powered_by a {
     color:#fff;
@@ -956,12 +960,61 @@ tr.tr-blank{
     text-decoration:underline;
 }
 #outer-autosuggest-menu{
-    float: left;
-    margin-left: 94px;
-    margin-top: 6px;
-    width: 245px;
+float: left;
+margin-top: 26px;
+width: 329px;
 }
 #autosuggest_menu_input{
-    width: 300px;
-    height: 14px;
+width: 300px;
+height: 14px;
+}
+#institution-name{
+    margin: 12px 0 0 0;
+    float: right;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+#header_link{
+    overflow: hidden;
+}
+#header_link div{
+    float: right;
+    margin: 0 5px;
+    padding: 0 5px;
+    overflow: hidden;
+}
+#header_link div a{
+    padding: 3px 23px 3px 3px;
+    display: block;
+    float: right;
+    text-decoration: none;
+}
+#profile-link a{
+    background: url(/images/application/profile.png) no-repeat right center;
+}
+#messages-link a{
+    background: url(/images/application/msg.png) no-repeat right center;
+    float: right;
+}
+#messages-link span {
+    padding: 3px 1px 3px 3px;
+    display: block;
+    float: right;
+}
+#logout-link a{
+    background: url(/images/application/logout.png) no-repeat right center;
+}
+#logout-link{
+    margin-left: 0 !important;
+}
+#profile-link:hover, #messages-link:hover, #logout-link:hover{
+    background: url(/images/application/top-link-bg.png) repeat;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+}
+textarea{
+    font-family: Arial !important;
 }

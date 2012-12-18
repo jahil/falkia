@@ -31,7 +31,7 @@
 }
 .payslip-field-pair input:focus {
     background: #fff;
-    border: 1px solid #42a5cc;
+    border: 1px solid #9e0f15;
 }
 .payslip-field-pair-extra {
     float : right;
@@ -144,7 +144,7 @@
 }
 .new-category-field-pair input:focus{
     background: #fff;
-    border: 1px solid #42a5cc;
+    border: 1px solid #9e0f15;
 }
 
 .new-category-checkbox-pair{
@@ -188,7 +188,7 @@
 }
 
 .val {
-    color: #42a5cc;
+    color: #bb0000;
     font-weight: bold;
     font-size: 13px;
     float: right;

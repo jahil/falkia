@@ -7,7 +7,7 @@
 }
 .link-heading a {
     font-weight:bold;
-    color:#3293bc;
+    color:#900;
 }
 .link-descr {
     margin-top:5px;
@@ -170,7 +170,7 @@
 }
 
 #inner-tab-menu ul li {
-    background-color: #42A5CC;
+    background-color: #9D0E00;
     color: #FFFFFF;
     float: right;
     font-size: 0.9em;
@@ -182,5 +182,36 @@
     width: 142px;
 }
 table#listing td.col-4 {
-    width: 28%;
+    width: 36%;
+}
+table#listing td.col-1 {
+    width: 2%;
+}
+
+.each_category{
+    font-size: 12px;
+    overflow:auto;
+    width:213px;;
+
+}
+.each_category input{
+    float:right;
+    width:auto;
+}
+
+.each_category label {
+    float: right;
+    margin-top: -7px;
+    width: 178px;
+    font-size:13px;
+    font-weight: normal;
+    margin-right: 8px;
+}
+.categories {
+    height: 100px;
+    overflow: auto;
+    max-width: 220px;
+    float: right;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }

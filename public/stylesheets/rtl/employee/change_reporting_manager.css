@@ -16,7 +16,7 @@
 #current-manager-name{
     float:right;
     font-weight:bold;
-    color:#42A5CC;
+    color:#BB0000;
 }
 
 #changed-manager-outer{
@@ -35,7 +35,7 @@
     
     float:right;
     font-weight:bold;
-    color:#42A5CC;
+    color:#BB0000;
     margin-top:7px;
 }
 

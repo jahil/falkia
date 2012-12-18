@@ -19,15 +19,7 @@
 
 <div id="wrapper">
   <div id="top_logo">
-    <% if FileTest.exists?("#{RAILS_ROOT}/public/uploads/image/institute_logo.jpg") %>
-      <%= image_tag  "/uploads/image/institute_logo.jpg" ,:width => "155",  :height=>"107" %>
-    <% else %>
-        <%= image_tag("/images/application/app_falkia_logo.jpg") %>
-    <% end %>
-  </div>
-
-  <div id="help_top">
-    <div id="help_link"><a href="http://www.falkia.com/forum/" target="_blank"><%= t('help') %>!</a></div>
+    <%= image_tag current_school_detail.logo.url %>
   </div>
 
   <div id="login_area_bg">
@@ -41,47 +33,45 @@
             :maxlength => 40%>
         </div>
 
-          <label for="password"><%= t('password') %></label>
+        <label for="password"><%= t('password') %></label>
         <div id="password_textbox_bg">
           <%= form.password_field :password %>
         </div>
 
-        <div id="checkbox_area">
-          <input type="checkbox" id="remember" />
-          <label for="remember"><%= t('remember_me') %></label>
+        <div id="notice-box">
+          <% if !flash.empty? %>
+            <div id="notice"><%= flash[:notice] %></div>
+          <% end %>
         </div>
 
         <div id="submit_area">
           <%= submit_tag t('login'), :class => "submit" %>
         </div>
 
+        <label for="forgot_password" class="forgot_password_link">
+          <%= link_to t('forgot_password'),
+            :controller => "user",
+            :action => "forgot_password" %>
+        </label>
 
-        <% if !flash.empty? %>
-          <div id="notice"><%= flash[:notice] %></div>
-        <% end %>
 
       </div>
     </div>
   <% end %>
   <div id="help_forgot_pw">
-    <%= link_to t('forgot_password'),
-      :controller => "user",
-      :action => "forgot_password" %>
 
-</div>
-<div class="clearfooter"></div>
+  </div>
+  <div class="clearfooter"></div>
 </div>
 
-    <div id="footer">
-      <div id="footer_logo">
-            <div id="powered_by">
-          <%= t('powered_by') %> <a href="http://www.falkia.com/" target="_blank">Falkia</a>
-        </div>
-          <a href="http://www.falkia.com/" target="_blank" class="footer-logo"></a>
-
-      </div>
+<div id="footer">
+  <div id="footer_logo">
+    <div id="powered_by">
+      <%= t('powered_by') %> <a href=<%= "#{FEDENA_SETTINGS[:company_url]}" %> target="_blank"><%= FEDENA_SETTINGS[:company_name] %></a>
     </div>
+  </div>
+</div>
 
 <script type="text/javascript">
-document.getElementById('user_username').focus();
- </script>
+  document.getElementById('user_username').focus();
+</script>
