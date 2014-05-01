@@ -1,25 +1,25 @@
 development:
       host: localhost
       adapter: mysql
-      database: new
+      database: falkia
       port: 3306
       username: root
-      password: password
+      password: rex220ft
 
 test: &test
       host: localhost
       adapter: mysql
-      database: new
+      database: falkia
       port: 3306
       username: root
-      password: password
+      password: rex220ft
 
 production:
       host: localhost
       adapter: mysql
-      database: new
+      database: falkia
       port: 3306
       username: root
-      password: password
+      password: rex220ft
 cucumber:
   <<: *test
